@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "msdfgen-sys",
+  "msdfgen-lib",
+  "msdfgen"
+]

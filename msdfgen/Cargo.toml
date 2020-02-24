@@ -1,0 +1,32 @@
+[package]
+name = "msdfgen"
+version = "0.1.0"
+description = "Safe bindings for msdfgen (multi-channel signed distance field generator)"
+categories = ["external-ffi-bindings", "graphics"]
+keywords = ["signed distance fields", "multi-channel signed distance fields", "SDF", "MSDF", "MCSDF"]
+authors = ["K. <kayo@illumium.org>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/katyo/msdfgen-rs"
+edition = "2018"
+
+[badges.travis-ci]
+repository = "katyo/msdfgen-rs"
+
+[badges.is-it-maintained-issue-resolution]
+repository = "katyo/msdfgen-rs"
+
+[badges.is-it-maintained-open-issues]
+repository = "katyo/msdfgen-rs"
+
+[badges.maintenance]
+status = "passively-maintained"
+
+[dependencies.msdfgen-sys]
+version = "0.1.0"
+path = "../msdfgen-sys"
+
+[dev-dependencies.msdfgen-lib]
+version = "0.1.0"
+path = "../msdfgen-lib"
+features = ["stdcxx", "stdcxx-shared"]
