@@ -1,5 +1,9 @@
-/*!
 # Safe bindings to msdfgen library
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![Crates.io Package](https://img.shields.io/crates/v/msdfgen.svg?style=popout)](https://crates.io/crates/msdfgen)
+[![Docs.rs API Docs](https://docs.rs/msdfgen/badge.svg)](https://docs.rs/msdfgen)
+[![Travis-CI Status](https://travis-ci.com/katyo/msdfgen-rs.svg?branch=master)](https://travis-ci.com/katyo/msdfgen-rs)
 
 ## Crates
 
@@ -16,7 +20,7 @@
 
 ## Usage
 
-```no_run
+```rust
 use msdfgen_lib; // forces linking with msdfgen library
 use std::fs::File;
 use material_icons::{Icon, icon_to_char, FONT};
@@ -36,54 +40,3 @@ generate_msdf(&mut bitmap, &shape, 4.0, 1.0, 0.0, EDGE_THRESHOLD, OVERLAP_SUPPOR
 let mut output = File::create("fingerprint-msdf.png").unwrap();
 bitmap.write_png(&mut output).unwrap();
 ```
- */
-
-mod vector;
-mod bitmap;
-mod bounds;
-mod segment;
-mod edge;
-mod contour;
-mod scanline;
-mod shape;
-mod generate;
-mod interop;
-
-#[cfg(test)]
-use msdfgen_lib as _;
-
-pub(crate) use msdfgen_sys as ffi;
-
-pub use self::vector::*;
-pub use self::bitmap::*;
-pub use self::bounds::*;
-pub use self::segment::*;
-pub use self::edge::*;
-pub use self::contour::*;
-pub use self::scanline::*;
-pub use self::shape::*;
-pub use self::generate::*;
-pub use self::interop::*;
-
-#[cfg(test)]
-mod test {
-    use std::fs::File;
-    use notosans::REGULAR_TTF as FONT;
-    use ttf_parser::Font;
-    use crate::{FontExt, Bitmap, generate_msdf, EDGE_THRESHOLD, OVERLAP_SUPPORT};
-
-    #[test]
-    fn test() {
-        let font = Font::from_data(&FONT, 0).unwrap();
-        let glyph = font.glyph_index('A').unwrap();
-        let mut shape = font.glyph_shape(glyph).unwrap();
-        let mut bitmap = Bitmap::new(32, 32);
-
-        shape.edge_coloring_simple(3.0, 0);
-
-        generate_msdf(&mut bitmap, &shape, 4.0, 0.02, 4.0, EDGE_THRESHOLD, OVERLAP_SUPPORT);
-
-        let mut output = File::create("A-msdf.png").unwrap();
-        bitmap.write_png(&mut output).unwrap();
-    }
-}

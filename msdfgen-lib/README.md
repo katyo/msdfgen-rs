@@ -1,5 +1,9 @@
-/*!
 # Bundled msdfgen library
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![Crates.io Package](https://img.shields.io/crates/v/msdfgen-lib.svg?style=popout)](https://crates.io/crates/msdfgen-lib)
+[![Docs.rs API Docs](https://docs.rs/msdfgen-lib/badge.svg)](https://docs.rs/msdfgen-lib)
+[![Travis-CI Status](https://travis-ci.com/katyo/msdfgen-rs.svg?branch=master)](https://travis-ci.com/katyo/msdfgen-rs)
 
 This crate provides bundled [msdfgen](https://github.com/Chlumsky/msdfgen) library for using with [__msdfgen__](https://crates.io/crates/msdfgen) crate.
 
@@ -32,27 +36,3 @@ You can apply some customizations to library using those features:
 - __shared__ Force bundle shared (or dynamic) library instead of static
 - __stdcxx__ Link with _libstdc++_ instead of _libc++_
 - __stdcxx-shared__ Link with shared C++ stdlib instead of static
-
- */
-
-#[cfg(test)]
-mod test {
-    #[repr(C)]
-    struct msdfgen_SignedDistance {
-        distance: f64,
-        dot: f64,
-    }
-
-    extern "C" {
-        #[link_name = "\u{1}_ZN7msdfgen14SignedDistance8INFINITEE"]
-        static msdfgen_SignedDistance_INFINITE: msdfgen_SignedDistance;
-    }
-
-    #[test]
-    fn linking() {
-        let infinite = unsafe { &msdfgen_SignedDistance_INFINITE };
-
-        assert_eq!(infinite.distance, -1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0);
-        assert_eq!(infinite.dot, 1.0);
-    }
-}
