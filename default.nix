@@ -29,6 +29,8 @@ in stdenv.mkDerivation {
     openssl
     libssh
     libgit2
+    freetype
     freetype.dev
+    fontconfig
   ];
 }

@@ -1,3 +1,6 @@
+#[cfg(feature = "png")]
+mod png;
+
 /// Gray color
 #[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(transparent)]
@@ -45,9 +48,9 @@ impl<T> RGB<T> {
 impl From<RGB<u8>> for RGB<f32> {
     fn from(RGB { r, g, b }: RGB<u8>) -> Self {
         Self::new(
-            (r as f32) / 255.0,
-            (g as f32) / 255.0,
-            (b as f32) / 255.0,
+            (r as f32) * (1.0 / 255.0),
+            (g as f32) * (1.0 / 255.0),
+            (b as f32) * (1.0 / 255.0),
         )
     }
 }
@@ -62,7 +65,7 @@ impl From<RGB<f32>> for RGB<u8> {
     }
 }
 
-/// Bitmap
+/// Bitmap object
 #[repr(C)]
 pub struct Bitmap<T> {
     pixels: *mut T,
@@ -103,7 +106,7 @@ impl<T> Bitmap<T> {
         self.height
     }
 
-    /// Get pixel data slice for reading
+    /// Get pixel data slice for reading from
     pub fn pixels(&self) -> &[T] {
         unsafe { std::slice::from_raw_parts(
             self.pixels,
@@ -111,12 +114,36 @@ impl<T> Bitmap<T> {
         ) }
     }
 
-    /// Get pixel data slice for writing
+    /// Get pixel data slice for writing to
     pub fn pixels_mut(&mut self) -> &mut [T] {
         unsafe { std::slice::from_raw_parts_mut(
             self.pixels,
             (self.width * self.height) as usize,
         ) }
+    }
+
+    /// Get raw pixels data for reading from
+    pub fn raw_pixels(&self) -> &[u8] {
+        let pixels = self.pixels();
+
+        unsafe {
+            core::slice::from_raw_parts(
+                pixels.as_ptr() as _,
+                pixels.len() * core::mem::size_of::<T>()
+            )
+        }
+    }
+
+    /// Get raw pixels data for writing to
+    pub fn raw_pixels_mut(&mut self) -> &mut [u8] {
+        let pixels = self.pixels_mut();
+
+        unsafe {
+            core::slice::from_raw_parts_mut(
+                pixels.as_mut_ptr() as _,
+                pixels.len() * core::mem::size_of::<T>()
+            )
+        }
     }
 
     /// Get pixel with specified coordinates
@@ -130,6 +157,19 @@ impl<T> Bitmap<T> {
         let index = x + y * self.width();
         &mut self.pixels_mut()[index as usize]
     }
+
+    /// Convert bitmap data type
+    pub fn convert<R>(&self) -> Bitmap<R>
+    where
+        T: Copy,
+        R: From<T>,
+    {
+        let mut bitmap = Bitmap::<R>::new(self.width(), self.height());
+        bitmap.pixels_mut().iter_mut().zip(self.pixels().iter())
+            .for_each(|(out_pixel, in_pixel)|
+                      *out_pixel = From::from(*in_pixel));
+        bitmap
+    }
 }
 
 impl<T> Drop for Bitmap<T> {
@@ -142,5 +182,15 @@ impl<T> Drop for Bitmap<T> {
 impl<T> Bitmap<T> {
     pub(crate) fn as_raw_mut(&mut self) -> *mut u8 {
         unsafe { core::mem::transmute(self) }
+    }
+}
+
+impl<'a, A, T> From<&'a Bitmap<A>> for Bitmap<T>
+where
+    A: Copy,
+    T: From<A>,
+{
+    fn from(bitmap: &'a Bitmap<A>) -> Self {
+        bitmap.convert()
     }
 }

@@ -1812,6 +1812,21 @@ extern "C" {
     #[link_name = "\u{1}_ZN7msdfgen19Scanline_destructorERNS_8ScanlineE"]
     pub fn msdfgen_Scanline_destructor(self_: *mut msdfgen_Scanline);
 }
+extern "C" {
+    #[link_name = "\u{1}_ZN7msdfgen21EdgeHolder_setSegmentERNS_10EdgeHolderERKNS_11EdgeSegmentE"]
+    pub fn msdfgen_EdgeHolder_setSegment(
+        self_: *mut msdfgen_EdgeHolder,
+        segment: *const msdfgen_EdgeSegment,
+    );
+}
+pub const msdfgen_SegmentKind_LINEAR: msdfgen_SegmentKind = 0;
+pub const msdfgen_SegmentKind_QUADRATIC: msdfgen_SegmentKind = 1;
+pub const msdfgen_SegmentKind_CUBIC: msdfgen_SegmentKind = 2;
+pub type msdfgen_SegmentKind = u32;
+extern "C" {
+    #[link_name = "\u{1}_ZN7msdfgen19EdgeSegment_getKindERKNS_11EdgeSegmentE"]
+    pub fn msdfgen_EdgeSegment_getKind(self_: *const msdfgen_EdgeSegment) -> msdfgen_SegmentKind;
+}
 pub type FILE = _IO_FILE;
 pub type _IO_lock_t = ::std::os::raw::c_void;
 #[repr(C)]

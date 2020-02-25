@@ -722,6 +722,10 @@ fn bindgen_test_layout_msdfgen_Shape() {
     );
 }
 pub type msdfgen_byte = ::std::os::raw::c_uchar;
+pub const msdfgen_SegmentKind_LINEAR: msdfgen_SegmentKind = 0;
+pub const msdfgen_SegmentKind_QUADRATIC: msdfgen_SegmentKind = 1;
+pub const msdfgen_SegmentKind_CUBIC: msdfgen_SegmentKind = 2;
+pub type msdfgen_SegmentKind = u32;
 pub type FILE = _IO_FILE;
 pub type _IO_lock_t = ::std::os::raw::c_void;
 #[repr(C)]

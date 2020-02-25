@@ -1,5 +1,11 @@
 use crate::{ffi, Bitmap, Gray, RGB, Shape, Vector2};
 
+/// Default edge threshold
+pub const EDGE_THRESHOLD: f64 = 1.001;
+
+/// Default overlap support
+pub const OVERLAP_SUPPORT: bool = true;
+
 /// Generate signed distance field for shape
 pub fn generate_sdf(
     output: &mut Bitmap<Gray<f32>>,
