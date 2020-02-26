@@ -25,21 +25,15 @@ pub struct Bitmap<T> {
     height: u32,
 }
 
-fn bitmap_layout<T>(width: u32, height: u32) -> std::alloc::Layout {
-    let pixel_size = core::mem::size_of::<T>();
-    let pixel_align = core::mem::size_of::<usize>();
-
-    unsafe { std::alloc::Layout::from_size_align_unchecked(
-        (width * height) as usize * pixel_size,
-        pixel_align,
-    ) }
-}
-
 impl<T> Bitmap<T> {
     /// Create new bitmap with specified size
     pub fn new(width: u32, height: u32) -> Self {
-        let layout = bitmap_layout::<T>(width, height);
-        let pixels = unsafe { std::alloc::alloc(layout) as *mut T };
+        let size = (width * height) as usize;
+
+        let mut pixels = Vec::with_capacity(size);
+        unsafe { pixels.set_len(size); }
+
+        let pixels = core::mem::ManuallyDrop::new(pixels).as_mut_ptr();
 
         Self {
             pixels,
@@ -47,7 +41,22 @@ impl<T> Bitmap<T> {
             height,
         }
     }
+}
 
+impl<T> Drop for Bitmap<T> {
+    fn drop(&mut self) {
+        let size = (self.width * self.height) as usize;
+        let _pixels = unsafe {
+            Vec::from_raw_parts(
+                self.pixels,
+                size,
+                size,
+            )
+        };
+    }
+}
+
+impl<T> Bitmap<T> {
     /// Get width of bitmap in pixels
     pub fn width(&self) -> u32 {
         self.width
@@ -165,13 +174,6 @@ impl<T> Bitmap<T> {
             .for_each(|(out_pixel, in_pixel)|
                       *out_pixel = From::from(*in_pixel));
         bitmap
-    }
-}
-
-impl<T> Drop for Bitmap<T> {
-    fn drop(&mut self) {
-        let layout = bitmap_layout::<T>(self.width, self.height);
-        unsafe { std::alloc::dealloc(self.pixels as *mut u8, layout) }
     }
 }
 
