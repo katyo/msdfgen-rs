@@ -1,7 +1,6 @@
 mod source {
-    pub const URL: &str = "https://github.com/Chlumsky/{package}/archive/{version}.tar.gz";
-    //pub const VERSION: &str = "v1.6";
-    pub const VERSION: &str = "master";
+    pub const URL: &str = "https://github.com/katyo/{package}-rs/releases/download/{package}-core-{version}/{package}-core-{version}.tar.gz";
+    pub const VERSION: &str = "1.6-gitb9d6f0b";
 }
 
 fn main() {

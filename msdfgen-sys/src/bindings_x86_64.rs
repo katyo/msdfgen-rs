@@ -1676,32 +1676,6 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
-    #[doc = " Saves the bitmap as a BMP file."]
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIhLi1EEEPKc"]
-    pub fn msdfgen_saveBmp(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
-}
-extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIhLi3EEEPKc"]
-    pub fn msdfgen_saveBmp1(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
-}
-extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIfLi1EEEPKc"]
-    pub fn msdfgen_saveBmp2(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
-}
-extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIfLi3EEEPKc"]
-    pub fn msdfgen_saveBmp3(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
-}
-extern "C" {
-    #[doc = " Saves the bitmap as an uncompressed floating-point TIFF file."]
-    #[link_name = "\u{1}_ZN7msdfgen8saveTiffERKNS_14BitmapConstRefIfLi1EEEPKc"]
-    pub fn msdfgen_saveTiff(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
-}
-extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen8saveTiffERKNS_14BitmapConstRefIfLi3EEEPKc"]
-    pub fn msdfgen_saveTiff1(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
-}
-extern "C" {
     #[doc = " Deserializes a text description of a vector shape into output."]
     #[link_name = "\u{1}_ZN7msdfgen20readShapeDescriptionEP8_IO_FILERNS_5ShapeEPb"]
     pub fn msdfgen_readShapeDescription(
