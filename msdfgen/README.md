@@ -17,6 +17,7 @@
 - __font__ Enables [font](https://crates.io/crates/font) crate integration which allows create shapes for glyphs of specific font.
 - __freetype-rs__ Enables [freetype-rs](https://crates.io/crates/freetype-rs) crate integration which allows create shapes for glyphs of specific font.
 - __png__ Enables [png](https://crates.io/crates/png) crate integration which allows load and save bitmaps from/as PNG images.
+- __all__ Meta-feature which enables all supported features.
 
 ## Usage
 

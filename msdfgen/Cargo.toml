@@ -63,7 +63,8 @@ version = "^0.1"
 version = "^0.1"
 
 [features]
-rustdoc = ["msdfgen-sys/rustdoc", "ttf-parser", "font", "freetype-rs", "png"]
+all = ["ttf-parser", "font", "freetype-rs", "png"]
+rustdoc = ["msdfgen-sys/rustdoc", "all"]
 
 [package.metadata.docs.rs]
 features = ["rustdoc"]
