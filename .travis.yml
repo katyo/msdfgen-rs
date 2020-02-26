@@ -24,6 +24,8 @@ script:
 jobs:
   allow_failures:
   - rust: nightly
+  - os: osx
+  - os: windows
   include:
   - stage: publish
     script:
