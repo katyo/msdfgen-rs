@@ -2,12 +2,12 @@ use ttf_parser;
 use crate::{Shape, Contour, EdgeHolder, EdgeColor, Point2, FontExt};
 
 #[derive(Default)]
-struct Segment {
+struct ContourBuilder {
     contour: Contour,
     point: Point2<f64>,
 }
 
-impl Segment {
+impl ContourBuilder {
     pub fn open_at(x: f64, y: f64) -> Self {
         Self {
             contour: Contour::default(),
@@ -42,58 +42,44 @@ impl Segment {
 }
 
 #[derive(Default)]
-struct Builder {
+struct ShapeBuilder {
     shape: Shape,
-    segment: Option<Segment>,
+    contour: Option<ContourBuilder>,
 }
 
-impl Into<Shape> for Builder {
-    fn into(self) -> Shape {
+impl ShapeBuilder {
+    pub fn build(self) -> Shape {
         self.shape
     }
 }
 
-impl ttf_parser::OutlineBuilder for Builder {
+impl ttf_parser::OutlineBuilder for ShapeBuilder {
     fn move_to(&mut self, x: f32, y: f32) {
-        if self.segment.is_some() {
+        if self.contour.is_some() {
             panic!("Unexpected move_to");
         }
 
-        self.segment = Segment::open_at(x as _, y as _).into();
+        self.contour = ContourBuilder::open_at(x as _, y as _).into();
     }
 
     fn line_to(&mut self, x: f32, y: f32) {
-        /*if self.segment.is_none() {
-            panic!("Unexpected line_to");
-        }*/
-
-        self.segment.as_mut().unwrap().line_to(x as _, y as _);
+        self.contour.as_mut().expect("Opened contour")
+            .line_to(x as _, y as _);
     }
 
     fn quad_to(&mut self, x1: f32, y1: f32, x: f32, y: f32) {
-        /*if self.segment.is_none() {
-            panic!("Unexpected quad_to");
-        }*/
-
-        self.segment.as_mut().unwrap()
+        self.contour.as_mut().expect("Opened contour")
             .quad_to(x1 as _, y1 as _, x as _, y as _);
     }
 
     fn curve_to(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, x: f32, y: f32) {
-        /*if self.segment.is_none() {
-            panic!("Unexpected curve_to");
-        }*/
-
-        self.segment.as_mut().unwrap()
+        self.contour.as_mut().expect("Opened contour")
             .curve_to(x1 as _, y1 as _, x2 as _, y2 as _, x as _, y as _);
     }
 
     fn close(&mut self) {
-        /*if self.segment.is_none() {
-            panic!("Unexpected close");
-        }*/
-
-        self.shape.add_contour(&self.segment.take().unwrap().close());
+        self.shape.add_contour(&self.contour.take()
+                               .expect("Opened contour").close());
     }
 }
 
@@ -101,11 +87,11 @@ impl<'a> FontExt for ttf_parser::Font<'a> {
     type Glyph = ttf_parser::GlyphId;
 
     fn glyph_shape(&self, glyph: Self::Glyph) -> Option<Shape> {
-        let mut builder = Builder::default();
+        let mut builder = ShapeBuilder::default();
 
         self.outline_glyph(glyph, &mut builder)?;
 
-        Some(builder.into())
+        Some(builder.build())
     }
 }
 

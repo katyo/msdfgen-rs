@@ -120,6 +120,40 @@ impl<T> Bitmap<T> {
         })
     }
 
+    /// Flip pixels around y axis
+    pub fn flip_x(&mut self) {
+        let width = self.width();
+        let height = self.height();
+        let pixels = self.pixels_mut();
+
+        for y in 0..height {
+            for x in 0..width / 2 {
+                let nx = width - x - 1;
+                unsafe { core::ptr::swap(
+                    &mut pixels[(x + y * width) as usize],
+                    &mut pixels[(nx + y * width) as usize],
+                ); }
+            }
+        }
+    }
+
+    /// Flip pixels around y axis
+    pub fn flip_y(&mut self) {
+        let width = self.width();
+        let height = self.height();
+        let pixels = self.pixels_mut();
+
+        for y in 0..height / 2 {
+            for x in 0..width {
+                let ny = height - y - 1;
+                unsafe { core::ptr::swap(
+                    &mut pixels[(x + y * width) as usize],
+                    &mut pixels[(x + ny * width) as usize],
+                ); }
+            }
+        }
+    }
+
     /// Convert bitmap data type
     pub fn convert<R>(&self) -> Bitmap<R>
     where
@@ -142,6 +176,10 @@ impl<T> Drop for Bitmap<T> {
 }
 
 impl<T> Bitmap<T> {
+    pub(crate) fn as_raw(&self) -> *const u8 {
+        unsafe { core::mem::transmute(self) }
+    }
+
     pub(crate) fn as_raw_mut(&mut self) -> *mut u8 {
         unsafe { core::mem::transmute(self) }
     }

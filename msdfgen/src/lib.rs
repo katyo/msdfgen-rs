@@ -19,21 +19,20 @@
 ```no_run
 use msdfgen_lib; // forces linking with msdfgen library
 use std::fs::File;
-use material_icons::{Icon, icon_to_char, FONT};
+use notosans::REGULAR_TTF as FONT;
 use ttf_parser::Font;
-use msdfgen::{FontExt, Bitmap, EDGE_THRESHOLD, OVERLAP_SUPPORT};
+use msdfgen::{FontExt, Bitmap, Gray, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
 let font = Font::from_data(&FONT, 0).unwrap();
 
-let chr = icon_to_char(Icon::Fingerprint);
-
-let glyph = font.glyph_index(chr).unwrap();
+let glyph = font.glyph_index('A').unwrap();
 
 let mut shape = font.glyph_shape(glyph).unwrap();
 
-let width = 64;
-let height = 64;
+let width = 32;
+let height = 32;
 
+let bounds = shape.get_bounds();
 let framing = bounds.autoframe(width, height, Range::Px(4.0), None).unwrap();
 
 let mut bitmap = Bitmap::new(width, height);
@@ -42,8 +41,23 @@ shape.edge_coloring_simple(3.0, 0);
 
 shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
 
-let mut output = File::create("fingerprint-msdf.png").unwrap();
+// optionally
+shape.correct_sign(&mut bitmap, &framing, Default::default());
+
+let error = shape.estimate_error(&mut bitmap, &framing, 5, Default::default());
+
+println!("Estimated error: {}", error);
+
+bitmap.flip_y();
+
+let mut output = File::create("A-letter-msdf.png").unwrap();
 bitmap.write_png(&mut output).unwrap();
+
+let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
+bitmap.render(&mut preview, Default::default());
+
+let mut output = File::create("A-letter-preview.png").unwrap();
+preview.write_png(&mut output).unwrap();
 ```
  */
 
@@ -56,6 +70,8 @@ mod contour;
 mod scanline;
 mod shape;
 mod generate;
+mod correct;
+mod render;
 mod interop;
 
 #[cfg(test)]
@@ -72,19 +88,22 @@ pub use self::contour::*;
 pub use self::scanline::*;
 pub use self::shape::*;
 pub use self::generate::*;
+pub use self::correct::*;
+pub use self::render::*;
 pub use self::interop::*;
 
 #[cfg(test)]
 mod test {
     use std::fs::File;
     use ttf_parser::Font;
+    use all_asserts::assert_lt;
 
     use notosans::REGULAR_TTF;
     use material_icons::{Icon, icon_to_char, FONT};
 
-    use crate::{FontExt, Bitmap, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
+    use crate::{FontExt, Bitmap, Range, Gray, FillRule, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
-    fn test_font_char(name: &str, font: &[u8], chr: char, width: u32, height: u32) {
+    fn test_font_char(name: &str, font: &[u8], chr: char, width: u32, height: u32, expected_error: f64) {
         let font = Font::from_data(font, 0).unwrap();
         let glyph = font.glyph_index(chr).unwrap();
         let mut shape = font.glyph_shape(glyph).unwrap();
@@ -107,20 +126,31 @@ mod test {
         println!("framing: {:?}", framing);
 
         shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
+        shape.correct_sign(&mut bitmap, &framing, FillRule::default());
+        let error = shape.estimate_error(&mut bitmap, &framing, 4, FillRule::default());
+
+        assert_lt!(error, expected_error);
+
+        bitmap.flip_y();
 
         let mut output = File::create(&format!("{}-msdf.png", name)).unwrap();
         bitmap.write_png(&mut output).unwrap();
+
+        let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
+
+        bitmap.render(&mut preview, Default::default());
+
+        let mut output = File::create(&format!("{}-preview.png", name)).unwrap();
+        preview.write_png(&mut output).unwrap();
     }
 
     #[test]
     fn test_regular_ttf_upcase_a_letter() {
-        test_font_char("A-letter", &REGULAR_TTF, 'A', 32, 32);
-        assert!(false);
+        test_font_char("A-letter", &REGULAR_TTF, 'A', 32, 32, 0.000016);
     }
 
     #[test]
     fn test_material_icon_fingerprint() {
-        test_font_char("fingerprint", &FONT, icon_to_char(Icon::Fingerprint), 32, 32);
-        assert!(false);
+        test_font_char("fingerprint", &FONT, icon_to_char(Icon::Fingerprint), 64, 64, 0.0015);
     }
 }

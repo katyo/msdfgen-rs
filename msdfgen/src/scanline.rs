@@ -4,10 +4,16 @@ use crate::ffi;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[repr(u32)]
 pub enum FillRule {
-    FillNegative = ffi::msdfgen_FillRule_FILL_NEGATIVE,
-    FillNonZero = ffi::msdfgen_FillRule_FILL_NONZERO,
-    FillOdd = ffi::msdfgen_FillRule_FILL_ODD,
-    FillPositive = ffi::msdfgen_FillRule_FILL_POSITIVE,
+    Negative = ffi::msdfgen_FillRule_FILL_NEGATIVE,
+    NonZero = ffi::msdfgen_FillRule_FILL_NONZERO,
+    Odd = ffi::msdfgen_FillRule_FILL_ODD,
+    Positive = ffi::msdfgen_FillRule_FILL_POSITIVE,
+}
+
+impl Default for FillRule {
+    fn default() -> Self {
+        FillRule::NonZero
+    }
 }
 
 impl FillRule {
