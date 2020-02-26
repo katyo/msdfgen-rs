@@ -84,6 +84,9 @@ mod utils {
             .whitelist_var("MSDFGEN_.*")
             .whitelist_type("msdfgen::.*")
             .whitelist_function("msdfgen::.*")
+            .blacklist_function("msdfgen::(read|write)ShapeDescription")
+            .blacklist_type("FILE")
+            .blacklist_type("_IO_.*")
             .generate()
             .expect("Generated bindings.");
 

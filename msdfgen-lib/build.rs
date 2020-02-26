@@ -78,9 +78,11 @@ mod utils {
         }
     }
 
-    pub fn lib_link<S: AsRef<str>>(name: S, shared: bool) {
+    pub fn lib_link<S: AsRef<str>>(name: S, shared: Option<bool>) {
         println!("cargo:rustc-link-lib={}{}",
-                 if shared { "" } else { "static=" },
+                 if let Some(shared) = shared {
+                     if shared { "dylib=" } else { "static=" }
+                 } else { "" },
                  name.as_ref());
     }
 
@@ -88,6 +90,10 @@ mod utils {
         let lib_dir = out_dir;
         let lib_name = "msdfgen";
         let lib_file = lib_dir.join(lib_file(&lib_name, cfg!(feature = "shared")));
+        let extra_src_dir = Path::new("src");
+        let extra_srcs = &["msdfgen_extras.cpp"].iter()
+            .map(|extra_src| extra_src_dir.join(extra_src))
+            .collect::<Vec<_>>();
 
         if !lib_file.is_file() {
             /*std::fs::create_dir_all(out_dir).unwrap();
@@ -143,7 +149,7 @@ mod utils {
                     .include(&include_dir)
                     .include(&core_src_dir)
                     .files(core_srcs)
-                    .file(Path::new("src").join("msdfgen_extras.cpp"))
+                    .files(extra_srcs)
                     .shared_flag(cfg!(feature = "shared"))
                     .static_flag(!cfg!(feature = "shared"))
                     .cargo_metadata(false)
@@ -151,11 +157,15 @@ mod utils {
             }
         }
 
+        for extra_src in extra_srcs {
+            println!("cargo:rerun-if-changed={}", extra_src.display());
+        }
+
         println!("cargo:rustc-link-search=native={}", lib_dir.display());
 
-        lib_link(lib_name, cfg!(feature = "shared"));
+        lib_link(lib_name, None);
 
         lib_link(if cfg!(feature = "libcxx") { "c++" } else { "stdc++" },
-                 !cfg!(feature = "stdcxx-static"));
+                 if cfg!(feature = "stdcxx-static") { Some(false) } else { None });
     }
 }

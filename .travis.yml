@@ -9,17 +9,18 @@ os:
 - windows
 cache:
   cargo: true
-before_install:
-- |-
-    case $TRAVIS_OS_NAME in
-      windows)
-        choco upgrade --no-progress -y pkgconfiglite make
-        ;;
-    esac
 script:
 - (cd msdfgen-sys && cargo test --release)
 - (cd msdfgen-lib && cargo test --release)
-- (cd msdfgen && cargo test --release --features all)
+- |-
+  case $TRAVIS_OS_NAME in
+    windows)
+      (cd msdfgen && cargo test --release --features ttf-parser,font,png)
+      ;;
+    *)
+      (cd msdfgen && cargo test --release --features all)
+      ;;
+  esac
 jobs:
   allow_failures:
   - rust: nightly
