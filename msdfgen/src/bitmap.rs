@@ -1,68 +1,20 @@
+mod gray;
+mod rgb;
+
+pub use self::gray::*;
+pub use self::rgb::*;
+
 #[cfg(feature = "png")]
 mod png;
 
-/// Gray color
-#[derive(Debug, Clone, Copy, PartialEq)]
-#[repr(transparent)]
-pub struct Gray<T> {
-    pub v: T,
-}
+/// Bitmap pixel
+pub trait Pixel {
+    type Component;
 
-impl<T> Gray<T> {
-    pub fn new(v: T) -> Self {
-        Self { v }
-    }
-}
+    fn components(&self) -> &[Self::Component];
+    fn components_mut(&mut self) -> &mut [Self::Component];
 
-impl From<Gray<u8>> for Gray<f32> {
-    fn from(Gray { v }: Gray<u8>) -> Self {
-        Self::new(
-            (v as f32) / 255.0,
-        )
-    }
-}
-
-impl From<Gray<f32>> for Gray<u8> {
-    fn from(Gray { v }: Gray<f32>) -> Self {
-        Self::new(
-            (v.min(1.0).max(0.0) * 255.0) as u8,
-        )
-    }
-}
-
-/// RGB color
-#[derive(Debug, Clone, Copy, PartialEq)]
-#[repr(C)]
-pub struct RGB<T> {
-    pub r: T,
-    pub g: T,
-    pub b: T,
-}
-
-impl<T> RGB<T> {
-    pub fn new(r: T, g: T, b: T) -> Self {
-        Self { r, g, b }
-    }
-}
-
-impl From<RGB<u8>> for RGB<f32> {
-    fn from(RGB { r, g, b }: RGB<u8>) -> Self {
-        Self::new(
-            (r as f32) * (1.0 / 255.0),
-            (g as f32) * (1.0 / 255.0),
-            (b as f32) * (1.0 / 255.0),
-        )
-    }
-}
-
-impl From<RGB<f32>> for RGB<u8> {
-    fn from(RGB { r, g, b }: RGB<f32>) -> Self {
-        Self::new(
-            (r.min(1.0).max(0.0) * 255.0) as u8,
-            (g.min(1.0).max(0.0) * 255.0) as u8,
-            (b.min(1.0).max(0.0) * 255.0) as u8,
-        )
-    }
+    fn invert(&mut self);
 }
 
 /// Bitmap object
@@ -156,6 +108,16 @@ impl<T> Bitmap<T> {
     pub fn pixel_mut(&mut self, x: u32, y: u32) -> &mut T {
         let index = x + y * self.width();
         &mut self.pixels_mut()[index as usize]
+    }
+
+    /// Invert pixels colors
+    pub fn invert(&mut self)
+    where
+        T: Pixel,
+    {
+        self.pixels_mut().iter_mut().for_each(|pixel| {
+            pixel.invert();
+        })
     }
 
     /// Convert bitmap data type
