@@ -31,9 +31,12 @@ let glyph = font.glyph_index(chr).unwrap();
 
 let mut shape = font.glyph_shape(glyph).unwrap();
 
-let framing = bounds.autoframe((32.0, 32.0), Range::Px(4.0), None).unwrap();
+let width = 64;
+let height = 64;
 
-let mut bitmap = Bitmap::new(32, 32);
+let framing = bounds.autoframe(width, height, Range::Px(4.0), None).unwrap();
+
+let mut bitmap = Bitmap::new(width, height);
 
 shape.edge_coloring_simple(3.0, 0);
 
@@ -74,14 +77,16 @@ pub use self::interop::*;
 #[cfg(test)]
 mod test {
     use std::fs::File;
-    use notosans::REGULAR_TTF as FONT;
     use ttf_parser::Font;
+
+    use notosans::REGULAR_TTF;
+    use material_icons::{Icon, icon_to_char, FONT};
+
     use crate::{FontExt, Bitmap, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
-    #[test]
-    fn test() {
-        let font = Font::from_data(&FONT, 0).unwrap();
-        let glyph = font.glyph_index('A').unwrap();
+    fn test_font_char(name: &str, font: &[u8], chr: char, width: u32, height: u32) {
+        let font = Font::from_data(font, 0).unwrap();
+        let glyph = font.glyph_index(chr).unwrap();
         let mut shape = font.glyph_shape(glyph).unwrap();
 
         if !shape.validate() {
@@ -90,21 +95,32 @@ mod test {
         shape.normalize();
 
         let bounds = shape.get_bounds();
-        let mut bitmap = Bitmap::new(32, 32);
+
+        let mut bitmap = Bitmap::new(width, height);
 
         println!("bounds: {:?}", bounds);
 
         shape.edge_coloring_simple(3.0, 0);
 
-        let framing = bounds.autoframe((32.0, 32.0), Range::Px(4.0), None).unwrap();
+        let framing = bounds.autoframe(width, height, Range::Px(4.0), None).unwrap();
 
         println!("framing: {:?}", framing);
 
         shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
 
-        let mut output = File::create("A-msdf.png").unwrap();
+        let mut output = File::create(&format!("{}-msdf.png", name)).unwrap();
         bitmap.write_png(&mut output).unwrap();
+    }
 
+    #[test]
+    fn test_regular_ttf_upcase_a_letter() {
+        test_font_char("A-letter", &REGULAR_TTF, 'A', 32, 32);
+        assert!(false);
+    }
+
+    #[test]
+    fn test_material_icon_fingerprint() {
+        test_font_char("fingerprint", &FONT, icon_to_char(Icon::Fingerprint), 32, 32);
         assert!(false);
     }
 }

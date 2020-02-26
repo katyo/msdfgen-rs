@@ -79,8 +79,8 @@ impl Bounds<f64> {
     /// Autoframing
     ///
     /// Returns `None` means that frame cannot fit the specified pixel range.
-    pub fn autoframe(&self, frame: impl Into<Vector2<f64>>, range: Range<f64>, scale: Option<Vector2<f64>>) -> Option<Framing<f64>> {
-        let mut frame = frame.into();
+    pub fn autoframe(&self, width: u32, height: u32, range: Range<f64>, scale: Option<Vector2<f64>>) -> Option<Framing<f64>> {
+        let mut frame = Vector2::new(width as f64, height as f64);
 
         let mut left = self.left;
         let mut bottom = self.bottom;
