@@ -1,5 +1,24 @@
 use crate::{ffi, Bitmap, Gray, RGB, Shape, Vector2};
 
+/// Framing options
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
+#[repr(C)]
+pub struct Framing<T> {
+    pub range: T,
+    pub scale: Vector2<T>,
+    pub translate: Vector2<T>,
+}
+
+impl<T> Framing<T> {
+    pub fn new(range: impl Into<T>, scale: impl Into<Vector2<T>>, translate: impl Into<Vector2<T>>) -> Self {
+        Self {
+            range: range.into(),
+            scale: scale.into(),
+            translate: translate.into(),
+        }
+    }
+}
+
 /// Default edge threshold
 pub const EDGE_THRESHOLD: f64 = 1.001;
 
@@ -10,18 +29,16 @@ pub const OVERLAP_SUPPORT: bool = true;
 pub fn generate_sdf(
     output: &mut Bitmap<Gray<f32>>,
     shape: &Shape,
-    range: f64,
-    scale: impl Into<Vector2<f64>>,
-    translate: impl Into<Vector2<f64>>,
+    framing: &Framing<f64>,
     overlap_support: bool,
 ) {
     unsafe {
         ffi::msdfgen_generateSDF(
             output.as_raw_mut(),
             shape.as_raw(),
-            range,
-            scale.into().as_raw(),
-            translate.into().as_raw(),
+            framing.range,
+            framing.scale.as_raw(),
+            framing.translate.as_raw(),
             overlap_support,
         )
     }
@@ -31,18 +48,16 @@ pub fn generate_sdf(
 pub fn generate_pseudo_sdf(
     output: &mut Bitmap<Gray<f32>>,
     shape: &Shape,
-    range: f64,
-    scale: impl Into<Vector2<f64>>,
-    translate: impl Into<Vector2<f64>>,
+    framing: &Framing<f64>,
     overlap_support: bool,
 ) {
     unsafe {
         ffi::msdfgen_generatePseudoSDF(
             output.as_raw_mut(),
             shape.as_raw(),
-            range,
-            scale.into().as_raw(),
-            translate.into().as_raw(),
+            framing.range,
+            framing.scale.as_raw(),
+            framing.translate.as_raw(),
             overlap_support,
         )
     }
@@ -52,17 +67,15 @@ pub fn generate_pseudo_sdf(
 pub fn generate_sdf_legacy(
     output: &mut Bitmap<Gray<f32>>,
     shape: &Shape,
-    range: f64,
-    scale: impl Into<Vector2<f64>>,
-    translate: impl Into<Vector2<f64>>,
+    framing: &Framing<f64>,
 ) {
     unsafe {
         ffi::msdfgen_generateSDF_legacy(
             output.as_raw_mut(),
             shape.as_raw(),
-            range,
-            scale.into().as_raw(),
-            translate.into().as_raw(),
+            framing.range,
+            framing.scale.as_raw(),
+            framing.translate.as_raw(),
         )
     }
 }
@@ -71,9 +84,7 @@ pub fn generate_sdf_legacy(
 pub fn generate_msdf(
     output: &mut Bitmap<RGB<f32>>,
     shape: &Shape,
-    range: f64,
-    scale: impl Into<Vector2<f64>>,
-    translate: impl Into<Vector2<f64>>,
+    framing: &Framing<f64>,
     edge_threshold: f64,
     overlap_support: bool,
 ) {
@@ -81,9 +92,9 @@ pub fn generate_msdf(
         ffi::msdfgen_generateMSDF(
             output.as_raw_mut(),
             shape.as_raw(),
-            range,
-            scale.into().as_raw(),
-            translate.into().as_raw(),
+            framing.range,
+            framing.scale.as_raw(),
+            framing.translate.as_raw(),
             edge_threshold,
             overlap_support,
         )
@@ -94,18 +105,16 @@ pub fn generate_msdf(
 pub fn generate_msdf_legacy(
     output: &mut Bitmap<RGB<f32>>,
     shape: &Shape,
-    range: f64,
-    scale: impl Into<Vector2<f64>>,
-    translate: impl Into<Vector2<f64>>,
+    framing: &Framing<f64>,
     edge_threshold: f64,
 ) {
     unsafe {
         ffi::msdfgen_generateMSDF_legacy(
             output.as_raw_mut(),
             shape.as_raw(),
-            range,
-            scale.into().as_raw(),
-            translate.into().as_raw(),
+            framing.range,
+            framing.scale.as_raw(),
+            framing.translate.as_raw(),
             edge_threshold,
         )
     }

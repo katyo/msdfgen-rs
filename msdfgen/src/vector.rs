@@ -1,3 +1,4 @@
+use core::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, Neg};
 use crate::ffi;
 
 /// Generic 2D point
@@ -50,17 +51,181 @@ impl<T: Copy> Vector2<T> {
     }
 
     pub fn reset(&mut self)
-    where T: Default
+    where T: Default,
     {
         self.x = T::default();
         self.y = T::default();
     }
+}
 
-    /*pub fn length(&mut self) -> T
-    where T: core::ops::Mul<T, Output = T> + core::ops::Add<T, Output = T>
-    {
-        (self.x * self.x + self.y * self.y).sqrt()
-    }*/
+impl<T> Add<T> for Vector2<T>
+where T: AddAssign + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn add(mut self, v: T) -> Self::Output {
+        self += v;
+        self
+    }
+}
+
+impl<T> AddAssign<T> for Vector2<T>
+where T: AddAssign + Copy,
+{
+    fn add_assign(&mut self, v: T) {
+        self.x += v;
+        self.y += v;
+    }
+}
+
+impl<T> Sub<T> for Vector2<T>
+where T: SubAssign + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn sub(mut self, v: T) -> Self::Output {
+        self -= v;
+        self
+    }
+}
+
+impl<T> SubAssign<T> for Vector2<T>
+where T: SubAssign + Copy,
+{
+    fn sub_assign(&mut self, v: T) {
+        self.x -= v;
+        self.y -= v;
+    }
+}
+
+impl<T> Mul<T> for Vector2<T>
+where T: MulAssign + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn mul(mut self, v: T) -> Self::Output {
+        self *= v;
+        self
+    }
+}
+
+impl<T> MulAssign<T> for Vector2<T>
+where T: MulAssign + Copy,
+{
+    fn mul_assign(&mut self, v: T) {
+        self.x *= v;
+        self.y *= v;
+    }
+}
+
+impl<T> Div<T> for Vector2<T>
+where T: DivAssign + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn div(mut self, v: T) -> Self::Output {
+        self /= v;
+        self
+    }
+}
+
+impl<T> DivAssign<T> for Vector2<T>
+where T: DivAssign + Copy,
+{
+    fn div_assign(&mut self, v: T) {
+        self.x /= v;
+        self.y /= v;
+    }
+}
+
+impl<T> Add<Vector2<T>> for Vector2<T>
+where T: AddAssign + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn add(mut self, v: Vector2<T>) -> Self::Output {
+        self += v;
+        self
+    }
+}
+
+impl<T> AddAssign<Vector2<T>> for Vector2<T>
+where T: AddAssign + Copy,
+{
+    fn add_assign(&mut self, v: Vector2<T>) {
+        self.x += v.x;
+        self.y += v.y;
+    }
+}
+
+impl<T> Sub<Vector2<T>> for Vector2<T>
+where T: SubAssign + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn sub(mut self, v: Vector2<T>) -> Self::Output {
+        self -= v;
+        self
+    }
+}
+
+impl<T> SubAssign<Vector2<T>> for Vector2<T>
+where T: SubAssign + Copy,
+{
+    fn sub_assign(&mut self, v: Vector2<T>) {
+        self.x -= v.x;
+        self.y -= v.y;
+    }
+}
+
+impl<T> Mul<Vector2<T>> for Vector2<T>
+where T: MulAssign + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn mul(mut self, v: Vector2<T>) -> Self::Output {
+        self *= v;
+        self
+    }
+}
+
+impl<T> MulAssign<Vector2<T>> for Vector2<T>
+where T: MulAssign + Copy,
+{
+    fn mul_assign(&mut self, v: Vector2<T>) {
+        self.x *= v.x;
+        self.y *= v.y;
+    }
+}
+
+impl<T> Div<Vector2<T>> for Vector2<T>
+where T: DivAssign + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn div(mut self, v: Vector2<T>) -> Self::Output {
+        self /= v;
+        self
+    }
+}
+
+impl<T> DivAssign<Vector2<T>> for Vector2<T>
+where T: DivAssign + Copy,
+{
+    fn div_assign(&mut self, v: Vector2<T>) {
+        self.x /= v.x;
+        self.y /= v.y;
+    }
+}
+
+impl<T> Neg for Vector2<T>
+where T: Neg<Output = T> + Copy,
+{
+    type Output = Vector2<T>;
+
+    fn neg(self) -> Self::Output {
+        Vector2::new(-self.x, -self.y)
+    }
 }
 
 impl Vector2<f64> {

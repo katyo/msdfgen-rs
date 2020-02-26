@@ -24,14 +24,20 @@ use ttf_parser::Font;
 use msdfgen::{FontExt, Bitmap, generate_msdf, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
 let font = Font::from_data(&FONT, 0).unwrap();
+
 let chr = icon_to_char(Icon::Fingerprint);
+
 let glyph = font.glyph_index(chr).unwrap();
+
 let mut shape = font.glyph_shape(glyph).unwrap();
+
+let framing = bounds.autoframe((32.0, 32.0), Range::Px(4.0), None).unwrap();
+
 let mut bitmap = Bitmap::new(32, 32);
 
 shape.edge_coloring_simple(3.0, 0);
 
-generate_msdf(&mut bitmap, &shape, 4.0, 1.0, 0.0, EDGE_THRESHOLD, OVERLAP_SUPPORT);
+generate_msdf(&mut bitmap, &shape, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
 
 let mut output = File::create("fingerprint-msdf.png").unwrap();
 bitmap.write_png(&mut output).unwrap();
@@ -70,20 +76,35 @@ mod test {
     use std::fs::File;
     use notosans::REGULAR_TTF as FONT;
     use ttf_parser::Font;
-    use crate::{FontExt, Bitmap, generate_msdf, EDGE_THRESHOLD, OVERLAP_SUPPORT};
+    use crate::{FontExt, Bitmap, Range, generate_msdf, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
     #[test]
     fn test() {
         let font = Font::from_data(&FONT, 0).unwrap();
         let glyph = font.glyph_index('A').unwrap();
         let mut shape = font.glyph_shape(glyph).unwrap();
+
+        if !shape.validate() {
+            panic!("Invalid shape");
+        }
+        shape.normalize();
+
+        let bounds = shape.get_bounds();
         let mut bitmap = Bitmap::new(32, 32);
+
+        println!("bounds: {:?}", bounds);
 
         shape.edge_coloring_simple(3.0, 0);
 
-        generate_msdf(&mut bitmap, &shape, 4.0, 0.02, 4.0, EDGE_THRESHOLD, OVERLAP_SUPPORT);
+        let mut framing = bounds.autoframe((32.0, 32.0), Range::Px(4.0), None).unwrap();
+
+        println!("framing: {:?}", framing);
+
+        generate_msdf(&mut bitmap, &shape, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
 
         let mut output = File::create("A-msdf.png").unwrap();
         bitmap.write_png(&mut output).unwrap();
+
+        assert!(false);
     }
 }

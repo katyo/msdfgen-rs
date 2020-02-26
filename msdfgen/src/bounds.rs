@@ -1,4 +1,38 @@
 use core::ops::{Sub, Neg};
+use crate::{Vector2, Framing};
+
+/// Range specifier
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Range<T> {
+    Unit(T),
+    Px(T),
+}
+
+impl<T> Range<T> {
+    /// Creates unit range
+    pub fn unit(range: T) -> Self {
+        Range::Unit(range)
+    }
+
+    /// Creates pixel range
+    pub fn px(range: T) -> Self {
+        Range::Px(range)
+    }
+}
+
+impl<T> From<T> for Range<T> {
+    fn from(range: T) -> Self {
+        Range::Unit(range)
+    }
+}
+
+impl<T> Default for Range<T>
+where T: Default,
+{
+    fn default() -> Self {
+        Self::from(T::default())
+    }
+}
 
 /// Bounds of shape or contour
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
@@ -41,6 +75,76 @@ impl<T> Bounds<T> {
     }
 }
 
+impl Bounds<f64> {
+    /// Autoframing
+    ///
+    /// Returns `None` means that frame cannot fit the specified pixel range.
+    pub fn autoframe(&self, frame: impl Into<Vector2<f64>>, range: Range<f64>, scale: Option<Vector2<f64>>) -> Option<Framing<f64>> {
+        let mut frame = frame.into();
+
+        let mut left = self.left;
+        let mut bottom = self.bottom;
+        let mut right = self.right;
+        let mut top = self.top;
+
+        match range {
+            Range::Unit(range) => {
+                left -= 0.5 * range;
+                bottom -= 0.5 * range;
+                right += 0.5 * range;
+                top += 0.5 * range;
+            },
+            Range::Px(range) => {
+                if scale.is_none() {
+                    frame -= range;
+                }
+            }
+        }
+
+        if left >= right || bottom >= top {
+            left = 0.0;
+            bottom = 0.0;
+            right = 1.0;
+            top = 1.0;
+        }
+
+        if frame.x <= 0.0 || frame.y <= 0.0 {
+            return None;
+        }
+
+        let dims = Vector2::new(right - left, top - bottom);
+
+        let mut res = Framing::default();
+
+        if let Some(scale) = scale {
+            res.translate = (frame / scale - dims) * 0.5 - Vector2::new(left, bottom);
+        } else {
+            if dims.x * frame.y < dims.y * frame.x {
+                res.translate.set(0.5 * (frame.x / frame.y * dims.y - dims.x) - left, -bottom);
+                res.scale = (frame.y / dims.y).into();
+            } else {
+                res.translate.set(-left, 0.5 * (frame.y / frame.x * dims.x - dims.y) - bottom);
+                res.scale = (frame.x / dims.x).into();
+            }
+        }
+
+        match range {
+            Range::Px(range) => {
+                if scale.is_none() {
+                    res.translate += Vector2::from(range * 0.5) / res.scale;
+                }
+
+                res.range = range / min(res.scale.x, res.scale.y);
+            },
+            Range::Unit(range) => {
+                res.range = range;
+            },
+        }
+
+        Some(res)
+    }
+}
+
 fn abs<T>(v: T) -> T
 where
     T: Neg<Output = T> + PartialOrd + Default,
@@ -57,4 +161,11 @@ where
     T: PartialOrd + Copy,
 {
     if a > b { a } else { b }
+}
+
+fn min<T>(a: T, b: T) -> T
+where
+    T: PartialOrd + Copy,
+{
+    if a < b { a } else { b }
 }
