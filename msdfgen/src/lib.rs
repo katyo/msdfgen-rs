@@ -21,7 +21,7 @@ use msdfgen_lib; // forces linking with msdfgen library
 use std::fs::File;
 use material_icons::{Icon, icon_to_char, FONT};
 use ttf_parser::Font;
-use msdfgen::{FontExt, Bitmap, generate_msdf, EDGE_THRESHOLD, OVERLAP_SUPPORT};
+use msdfgen::{FontExt, Bitmap, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
 let font = Font::from_data(&FONT, 0).unwrap();
 
@@ -37,7 +37,7 @@ let mut bitmap = Bitmap::new(32, 32);
 
 shape.edge_coloring_simple(3.0, 0);
 
-generate_msdf(&mut bitmap, &shape, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
+shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
 
 let mut output = File::create("fingerprint-msdf.png").unwrap();
 bitmap.write_png(&mut output).unwrap();
@@ -76,7 +76,7 @@ mod test {
     use std::fs::File;
     use notosans::REGULAR_TTF as FONT;
     use ttf_parser::Font;
-    use crate::{FontExt, Bitmap, Range, generate_msdf, EDGE_THRESHOLD, OVERLAP_SUPPORT};
+    use crate::{FontExt, Bitmap, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
     #[test]
     fn test() {
@@ -96,11 +96,11 @@ mod test {
 
         shape.edge_coloring_simple(3.0, 0);
 
-        let mut framing = bounds.autoframe((32.0, 32.0), Range::Px(4.0), None).unwrap();
+        let framing = bounds.autoframe((32.0, 32.0), Range::Px(4.0), None).unwrap();
 
         println!("framing: {:?}", framing);
 
-        generate_msdf(&mut bitmap, &shape, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
+        shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
 
         let mut output = File::create("A-msdf.png").unwrap();
         bitmap.write_png(&mut output).unwrap();

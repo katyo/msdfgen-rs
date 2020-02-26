@@ -25,97 +25,99 @@ pub const EDGE_THRESHOLD: f64 = 1.001;
 /// Default overlap support
 pub const OVERLAP_SUPPORT: bool = true;
 
+impl Shape {
 /// Generate signed distance field for shape
-pub fn generate_sdf(
-    output: &mut Bitmap<Gray<f32>>,
-    shape: &Shape,
-    framing: &Framing<f64>,
-    overlap_support: bool,
-) {
-    unsafe {
-        ffi::msdfgen_generateSDF(
-            output.as_raw_mut(),
-            shape.as_raw(),
-            framing.range,
-            framing.scale.as_raw(),
-            framing.translate.as_raw(),
-            overlap_support,
-        )
+    pub fn generate_sdf(
+        &self,
+        output: &mut Bitmap<Gray<f32>>,
+        framing: &Framing<f64>,
+        overlap_support: bool,
+    ) {
+        unsafe {
+            ffi::msdfgen_generateSDF(
+                output.as_raw_mut(),
+                self.as_raw(),
+                framing.range,
+                framing.scale.as_raw(),
+                framing.translate.as_raw(),
+                overlap_support,
+            )
+        }
     }
-}
 
-/// Generate pseudo signed distance field for shape
-pub fn generate_pseudo_sdf(
-    output: &mut Bitmap<Gray<f32>>,
-    shape: &Shape,
-    framing: &Framing<f64>,
-    overlap_support: bool,
-) {
-    unsafe {
-        ffi::msdfgen_generatePseudoSDF(
-            output.as_raw_mut(),
-            shape.as_raw(),
-            framing.range,
-            framing.scale.as_raw(),
-            framing.translate.as_raw(),
-            overlap_support,
-        )
+    /// Generate pseudo signed distance field for shape
+    pub fn generate_pseudo_sdf(
+        &self,
+        output: &mut Bitmap<Gray<f32>>,
+        framing: &Framing<f64>,
+        overlap_support: bool,
+    ) {
+        unsafe {
+            ffi::msdfgen_generatePseudoSDF(
+                output.as_raw_mut(),
+                self.as_raw(),
+                framing.range,
+                framing.scale.as_raw(),
+                framing.translate.as_raw(),
+                overlap_support,
+            )
+        }
     }
-}
 
-/// Generate signed distance field for shape (legacy)
-pub fn generate_sdf_legacy(
-    output: &mut Bitmap<Gray<f32>>,
-    shape: &Shape,
-    framing: &Framing<f64>,
-) {
-    unsafe {
-        ffi::msdfgen_generateSDF_legacy(
-            output.as_raw_mut(),
-            shape.as_raw(),
-            framing.range,
-            framing.scale.as_raw(),
-            framing.translate.as_raw(),
-        )
+    /// Generate signed distance field for shape (legacy)
+    pub fn generate_sdf_legacy(
+        &self,
+        output: &mut Bitmap<Gray<f32>>,
+        framing: &Framing<f64>,
+    ) {
+        unsafe {
+            ffi::msdfgen_generateSDF_legacy(
+                output.as_raw_mut(),
+                self.as_raw(),
+                framing.range,
+                framing.scale.as_raw(),
+                framing.translate.as_raw(),
+            )
+        }
     }
-}
 
-/// Generate multi-channel signed distance field for shape
-pub fn generate_msdf(
-    output: &mut Bitmap<RGB<f32>>,
-    shape: &Shape,
-    framing: &Framing<f64>,
-    edge_threshold: f64,
-    overlap_support: bool,
-) {
-    unsafe {
-        ffi::msdfgen_generateMSDF(
-            output.as_raw_mut(),
-            shape.as_raw(),
-            framing.range,
-            framing.scale.as_raw(),
-            framing.translate.as_raw(),
-            edge_threshold,
-            overlap_support,
-        )
+    /// Generate multi-channel signed distance field for shape
+    pub fn generate_msdf(
+        &self,
+        output: &mut Bitmap<RGB<f32>>,
+        framing: &Framing<f64>,
+        edge_threshold: f64,
+        overlap_support: bool,
+    ) {
+        unsafe {
+            ffi::msdfgen_generateMSDF(
+                output.as_raw_mut(),
+                self.as_raw(),
+                framing.range,
+                framing.scale.as_raw(),
+                framing.translate.as_raw(),
+                edge_threshold,
+                overlap_support,
+            )
+        }
     }
-}
 
-/// Generate multi-channel signed distance field for shape (legacy)
-pub fn generate_msdf_legacy(
-    output: &mut Bitmap<RGB<f32>>,
-    shape: &Shape,
-    framing: &Framing<f64>,
-    edge_threshold: f64,
-) {
-    unsafe {
-        ffi::msdfgen_generateMSDF_legacy(
-            output.as_raw_mut(),
-            shape.as_raw(),
-            framing.range,
-            framing.scale.as_raw(),
-            framing.translate.as_raw(),
-            edge_threshold,
-        )
+    /// Generate multi-channel signed distance field for shape (legacy)
+    pub fn generate_msdf_legacy(
+        &self,
+        output: &mut Bitmap<RGB<f32>>,
+        framing: &Framing<f64>,
+        edge_threshold: f64,
+    ) {
+        unsafe {
+            ffi::msdfgen_generateMSDF_legacy(
+                output.as_raw_mut(),
+                self.as_raw(),
+                framing.range,
+                framing.scale.as_raw(),
+                framing.translate.as_raw(),
+                edge_threshold,
+            )
+        }
     }
 }
