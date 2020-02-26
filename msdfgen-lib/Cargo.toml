@@ -36,11 +36,11 @@ features = ["parallel"]
 # build and link shared library instead of static
 shared = []
 
-# link libstdc++ instead of libc++
-stdcxx = []
+# link libc++ instead of libstdc++
+libcxx = []
 
-# link shared libstdc++ or libc++
-stdcxx-shared = []
+# link static libstdc++/libc++
+stdcxx-static = []
 
 rustdoc = []
 

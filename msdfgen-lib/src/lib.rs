@@ -29,9 +29,9 @@ use msdfgen_lib as _;
 
 You can apply some customizations to library using those features:
 
-- __shared__ Force bundle shared (or dynamic) library instead of static
-- __stdcxx__ Link with _libstdc++_ instead of _libc++_
-- __stdcxx-shared__ Link with shared C++ stdlib instead of static
+- __shared__ Force bundle shared (or dynamic) library instead of static (default)
+- __libcxx__ Link with _libc++_ instead of _libstdc++_ (default)
+- __stdcxx-static__ Link with static C++ stdlib instead of shared (default)
 
  */
 

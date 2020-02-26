@@ -49,7 +49,6 @@ optional = true
 [dev-dependencies.msdfgen-lib]
 version = "0.1.0"
 path = "../msdfgen-lib"
-features = ["stdcxx", "stdcxx-shared"]
 
 [dev-dependencies.all_asserts]
 version = "^1"

@@ -78,6 +78,12 @@ mod utils {
         }
     }
 
+    pub fn lib_link<S: AsRef<str>>(name: S, shared: bool) {
+        println!("cargo:rustc-link-lib={}{}",
+                 if shared { "" } else { "static=" },
+                 name.as_ref());
+    }
+
     pub fn compile_library(src_dir: &Path, out_dir: &Path) {
         let lib_dir = out_dir;
         let lib_name = "msdfgen";
@@ -147,22 +153,9 @@ mod utils {
 
         println!("cargo:rustc-link-search=native={}", lib_dir.display());
 
-        #[cfg(feature = "shared")]
-        println!("cargo:rustc-link-lib={}", lib_name);
+        lib_link(lib_name, cfg!(feature = "shared"));
 
-        #[cfg(not(feature = "shared"))]
-        println!("cargo:rustc-link-lib=static={}", lib_name);
-
-        let stdcxx_lib_name = if cfg!(feature = "stdcxx") {
-            "stdc++"
-        } else {
-            "c++"
-        };
-
-        #[cfg(feature = "stdcxx-shared")]
-        println!("cargo:rustc-link-lib={}", stdcxx_lib_name);
-
-        #[cfg(not(feature = "stdcxx-shared"))]
-        println!("cargo:rustc-link-lib=static={}", stdcxx_lib_name);
+        lib_link(if cfg!(feature = "libcxx") { "c++" } else { "stdc++" },
+                 !cfg!(feature = "stdcxx-static"));
     }
 }
