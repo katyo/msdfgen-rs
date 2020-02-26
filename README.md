@@ -21,22 +21,42 @@
 ## Usage
 
 ```rust
-use msdfgen_lib; // forces linking with msdfgen library
+use msdfgen_lib as _; // forces linking with msdfgen library
+
 use std::fs::File;
-use material_icons::{Icon, icon_to_char, FONT};
+use notosans::REGULAR_TTF as FONT;
 use ttf_parser::Font;
-use msdfgen::{FontExt, Bitmap, generate_msdf, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
-let font = Font::from_data(&FONT, 0).unwrap();
-let chr = icon_to_char(Icon::Fingerprint);
-let glyph = font.glyph_index(chr).unwrap();
-let mut shape = font.glyph_shape(glyph).unwrap();
-let mut bitmap = Bitmap::new(32, 32);
+use msdfgen::{FontExt, Bitmap, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
-shape.edge_coloring_simple(3.0, 0);
+fn main() {
+    let font = Font::from_data(&FONT, 0).unwrap();
+    let glyph = font.glyph_index('A').unwrap();
+    let mut shape = font.glyph_shape(glyph).unwrap();
 
-generate_msdf(&mut bitmap, &shape, 4.0, 1.0, 0.0, EDGE_THRESHOLD, OVERLAP_SUPPORT);
+    if !shape.validate() {
+        panic!("Invalid shape");
+    }
+    shape.normalize();
 
-let mut output = File::create("fingerprint-msdf.png").unwrap();
-bitmap.write_png(&mut output).unwrap();
+    let bounds = shape.get_bounds();
+
+    let width = 32;
+    let height = 32;
+
+    let mut bitmap = Bitmap::new(width, height);
+
+    println!("bounds: {:?}", bounds);
+
+    shape.edge_coloring_simple(3.0, 0);
+
+    let framing = bounds.autoframe(width, height, Range::Px(4.0), None).unwrap();
+
+    println!("framing: {:?}", framing);
+
+    shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
+
+    let mut output = File::create("A-msdf.png").unwrap();
+    bitmap.write_png(&mut output).unwrap();
+}
 ```
