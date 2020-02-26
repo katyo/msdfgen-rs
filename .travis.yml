@@ -1,0 +1,33 @@
+language: rust
+rust:
+- stable
+- beta
+- nightly
+os:
+- linux
+- osx
+- windows
+cache:
+  cargo: true
+before_install:
+- |-
+    case $TRAVIS_OS_NAME in
+      windows)
+        choco upgrade --no-progress -y pkgconfiglite make
+        ;;
+    esac
+script:
+- (cd msdfgen-sys && cargo test --release)
+- (cd msdfgen-lib && cargo test --release)
+- (cd msdfgen && cargo test --release --features all)
+jobs:
+  allow_failures:
+  - rust: nightly
+  include:
+  - stage: publish
+    script:
+    - (cd msdfgen-sys && cargo publish || true)
+    - (cd msdfgen-lib && cargo publish || true)
+    - sleep 10
+    - (cd msdfgen && cargo publish || true)
+    if: (type = push) && (tag =~ /^\d+\.\d+\.\d+/)
