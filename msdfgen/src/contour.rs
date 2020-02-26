@@ -41,50 +41,41 @@ impl Contour {
     }
 
     /// Adjusts the bounding box to fit the contour.
-    pub fn bounds(&self) -> Bounds<f64> {
-        let mut left = core::mem::MaybeUninit::uninit();
-        let mut bottom = core::mem::MaybeUninit::uninit();
-        let mut right = core::mem::MaybeUninit::uninit();
-        let mut top = core::mem::MaybeUninit::uninit();
-
+    pub fn bounds(&self, bounds: &mut Bounds<f64>) {
         unsafe { self.raw.bounds(
-            left.as_mut_ptr(),
-            bottom.as_mut_ptr(),
-            right.as_mut_ptr(),
-            top.as_mut_ptr(),
+            &mut bounds.left,
+            &mut bounds.bottom,
+            &mut bounds.right,
+            &mut bounds.top,
         ) }
+    }
 
-        Bounds::new(
-            unsafe { left.assume_init() },
-            unsafe { bottom.assume_init() },
-            unsafe { right.assume_init() },
-            unsafe { top.assume_init() },
-        )
+    /// Gets the bounding box to fit the contour.
+    pub fn get_bounds(&self) -> Bounds<f64> {
+        let mut bounds = Bounds::default();
+        self.bounds(&mut bounds);
+        bounds
     }
 
     /// Adjusts the bounding box to fit the contour border's mitered corners.
-    pub fn miter_bounds(&self, border: f64, miter_limit: f64) -> Bounds<f64> {
-        let mut left = core::mem::MaybeUninit::uninit();
-        let mut bottom = core::mem::MaybeUninit::uninit();
-        let mut right = core::mem::MaybeUninit::uninit();
-        let mut top = core::mem::MaybeUninit::uninit();
-
+    pub fn miter_bounds(&self, bounds: &mut Bounds<f64>, border: f64, miter_limit: f64) {
         unsafe { self.raw.miterBounds(
-            left.as_mut_ptr(),
-            bottom.as_mut_ptr(),
-            right.as_mut_ptr(),
-            top.as_mut_ptr(),
+            &mut bounds.left,
+            &mut bounds.bottom,
+            &mut bounds.right,
+            &mut bounds.top,
             border,
             miter_limit,
         ) }
-
-        Bounds::new(
-            unsafe { left.assume_init() },
-            unsafe { bottom.assume_init() },
-            unsafe { right.assume_init() },
-            unsafe { top.assume_init() },
-        )
     }
+
+    /// Gets the bounding box to fit the contour border's mitered corners.
+    pub fn get_miter_bounds(&self, border: f64, miter_limit: f64) -> Bounds<f64> {
+        let mut bounds = Bounds::default();
+        self.miter_bounds(&mut bounds, border, miter_limit);
+        bounds
+    }
+
 
     /// Computes the winding of the contour. Returns 1 if positive, -1 if negative.
     pub fn winding(&self) -> i32 {
