@@ -44,7 +44,12 @@ mod test {
     }
 
     extern "C" {
+        #[cfg(not(target_vendor = "apple"))]
         #[link_name = "\u{1}_ZN7msdfgen14SignedDistance8INFINITEE"]
+        static msdfgen_SignedDistance_INFINITE: msdfgen_SignedDistance;
+
+        #[cfg(target_vendor = "apple")]
+        #[link_name = "\u{1}__ZN7msdfgen14SignedDistance8INFINITEE"]
         static msdfgen_SignedDistance_INFINITE: msdfgen_SignedDistance;
     }
 
