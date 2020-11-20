@@ -97,6 +97,8 @@ pub use self::interop::*;
 // or: cargo test --features "all" etc.
 #[cfg(test)]
 #[allow(dead_code)]
+#[allow(unused_imports)]
+#[allow(unused_variables)]
 mod test {
     use std::fs::File;
     #[cfg(feature = "ttf-parser")]
