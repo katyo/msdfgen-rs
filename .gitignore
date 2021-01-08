@@ -1,0 +1,4 @@
+# TODO: should Cargo.lock be checked in for this workspace?
+Cargo.lock
+target/
+msdfgen/*.png
