@@ -41,24 +41,24 @@ impl FontExt for font::Font {
     }
 }
 
-#[cfg(test)]
-mod test {
-    use font::Font;
-    use notosans::REGULAR_TTF;
-    use super::*;
+// #[cfg(test)]
+// mod test {
+//     use font::Font;
+//     use notosans::REGULAR_TTF;
+//     use super::*;
 
-    #[test]
-    fn glyph_shape() {
-        let font = Font::read(&mut std::io::Cursor::new(&REGULAR_TTF)).unwrap();
+//     #[test]
+//     fn glyph_shape() {
+//         let font = Font::read(&mut std::io::Cursor::new(&REGULAR_TTF)).unwrap();
 
-        let mut shapes = 0;
+//         let mut shapes = 0;
 
-        for glyph in "abcdefghABCDEFGH".chars() {
-            if let Some(_shape) = font.glyph_shape(glyph) {
-                shapes += 1;
-            }
-        }
+//         for glyph in "abcdefghABCDEFGH".chars() {
+//             if let Some(_shape) = font.glyph_shape(glyph) {
+//                 shapes += 1;
+//             }
+//         }
 
-        assert_eq!(shapes, 16);
-    }
-}
+//         assert_eq!(shapes, 16);
+//     }
+// }
