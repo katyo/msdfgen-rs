@@ -2,10 +2,10 @@ use freetype;
 use crate::{Shape, EdgeHolder, EdgeColor, Point2, FontExt};
 
 impl FontExt for freetype::face::Face {
-    type Glyph = usize;
+    type Glyph = u32;
 
     fn glyph_shape(&self, glyph: Self::Glyph) -> Option<Shape> {
-        self.load_char(glyph, freetype::face::LoadFlag::NO_SCALE).ok()?;
+        self.load_glyph(glyph, freetype::face::LoadFlag::NO_SCALE).ok()?;
         let glyph = self.glyph();
         let outline = glyph.outline()?;
 

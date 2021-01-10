@@ -39,7 +39,7 @@ version = "^0.6"
 optional = true
 
 [dependencies.freetype-rs]
-version = "^0.23"
+version = "^0.26"
 optional = true
 
 [dependencies.png]
@@ -65,6 +65,7 @@ version = "^0.1"
 [features]
 all = ["ttf-parser", "font", "freetype-rs", "png"]
 rustdoc = ["msdfgen-sys/rustdoc", "all"]
+default = ["ttf-parser", "freetype-rs", "png"]
 
 [package.metadata.docs.rs]
 features = ["rustdoc"]

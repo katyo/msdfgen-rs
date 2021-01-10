@@ -17,7 +17,7 @@
 
 ## Usage
 
-```no_run
+```ignore
 use msdfgen_lib; // forces linking with msdfgen library
 use std::fs::File;
 use notosans::REGULAR_TTF as FONT;
@@ -93,10 +93,18 @@ pub use self::correct::*;
 pub use self::render::*;
 pub use self::interop::*;
 
+// Run via: cargo test --features "png,ttf-parser"
+// or: cargo test --features "all" etc.
 #[cfg(test)]
+#[allow(dead_code)]
+#[allow(unused_imports)]
+#[allow(unused_variables)]
 mod test {
     use std::fs::File;
+    #[cfg(feature = "ttf-parser")]
     use ttf_parser::Font;
+    #[cfg(feature = "freetype-rs")]
+    use freetype as freetype_rs;
     use all_asserts::assert_lt;
 
     use notosans::REGULAR_TTF;
@@ -104,7 +112,9 @@ mod test {
 
     use crate::{FontExt, Bitmap, Range, Gray, FillRule, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
-    fn test_font_char(name: &str, font: &[u8], chr: char, width: u32, height: u32, expected_error: f64) {
+    #[cfg(feature = "ttf-parser")]
+    #[cfg(feature = "png")]
+    fn test_font_char_ttf_parser(name: &str, font: &[u8], chr: char, width: u32, height: u32, expected_error: f64) {
         let font = Font::from_data(font, 0).unwrap();
         let glyph = font.glyph_index(chr).unwrap();
         let mut shape = font.glyph_shape(glyph).unwrap();
@@ -134,15 +144,74 @@ mod test {
 
         bitmap.flip_y();
 
-        let mut output = File::create(&format!("{}-msdf.png", name)).unwrap();
+        let mut output = File::create(&format!("ttf-parser-{}-msdf.png", name)).unwrap();
         bitmap.write_png(&mut output).unwrap();
 
         let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
 
         bitmap.render(&mut preview, Default::default());
 
-        let mut output = File::create(&format!("{}-preview.png", name)).unwrap();
+        let mut output = File::create(&format!("ttf-parser-{}-preview.png", name)).unwrap();
         preview.write_png(&mut output).unwrap();
+    }
+
+    #[cfg(feature = "freetype-rs")]
+    #[cfg(feature = "png")]
+    fn test_font_char_freetype_rs(name: &str, font: &[u8], chr: char, width: u32, height: u32, expected_error: f64) -> freetype_rs::FtResult<()> {
+
+        let library = freetype_rs::Library::init()?;
+        let face = library.new_memory_face(font.to_vec(), 0)?;
+        face.set_pixel_sizes(width, height)?;
+        let glyph_index = face.get_char_index(chr as usize);
+        let mut shape = face.glyph_shape(glyph_index).unwrap();
+
+        if !shape.validate() {
+            panic!("Invalid shape");
+        }
+        shape.normalize();
+
+        let bounds = shape.get_bounds();
+
+        let mut bitmap = Bitmap::new(width, height);
+
+        println!("bounds: {:?}", bounds);
+
+        shape.edge_coloring_simple(3.0, 0);
+
+        let framing = bounds.autoframe(width, height, Range::Px(4.0), None).unwrap();
+
+        println!("framing: {:?}", framing);
+
+        shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
+        shape.correct_sign(&mut bitmap, &framing, FillRule::default());
+        let error = shape.estimate_error(&mut bitmap, &framing, 4, FillRule::default());
+
+        assert_lt!(error, expected_error);
+
+        bitmap.flip_y();
+
+        let mut output = File::create(&format!("freetype-{}-msdf.png", name)).unwrap();
+        bitmap.write_png(&mut output).unwrap();
+
+        let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
+
+        bitmap.render(&mut preview, Default::default());
+
+        let mut output = File::create(&format!("freetype-{}-preview.png", name)).unwrap();
+        preview.write_png(&mut output).unwrap();
+
+        Ok(())
+    }
+
+    fn test_font_char(name: &str, font: &[u8], chr: char, width: u32, height: u32, expected_error: f64) {
+
+        #[cfg(feature = "ttf-parser")]
+        #[cfg(feature = "png")]
+        test_font_char_ttf_parser(name, font, chr, width, height, expected_error);
+
+        #[cfg(feature = "freetype-rs")]
+        #[cfg(feature = "png")]
+        test_font_char_freetype_rs(name, font, chr, width, height, expected_error).unwrap();
     }
 
     #[test]
