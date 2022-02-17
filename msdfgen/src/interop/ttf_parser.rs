@@ -83,7 +83,7 @@ impl ttf_parser::OutlineBuilder for ShapeBuilder {
     }
 }
 
-impl<'a> FontExt for ttf_parser::Font<'a> {
+impl<'a> FontExt for ttf_parser::Face<'a> {
     type Glyph = ttf_parser::GlyphId;
 
     fn glyph_shape(&self, glyph: Self::Glyph) -> Option<Shape> {
