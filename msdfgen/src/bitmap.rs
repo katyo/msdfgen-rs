@@ -25,6 +25,8 @@ pub struct Bitmap<T> {
     height: u32,
 }
 
+unsafe impl<T> Send for Bitmap<T> {}
+
 impl<T> Bitmap<T> {
     /// Create new bitmap with specified size
     pub fn new(width: u32, height: u32) -> Self {
