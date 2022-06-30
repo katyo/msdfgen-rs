@@ -2,23 +2,20 @@
 with pkgs;
 let
   llvmPackages = llvmPackages_latest;
-  clang = llvmPackages.clang-polly-unwrapped;
+  clang = llvmPackages.clang;
   libclang = llvmPackages.libclang;
-  llvm = llvmPackages.llvm-polly;
+  llvm = llvmPackages.llvm;
 
   stdenv = llvmPackages.stdenv;
 
 in stdenv.mkDerivation {
   name = "msdfgen";
 
-  LIBCLANG_PATH = "${libclang}/lib";
+  LIBCLANG_PATH = lib.makeLibraryPath [ libclang ];
 
   nativeBuildInputs = [
     pkgconfig
     gdb
-    #clang
-    #llvm
-    #libclang
   ];
 
   buildInputs = [
@@ -30,7 +27,6 @@ in stdenv.mkDerivation {
     libssh
     libgit2
     freetype
-    freetype.dev
     fontconfig
   ];
 }
