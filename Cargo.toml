@@ -8,7 +8,7 @@ authors = ["K. <kayo@illumium.org>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/katyo/msdfgen-rs"
-edition = "2018"
+edition = "2021"
 
 [workspace]
 members = ["sys", "lib"]

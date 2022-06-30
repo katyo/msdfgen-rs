@@ -118,14 +118,12 @@ impl Bounds<f64> {
 
         if let Some(scale) = scale {
             res.translate = (frame / scale - dims) * 0.5 - Vector2::new(left, bottom);
+        } else if dims.x * frame.y < dims.y * frame.x {
+            res.translate.set(0.5 * (frame.x / frame.y * dims.y - dims.x) - left, -bottom);
+            res.scale = (frame.y / dims.y).into();
         } else {
-            if dims.x * frame.y < dims.y * frame.x {
-                res.translate.set(0.5 * (frame.x / frame.y * dims.y - dims.x) - left, -bottom);
-                res.scale = (frame.y / dims.y).into();
-            } else {
-                res.translate.set(-left, 0.5 * (frame.y / frame.x * dims.x - dims.y) - bottom);
-                res.scale = (frame.x / dims.x).into();
-            }
+            res.translate.set(-left, 0.5 * (frame.y / frame.x * dims.x - dims.y) - bottom);
+            res.scale = (frame.x / dims.x).into();
         }
 
         match range {

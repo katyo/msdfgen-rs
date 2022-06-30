@@ -1,5 +1,4 @@
 use super::{Bitmap, Gray, RGB};
-use png;
 use std::io::{Read, Write};
 
 pub trait PngColorType {

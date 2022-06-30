@@ -1,4 +1,3 @@
-use freetype;
 use crate::{Shape, EdgeHolder, EdgeColor, Point2, FontExt};
 
 impl FontExt for freetype::face::Face {

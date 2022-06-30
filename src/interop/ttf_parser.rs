@@ -1,5 +1,4 @@
 use crate::{Contour, EdgeColor, EdgeHolder, FontExt, Point2, Shape};
-use ttf_parser;
 
 #[derive(Default)]
 struct ContourBuilder {

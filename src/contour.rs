@@ -32,7 +32,7 @@ impl Contour {
 
     /// Creates a new edge in the contour and returns its reference.
     pub fn add_edge_mut(&mut self) -> &mut EdgeHolder {
-        unsafe { core::mem::transmute(self.raw.addEdge2()) }
+        unsafe { &mut *(self.raw.addEdge2() as *mut EdgeHolder) }
     }
 
     /// Adds segment as an edge to the contour.

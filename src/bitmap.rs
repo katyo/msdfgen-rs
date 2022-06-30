@@ -1,8 +1,8 @@
 mod gray;
 mod rgb;
 
-pub use self::gray::*;
-pub use self::rgb::*;
+pub use gray::*;
+pub use rgb::*;
 
 #[cfg(feature = "png")]
 mod png;

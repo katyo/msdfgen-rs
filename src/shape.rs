@@ -32,7 +32,7 @@ impl Shape {
 
     /// Adds a blank contour and returns its reference
     pub fn add_contour_mut(&mut self) -> &mut Contour {
-        unsafe { core::mem::transmute(self.raw.addContour2()) }
+        unsafe { &mut *(self.raw.addContour2() as *mut Contour) }
     }
 
     /// Normalizes the shape geometry for distance field generation
