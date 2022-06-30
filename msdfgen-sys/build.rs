@@ -7,26 +7,19 @@ mod source {
 fn main() {
     #[cfg(feature = "generate-bindings")]
     {
-        use std::{
-            env,
-            path::Path,
-        };
+        use std::{env, path::Path};
 
         let src = utils::Source::new(
             "msdfgen",
-            env::var("MSDFGEN_VERSION")
-                .unwrap_or(source::VERSION.into()),
-            env::var("MSDFGEN_URL")
-                .unwrap_or(source::URL.into()),
+            env::var("MSDFGEN_VERSION").unwrap_or(source::VERSION.into()),
+            env::var("MSDFGEN_URL").unwrap_or(source::URL.into()),
         );
 
-        let out_dir = env::var("OUT_DIR")
-            .expect("The OUT_DIR is set by cargo.");
+        let out_dir = env::var("OUT_DIR").expect("The OUT_DIR is set by cargo.");
 
         let out_dir = Path::new(&out_dir);
 
-        let src_dir = out_dir.join("source")
-            .join(&src.version);
+        let src_dir = out_dir.join("source").join(&src.version);
 
         utils::fetch_source(&src, &src_dir);
 
@@ -48,12 +41,22 @@ mod utils {
     }
 
     impl Source {
-        pub fn new(package: impl Into<String>, version: impl Into<String>, url: impl Into<String>) -> Self {
-            Self { package: package.into(), version: version.into(), url: url.into() }
+        pub fn new(
+            package: impl Into<String>,
+            version: impl Into<String>,
+            url: impl Into<String>,
+        ) -> Self {
+            Self {
+                package: package.into(),
+                version: version.into(),
+                url: url.into(),
+            }
         }
 
         pub fn url(&self) -> String {
-            self.url.replace("{package}", &self.package).replace("{version}", &self.version)
+            self.url
+                .replace("{package}", &self.package)
+                .replace("{version}", &self.version)
         }
     }
 
@@ -63,22 +66,22 @@ mod utils {
         if !out_dir.is_dir() {
             let src_url = src.url();
 
-            eprintln!("Fetch msdfgen from {} to {}",
-                      src_url, out_dir.display());
+            eprintln!("Fetch msdfgen from {} to {}", src_url, out_dir.display());
 
-            Fetch::from(src_url).unroll().strip_components(1).to(out_dir)
+            Fetch::from(src_url)
+                .unroll()
+                .strip_components(1)
+                .to(out_dir)
                 .expect("Msdfgen sources should be fetched.");
         }
     }
 
     pub fn generate_bindings(inc_dir: &Path, out_file: &Path) {
-        let target = std::env::var("TARGET")
-            .expect("TARGET is set by cargo.");
+        let target = std::env::var("TARGET").expect("TARGET is set by cargo.");
 
         let ctarget = into_c_target(&target);
 
-        let sysroot = detect_sysroot(&target)
-            .expect("Detect sysroot.");
+        let sysroot = detect_sysroot(&target).expect("Detect sysroot.");
 
         let stdlib = detect_stdlib(&target);
 
@@ -86,26 +89,35 @@ mod utils {
             .detect_include_paths(true)
             .clang_arg("-xc++")
             .clang_arg("-std=c++11")
-            .clang_args(stdlib.map_or_else(|| vec![], |stdlib| vec![format!("--stdlib={}", stdlib)]))
-            .clang_arg("-target").clang_arg(ctarget)
-            .clang_args(sysroot.map_or_else(|| vec![], |sysroot| vec!["-isysroot".into(), sysroot.display().to_string()]))
+            .clang_args(
+                stdlib.map_or_else(|| vec![], |stdlib| vec![format!("--stdlib={}", stdlib)]),
+            )
+            .clang_arg("-target")
+            .clang_arg(ctarget)
+            .clang_args(sysroot.map_or_else(
+                || vec![],
+                |sysroot| vec!["-isysroot".into(), sysroot.display().to_string()],
+            ))
             .clang_arg(format!("-I{}", inc_dir.display()))
             .clang_arg("-DMSDFGEN_USE_CPP11")
             .header(inc_dir.join("msdfgen.h").display().to_string())
-            .header(Path::new("src").join("msdfgen_extras.h").display().to_string())
+            .header(
+                Path::new("src")
+                    .join("msdfgen_extras.h")
+                    .display()
+                    .to_string(),
+            )
             .opaque_type("std::.*")
-            .whitelist_var("MSDFGEN_.*")
-            .whitelist_type("msdfgen::.*")
-            .whitelist_function("msdfgen::.*")
-            .blacklist_function("msdfgen::(read|write)ShapeDescription")
-            .blacklist_type("FILE")
-            .blacklist_type("_IO_.*")
+            .allowlist_var("MSDFGEN_.*")
+            .allowlist_type("msdfgen::.*")
+            .allowlist_function("msdfgen::.*")
+            .blocklist_function("msdfgen::(read|write)ShapeDescription")
+            .blocklist_type("FILE")
+            .blocklist_type("_IO_.*")
             .generate()
             .expect("Generated bindings.");
 
-        bindings
-            .write_to_file(out_file)
-            .expect("Written bindings.");
+        bindings.write_to_file(out_file).expect("Written bindings.");
     }
 
     fn into_c_target(target: &str) -> String {
@@ -148,11 +160,12 @@ mod utils {
 
             let raw_path = std::process::Command::new("xcrun")
                 .args(&["--sdk", sdk_name, "--show-sdk-path"])
-                .output().map_err(|err| err.to_string())?
+                .output()
+                .map_err(|err| err.to_string())?
                 .stdout;
 
-            let str_path = std::str::from_utf8(&raw_path)
-                .map_err(|_| "Invalid apple SDK path string")?;
+            let str_path =
+                std::str::from_utf8(&raw_path).map_err(|_| "Invalid apple SDK path string")?;
 
             Ok(Some(str_path.trim().into()))
         } else if target.contains("-android") {

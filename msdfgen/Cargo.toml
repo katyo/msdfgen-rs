@@ -27,23 +27,23 @@ version = "0.1.0"
 path = "../msdfgen-sys"
 
 [dependencies.ttf-parser]
-version = "^0.12.3"
+version = "0.15"
 optional = true
 
 [dependencies.font]
-version = "^0.3"
+version = "0.4"
 optional = true
 
 [dependencies.fonterator]
-version = "^0.6"
+version = "0.9"
 optional = true
 
 [dependencies.freetype-rs]
-version = "^0.26"
+version = "0.30"
 optional = true
 
 [dependencies.png]
-version = "^0.15"
+version = "0.17"
 optional = true
 
 [dev-dependencies.msdfgen-lib]
@@ -51,16 +51,16 @@ version = "0.1.0"
 path = "../msdfgen-lib"
 
 [dev-dependencies.all_asserts]
-version = "^1"
+version = "2"
 
 [dev-dependencies.ttf-parser]
-version = "^0.4"
+version = "0.15"
 
 [dev-dependencies.notosans]
-version = "^0.1"
+version = "0.1"
 
 [dev-dependencies.material-icons]
-version = "^0.1"
+version = "0.2"
 
 [features]
 all = ["ttf-parser", "font", "freetype-rs", "png"]

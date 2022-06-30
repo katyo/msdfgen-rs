@@ -23,11 +23,11 @@ repository = "katyo/msdfgen-rs"
 status = "passively-maintained"
 
 [build-dependencies.fetch_unroll]
-version = "^0.2"
+version = "0.3"
 optional = true
 
 [build-dependencies.bindgen]
-version = "0.53"
+version = "0.60"
 optional = true
 
 [features]

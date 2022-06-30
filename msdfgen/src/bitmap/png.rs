@@ -1,6 +1,6 @@
-use std::io::{Read, Write};
-use png;
 use super::{Bitmap, Gray, RGB};
+use png;
+use std::io::{Read, Write};
 
 pub trait PngColorType {
     type PngPixelType;
@@ -14,7 +14,7 @@ impl<T> PngColorType for Gray<T> {
 
 impl<T> PngColorType for RGB<T> {
     type PngPixelType = RGB<u8>;
-    const PNG_COLOR_TYPE: png::ColorType = png::ColorType::RGB;
+    const PNG_COLOR_TYPE: png::ColorType = png::ColorType::Rgb;
 }
 
 impl<T> Bitmap<T>
@@ -24,9 +24,7 @@ where
 {
     /// Save bitmap as png
     pub fn write_png(&self, writer: impl Write) -> Result<(), png::EncodingError> {
-        let mut encoder = png::Encoder::new(
-            writer, self.width(), self.height(),
-        );
+        let mut encoder = png::Encoder::new(writer, self.width(), self.height());
 
         encoder.set_color(T::PNG_COLOR_TYPE);
         encoder.set_depth(png::BitDepth::Eight);
@@ -47,8 +45,10 @@ where
     /// Load bitmap from png
     pub fn read_png(reader: impl Read) -> Result<Bitmap<T>, png::DecodingError> {
         let decoder = png::Decoder::new(reader);
-        let (info, mut reader) = decoder.read_info()?;
+        let mut reader = decoder.read_info()?;
+        let info = reader.info();
 
+        /*
         if info.bit_depth != png::BitDepth::Eight {
             return Err(png::DecodingError::Other("Bit depth should be 8".into()));
         }
@@ -56,6 +56,7 @@ where
         if info.color_type != T::PNG_COLOR_TYPE {
             return Err(png::DecodingError::Other("Color type mismatch".into()));
         }
+        */
 
         let mut bitmap = Bitmap::<T::PngPixelType>::new(info.width, info.height);
 

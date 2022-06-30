@@ -23,13 +23,10 @@ repository = "katyo/msdfgen-rs"
 status = "passively-maintained"
 
 [build-dependencies.fetch_unroll]
-version = "^0.2"
-
-#[build-dependencies.cmake]
-#version = "^0.1"
+version = "0.3"
 
 [build-dependencies.cc]
-version = "^1"
+version = "1"
 features = ["parallel"]
 
 [features]

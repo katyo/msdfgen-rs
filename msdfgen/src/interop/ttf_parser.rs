@@ -1,5 +1,5 @@
+use crate::{Contour, EdgeColor, EdgeHolder, FontExt, Point2, Shape};
 use ttf_parser;
-use crate::{Shape, Contour, EdgeHolder, EdgeColor, Point2, FontExt};
 
 #[derive(Default)]
 struct ContourBuilder {
@@ -17,14 +17,23 @@ impl ContourBuilder {
 
     pub fn line_to(&mut self, x: f64, y: f64) {
         let point = Point2::new(x, y);
-        self.contour.add_edge(&EdgeHolder::new_linear(self.point, point, EdgeColor::default()));
+        self.contour.add_edge(&EdgeHolder::new_linear(
+            self.point,
+            point,
+            EdgeColor::default(),
+        ));
         self.point = point;
     }
 
     pub fn quad_to(&mut self, cx: f64, cy: f64, x: f64, y: f64) {
         let cpoint = Point2::new(cx, cy);
         let point = Point2::new(x, y);
-        self.contour.add_edge(&EdgeHolder::new_quadratic(self.point, cpoint, point, EdgeColor::default()));
+        self.contour.add_edge(&EdgeHolder::new_quadratic(
+            self.point,
+            cpoint,
+            point,
+            EdgeColor::default(),
+        ));
         self.point = point;
     }
 
@@ -32,7 +41,13 @@ impl ContourBuilder {
         let c1point = Point2::new(c1x, c1y);
         let c2point = Point2::new(c2x, c2y);
         let point = Point2::new(x, y);
-        self.contour.add_edge(&EdgeHolder::new_cubic(self.point, c1point, c2point, point, EdgeColor::default()));
+        self.contour.add_edge(&EdgeHolder::new_cubic(
+            self.point,
+            c1point,
+            c2point,
+            point,
+            EdgeColor::default(),
+        ));
         self.point = point;
     }
 
@@ -63,23 +78,29 @@ impl ttf_parser::OutlineBuilder for ShapeBuilder {
     }
 
     fn line_to(&mut self, x: f32, y: f32) {
-        self.contour.as_mut().expect("Opened contour")
+        self.contour
+            .as_mut()
+            .expect("Opened contour")
             .line_to(x as _, y as _);
     }
 
     fn quad_to(&mut self, x1: f32, y1: f32, x: f32, y: f32) {
-        self.contour.as_mut().expect("Opened contour")
+        self.contour
+            .as_mut()
+            .expect("Opened contour")
             .quad_to(x1 as _, y1 as _, x as _, y as _);
     }
 
     fn curve_to(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, x: f32, y: f32) {
-        self.contour.as_mut().expect("Opened contour")
+        self.contour
+            .as_mut()
+            .expect("Opened contour")
             .curve_to(x1 as _, y1 as _, x2 as _, y2 as _, x as _, y as _);
     }
 
     fn close(&mut self) {
-        self.shape.add_contour(&self.contour.take()
-                               .expect("Opened contour").close());
+        self.shape
+            .add_contour(&self.contour.take().expect("Opened contour").close());
     }
 }
 
@@ -97,13 +118,13 @@ impl<'a> FontExt for ttf_parser::Face<'a> {
 
 #[cfg(test)]
 mod test {
-    use ttf_parser::{Font, GlyphId};
-    use notosans::REGULAR_TTF;
     use super::*;
+    use notosans::REGULAR_TTF;
+    use ttf_parser::{Face, GlyphId};
 
     #[test]
     fn glyph_shape() {
-        let font = Font::from_data(&REGULAR_TTF, 0).unwrap();
+        let font = Face::from_slice(&REGULAR_TTF, 0).unwrap();
 
         let mut shapes = 0;
 

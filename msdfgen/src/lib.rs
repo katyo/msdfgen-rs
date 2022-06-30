@@ -21,10 +21,10 @@
 use msdfgen_lib; // forces linking with msdfgen library
 use std::fs::File;
 use notosans::REGULAR_TTF as FONT;
-use ttf_parser::Font;
+use ttf_parser::Face;
 use msdfgen::{FontExt, Bitmap, Gray, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
-let font = Font::from_data(&FONT, 0).unwrap();
+let font = Face::from_slice(&FONT, 0).unwrap();
 
 let glyph = font.glyph_index('A').unwrap();
 
@@ -62,36 +62,36 @@ preview.write_png(&mut output).unwrap();
 ```
  */
 
-mod vector;
 mod bitmap;
 mod bounds;
-mod segment;
-mod edge;
 mod contour;
-mod scanline;
-mod shape;
-mod generate;
 mod correct;
-mod render;
+mod edge;
+mod generate;
 mod interop;
+mod render;
+mod scanline;
+mod segment;
+mod shape;
+mod vector;
 
 #[cfg(test)]
 use msdfgen_lib as _;
 
 pub(crate) use msdfgen_sys as ffi;
 
-pub use self::vector::*;
 pub use self::bitmap::*;
 pub use self::bounds::*;
-pub use self::segment::*;
-pub use self::edge::*;
 pub use self::contour::*;
-pub use self::scanline::*;
-pub use self::shape::*;
-pub use self::generate::*;
 pub use self::correct::*;
-pub use self::render::*;
+pub use self::edge::*;
+pub use self::generate::*;
 pub use self::interop::*;
+pub use self::render::*;
+pub use self::scanline::*;
+pub use self::segment::*;
+pub use self::shape::*;
+pub use self::vector::*;
 
 // Run via: cargo test --features "png,ttf-parser"
 // or: cargo test --features "all" etc.
@@ -100,22 +100,29 @@ pub use self::interop::*;
 #[allow(unused_imports)]
 #[allow(unused_variables)]
 mod test {
-    use std::fs::File;
-    #[cfg(feature = "ttf-parser")]
-    use ttf_parser::Font;
+    use all_asserts::assert_lt;
     #[cfg(feature = "freetype-rs")]
     use freetype as freetype_rs;
-    use all_asserts::assert_lt;
+    use std::fs::File;
+    #[cfg(feature = "ttf-parser")]
+    use ttf_parser::Face;
 
+    use material_icons::{icon_to_char, Icon, FONT};
     use notosans::REGULAR_TTF;
-    use material_icons::{Icon, icon_to_char, FONT};
 
-    use crate::{FontExt, Bitmap, Range, Gray, FillRule, EDGE_THRESHOLD, OVERLAP_SUPPORT};
+    use crate::{Bitmap, FillRule, FontExt, Gray, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
 
     #[cfg(feature = "ttf-parser")]
     #[cfg(feature = "png")]
-    fn test_font_char_ttf_parser(name: &str, font: &[u8], chr: char, width: u32, height: u32, expected_error: f64) {
-        let font = Font::from_data(font, 0).unwrap();
+    fn test_font_char_ttf_parser(
+        name: &str,
+        font: &[u8],
+        chr: char,
+        width: u32,
+        height: u32,
+        expected_error: f64,
+    ) {
+        let font = Face::from_slice(font, 0).unwrap();
         let glyph = font.glyph_index(chr).unwrap();
         let mut shape = font.glyph_shape(glyph).unwrap();
 
@@ -132,7 +139,9 @@ mod test {
 
         shape.edge_coloring_simple(3.0, 0);
 
-        let framing = bounds.autoframe(width, height, Range::Px(4.0), None).unwrap();
+        let framing = bounds
+            .autoframe(width, height, Range::Px(4.0), None)
+            .unwrap();
 
         println!("framing: {:?}", framing);
 
@@ -157,8 +166,14 @@ mod test {
 
     #[cfg(feature = "freetype-rs")]
     #[cfg(feature = "png")]
-    fn test_font_char_freetype_rs(name: &str, font: &[u8], chr: char, width: u32, height: u32, expected_error: f64) -> freetype_rs::FtResult<()> {
-
+    fn test_font_char_freetype_rs(
+        name: &str,
+        font: &[u8],
+        chr: char,
+        width: u32,
+        height: u32,
+        expected_error: f64,
+    ) -> freetype_rs::FtResult<()> {
         let library = freetype_rs::Library::init()?;
         let face = library.new_memory_face(font.to_vec(), 0)?;
         face.set_pixel_sizes(width, height)?;
@@ -178,7 +193,9 @@ mod test {
 
         shape.edge_coloring_simple(3.0, 0);
 
-        let framing = bounds.autoframe(width, height, Range::Px(4.0), None).unwrap();
+        let framing = bounds
+            .autoframe(width, height, Range::Px(4.0), None)
+            .unwrap();
 
         println!("framing: {:?}", framing);
 
@@ -203,8 +220,14 @@ mod test {
         Ok(())
     }
 
-    fn test_font_char(name: &str, font: &[u8], chr: char, width: u32, height: u32, expected_error: f64) {
-
+    fn test_font_char(
+        name: &str,
+        font: &[u8],
+        chr: char,
+        width: u32,
+        height: u32,
+        expected_error: f64,
+    ) {
         #[cfg(feature = "ttf-parser")]
         #[cfg(feature = "png")]
         test_font_char_ttf_parser(name, font, chr, width, height, expected_error);
@@ -221,6 +244,13 @@ mod test {
 
     #[test]
     fn test_material_icon_fingerprint() {
-        test_font_char("fingerprint", &FONT, icon_to_char(Icon::Fingerprint), 64, 64, 0.0015);
+        test_font_char(
+            "fingerprint",
+            &FONT,
+            icon_to_char(Icon::Fingerprint),
+            64,
+            64,
+            0.0015,
+        );
     }
 }
