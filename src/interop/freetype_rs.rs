@@ -1,10 +1,11 @@
-use crate::{Shape, EdgeHolder, EdgeColor, Point2, FontExt};
+use crate::{EdgeColor, EdgeHolder, FontExt, Point2, Shape};
 
 impl FontExt for freetype::face::Face {
     type Glyph = u32;
 
     fn glyph_shape(&self, glyph: Self::Glyph) -> Option<Shape> {
-        self.load_glyph(glyph, freetype::face::LoadFlag::NO_SCALE).ok()?;
+        self.load_glyph(glyph, freetype::face::LoadFlag::NO_SCALE)
+            .ok()?;
         let glyph = self.glyph();
         let outline = glyph.outline()?;
 
@@ -19,22 +20,37 @@ impl FontExt for freetype::face::Face {
                 match curve {
                     freetype::outline::Curve::Line(p) => {
                         let point = Point2::new(p.x as f64, p.y as f64);
-                        last_contour.add_edge(&EdgeHolder::new_linear(last_point, point, EdgeColor::default()));
+                        last_contour.add_edge(&EdgeHolder::new_linear(
+                            last_point,
+                            point,
+                            EdgeColor::default(),
+                        ));
                         last_point = point;
-                    },
+                    }
                     freetype::outline::Curve::Bezier2(c, p) => {
                         let cpoint = Point2::new(c.x as f64, c.y as f64);
                         let point = Point2::new(p.x as f64, p.y as f64);
-                        last_contour.add_edge(&EdgeHolder::new_quadratic(last_point, cpoint, point, EdgeColor::default()));
+                        last_contour.add_edge(&EdgeHolder::new_quadratic(
+                            last_point,
+                            cpoint,
+                            point,
+                            EdgeColor::default(),
+                        ));
                         last_point = point;
-                    },
+                    }
                     freetype::outline::Curve::Bezier3(c1, c2, p) => {
                         let c1point = Point2::new(c1.x as f64, c1.y as f64);
                         let c2point = Point2::new(c2.x as f64, c2.y as f64);
                         let point = Point2::new(p.x as f64, p.y as f64);
-                        last_contour.add_edge(&EdgeHolder::new_cubic(last_point, c1point, c2point, point, EdgeColor::default()));
+                        last_contour.add_edge(&EdgeHolder::new_cubic(
+                            last_point,
+                            c1point,
+                            c2point,
+                            point,
+                            EdgeColor::default(),
+                        ));
                         last_point = point;
-                    },
+                    }
                 }
             }
         }

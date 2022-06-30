@@ -11,10 +11,7 @@ repository = "https://github.com/katyo/msdfgen-rs"
 edition = "2021"
 
 [workspace]
-members = ["sys", "lib"]
-
-[badges.travis-ci]
-repository = "katyo/msdfgen-rs"
+members = ["sys"]
 
 [badges.is-it-maintained-issue-resolution]
 repository = "katyo/msdfgen-rs"
@@ -49,10 +46,6 @@ optional = true
 version = "0.17"
 optional = true
 
-[dev-dependencies.msdfgen-lib]
-version = "0.2.0"
-path = "lib"
-
 [dev-dependencies.all_asserts]
 version = "2"
 
@@ -66,9 +59,24 @@ version = "0.1"
 version = "0.2"
 
 [features]
-all = ["ttf-parser", "font", "freetype-rs", "png"]
-rustdoc = ["msdfgen-sys/rustdoc", "all"]
 default = ["ttf-parser", "freetype-rs", "png"]
+all = ["default", "font"]
+rustdoc = ["msdfgen-sys/rustdoc", "all"]
+
+# generate bindings when build
+bindgen = ["msdfgen-sys/bindgen"]
+
+# build and link shared library
+#shared = ["msdfgen-sys/shared"]
+
+# build and link static library
+#static = ["msdfgen-sys/static"]
+
+# link libc++ instead of libstdc++
+#libcxx = ["msdfgen-sys/libcxx"]
+
+# link static libstdc++/libc++
+#stdcxx-static = ["msdfgen-sys/stdcxx-static"]
 
 [package.metadata.docs.rs]
 features = ["rustdoc"]

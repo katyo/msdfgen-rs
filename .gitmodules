@@ -1,0 +1,3 @@
+[submodule "sys/lib"]
+	path = sys/lib
+	url = ../../Chlumsky/msdfgen

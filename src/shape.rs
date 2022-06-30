@@ -1,4 +1,4 @@
-use crate::{ffi, Bounds, Contour, Scanline};
+use crate::{ffi, Bound, Contour, Polarity, Scanline};
 
 /// Shape object
 #[repr(transparent)]
@@ -37,7 +37,9 @@ impl Shape {
 
     /// Normalizes the shape geometry for distance field generation
     pub fn normalize(&mut self) {
-        unsafe { self.raw.normalize(); }
+        unsafe {
+            self.raw.normalize();
+        }
     }
 
     /// Performs basic checks to determine if the object represents a valid shape
@@ -46,56 +48,70 @@ impl Shape {
     }
 
     /// Adjusts the bounding box to fit the shape
-    pub fn bounds(&self, bounds: &mut Bounds<f64>) {
-        unsafe { self.raw.bounds(
-            &mut bounds.left,
-            &mut bounds.bottom,
-            &mut bounds.right,
-            &mut bounds.top,
-        ) }
+    pub fn bound(&self, bound: &mut Bound<f64>) {
+        unsafe {
+            self.raw.bound(
+                &mut bound.left,
+                &mut bound.bottom,
+                &mut bound.right,
+                &mut bound.top,
+            )
+        }
     }
 
     /// Gets the bounding box to fit the shape
-    pub fn get_bounds(&self) -> Bounds<f64> {
-        let mut bounds = Bounds::default();
-        self.bounds(&mut bounds);
-        bounds
+    pub fn get_bound(&self) -> Bound<f64> {
+        let mut bound = Bound::default();
+        self.bound(&mut bound);
+        bound
     }
 
     /// Adjusts the bounding box to fit the shape border's mitered corners
-    pub fn miter_bounds(&self, bounds: &mut Bounds<f64>, border: f64, miter_limit: f64) {
-        unsafe { self.raw.miterBounds(
-            &mut bounds.left,
-            &mut bounds.bottom,
-            &mut bounds.right,
-            &mut bounds.top,
-            border,
-            miter_limit,
-        ) }
+    pub fn bound_miters(
+        &self,
+        bounds: &mut Bound<f64>,
+        border: f64,
+        miter_limit: f64,
+        polarity: Polarity,
+    ) {
+        unsafe {
+            self.raw.boundMiters(
+                &mut bounds.left,
+                &mut bounds.bottom,
+                &mut bounds.right,
+                &mut bounds.top,
+                border,
+                miter_limit,
+                polarity as _,
+            )
+        }
     }
 
     /// Gets the bounding box to fit the shape border's mitered corners
-    pub fn get_miter_bounds(&self, border: f64, miter_limit: f64) -> Bounds<f64> {
-        let mut bounds = Bounds::default();
-        self.miter_bounds(&mut bounds, border, miter_limit);
-        bounds
+    pub fn get_bound_miters(
+        &self,
+        border: f64,
+        miter_limit: f64,
+        polarity: Polarity,
+    ) -> Bound<f64> {
+        let mut bound = Bound::default();
+        self.bound_miters(&mut bound, border, miter_limit, polarity);
+        bound
     }
 
     /// Outputs the scanline that intersects the shape at y
     pub fn scanline(&self, y: f64) -> Scanline {
         let mut scanline = Scanline::default();
 
-        unsafe { self.raw.scanline(scanline.as_raw_mut(), y); }
+        unsafe {
+            self.raw.scanline(scanline.as_raw_mut(), y);
+        }
 
         scanline
     }
 
     /// Assigns colors to edges of the shape in accordance to the multi-channel distance field technique. May split some edges if necessary. angleThreshold specifies the maximum angle (in radians) to be considered a corner, for example 3 (~172 degrees). Values below 1/2 PI will be treated as the external angle.
     pub fn edge_coloring_simple(&mut self, angle_threshold: f64, seed: u64) {
-        unsafe { ffi::msdfgen_edgeColoringSimple(
-            &mut self.raw,
-            angle_threshold,
-            seed,
-        ) }
+        unsafe { ffi::msdfgen_edgeColoringSimple(&mut self.raw, angle_threshold, seed) }
     }
 }

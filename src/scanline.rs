@@ -56,8 +56,11 @@ impl Scanline {
     pub fn overlap(a: &Scanline, b: &Scanline, x_from: f64, x_to: f64, fill_rule: FillRule) -> f64 {
         unsafe {
             ffi::msdfgen_Scanline::overlap(
-                a.as_raw(), b.as_raw(),
-                x_from, x_to, fill_rule.into_raw(),
+                a.as_raw(),
+                b.as_raw(),
+                x_from,
+                x_to,
+                fill_rule.into_raw(),
             )
         }
     }

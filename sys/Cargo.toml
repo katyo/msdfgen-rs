@@ -10,9 +10,6 @@ readme = "README.md"
 repository = "https://github.com/katyo/msdfgen-rs"
 edition = "2021"
 
-[badges.travis-ci]
-repository = "katyo/msdfgen-rs"
-
 [badges.is-it-maintained-issue-resolution]
 repository = "katyo/msdfgen-rs"
 
@@ -22,16 +19,31 @@ repository = "katyo/msdfgen-rs"
 [badges.maintenance]
 status = "passively-maintained"
 
-[build-dependencies.fetch_unroll]
-version = "0.3"
-optional = true
-
 [build-dependencies.bindgen]
 version = "0.60"
 optional = true
 
+[build-dependencies.cc]
+version = "1"
+features = ["parallel"]
+
 [features]
-generate-bindings = ["fetch_unroll", "bindgen"]
+update-bindings = ["bindgen"]
+
+#builtin = []
+
+# build and link shared library
+shared = []
+
+# build and link static library
+static = []
+
+# link libc++ instead of libstdc++
+libcxx = []
+
+# link static libstdc++/libc++
+stdcxx-static = []
+
 rustdoc = []
 
 [package.metadata.docs.rs]

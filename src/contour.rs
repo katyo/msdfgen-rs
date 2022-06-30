@@ -1,4 +1,4 @@
-use crate::{ffi, EdgeHolder, EdgeSegment, Bounds};
+use crate::{ffi, Bound, EdgeHolder, EdgeSegment, Polarity};
 
 /// Contour object
 #[repr(transparent)]
@@ -16,7 +16,9 @@ impl Default for Contour {
 
 impl Drop for Contour {
     fn drop(&mut self) {
-        unsafe { ffi::msdfgen_Contour_destructor(&mut self.raw); }
+        unsafe {
+            ffi::msdfgen_Contour_destructor(&mut self.raw);
+        }
     }
 }
 
@@ -41,41 +43,56 @@ impl Contour {
     }
 
     /// Adjusts the bounding box to fit the contour.
-    pub fn bounds(&self, bounds: &mut Bounds<f64>) {
-        unsafe { self.raw.bounds(
-            &mut bounds.left,
-            &mut bounds.bottom,
-            &mut bounds.right,
-            &mut bounds.top,
-        ) }
+    pub fn bound(&self, bound: &mut Bound<f64>) {
+        unsafe {
+            self.raw.bound(
+                &mut bound.left,
+                &mut bound.bottom,
+                &mut bound.right,
+                &mut bound.top,
+            )
+        }
     }
 
     /// Gets the bounding box to fit the contour.
-    pub fn get_bounds(&self) -> Bounds<f64> {
-        let mut bounds = Bounds::default();
-        self.bounds(&mut bounds);
-        bounds
+    pub fn get_bound(&self) -> Bound<f64> {
+        let mut bound = Bound::default();
+        self.bound(&mut bound);
+        bound
     }
 
     /// Adjusts the bounding box to fit the contour border's mitered corners.
-    pub fn miter_bounds(&self, bounds: &mut Bounds<f64>, border: f64, miter_limit: f64) {
-        unsafe { self.raw.miterBounds(
-            &mut bounds.left,
-            &mut bounds.bottom,
-            &mut bounds.right,
-            &mut bounds.top,
-            border,
-            miter_limit,
-        ) }
+    pub fn bound_miters(
+        &self,
+        bound: &mut Bound<f64>,
+        border: f64,
+        miter_limit: f64,
+        polarity: Polarity,
+    ) {
+        unsafe {
+            self.raw.boundMiters(
+                &mut bound.left,
+                &mut bound.bottom,
+                &mut bound.right,
+                &mut bound.top,
+                border,
+                miter_limit,
+                polarity as _,
+            )
+        }
     }
 
     /// Gets the bounding box to fit the contour border's mitered corners.
-    pub fn get_miter_bounds(&self, border: f64, miter_limit: f64) -> Bounds<f64> {
-        let mut bounds = Bounds::default();
-        self.miter_bounds(&mut bounds, border, miter_limit);
-        bounds
+    pub fn get_bound_miters(
+        &self,
+        border: f64,
+        miter_limit: f64,
+        polarity: Polarity,
+    ) -> Bound<f64> {
+        let mut bound = Bound::default();
+        self.bound_miters(&mut bound, border, miter_limit, polarity);
+        bound
     }
-
 
     /// Computes the winding of the contour. Returns 1 if positive, -1 if negative.
     pub fn winding(&self) -> i32 {

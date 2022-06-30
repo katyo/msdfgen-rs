@@ -39,17 +39,11 @@ impl Pixel for RGB<f32> {
     type Component = f32;
 
     fn components(&self) -> &[Self::Component] {
-        unsafe { core::slice::from_raw_parts(
-            &self.r,
-            3,
-        ) }
+        unsafe { core::slice::from_raw_parts(&self.r, 3) }
     }
 
     fn components_mut(&mut self) -> &mut [Self::Component] {
-        unsafe { core::slice::from_raw_parts_mut(
-            &mut self.r,
-            3,
-        ) }
+        unsafe { core::slice::from_raw_parts_mut(&mut self.r, 3) }
     }
 
     fn invert(&mut self) {
@@ -63,17 +57,11 @@ impl Pixel for RGB<u8> {
     type Component = u8;
 
     fn components(&self) -> &[Self::Component] {
-        unsafe { core::slice::from_raw_parts(
-            &self.r,
-            3,
-        ) }
+        unsafe { core::slice::from_raw_parts(&self.r, 3) }
     }
 
     fn components_mut(&mut self) -> &mut [Self::Component] {
-        unsafe { core::slice::from_raw_parts_mut(
-            &mut self.r,
-            3,
-        ) }
+        unsafe { core::slice::from_raw_parts_mut(&mut self.r, 3) }
     }
 
     fn invert(&mut self) {

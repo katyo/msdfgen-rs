@@ -18,7 +18,6 @@
 ## Usage
 
 ```ignore
-use msdfgen_lib; // forces linking with msdfgen library
 use std::fs::File;
 use notosans::REGULAR_TTF as FONT;
 use ttf_parser::Face;
@@ -33,8 +32,8 @@ let mut shape = font.glyph_shape(glyph).unwrap();
 let width = 32;
 let height = 32;
 
-let bounds = shape.get_bounds();
-let framing = bounds.autoframe(width, height, Range::Px(4.0), None).unwrap();
+let bound = shape.get_bound();
+let framing = bound.autoframe(width, height, Range::Px(4.0), None).unwrap();
 
 let mut bitmap = Bitmap::new(width, height);
 
@@ -63,30 +62,31 @@ preview.write_png(&mut output).unwrap();
  */
 
 mod bitmap;
-mod bounds;
+mod bound;
+mod config;
 mod contour;
 mod correct;
 mod edge;
 mod generate;
 mod interop;
+mod polarity;
 mod render;
 mod scanline;
 mod segment;
 mod shape;
 mod vector;
 
-#[cfg(test)]
-use msdfgen_lib as _;
-
 pub(crate) use msdfgen_sys as ffi;
 
 pub use bitmap::*;
-pub use bounds::*;
+pub use bound::*;
+pub use config::*;
 pub use contour::*;
 pub use correct::*;
 pub use edge::*;
 pub use generate::*;
 pub use interop::*;
+pub use polarity::*;
 pub use render::*;
 pub use scanline::*;
 pub use segment::*;
@@ -110,7 +110,63 @@ mod test {
     use material_icons::{icon_to_char, Icon, FONT};
     use notosans::REGULAR_TTF;
 
-    use crate::{Bitmap, FillRule, FontExt, Gray, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
+    use crate::{
+        Bitmap, ErrorCorrectionConfig, FillRule, FontExt, Gray, Range, MID_VALUE, OVERLAP_SUPPORT, Shape,
+    };
+
+    #[cfg(any(feature = "ttf-parser", feature = "freetype-rs"))]
+    #[cfg(feature = "png")]
+    fn test_font_shape(
+        pfx: &str,
+        name: &str,
+        mut shape: Shape,
+        width: u32,
+        height: u32,
+        expected_error: f64,
+    ) {
+        if !shape.validate() {
+            panic!("Invalid shape");
+        }
+        shape.normalize();
+
+        let bound = shape.get_bound();
+
+        let mut bitmap = Bitmap::new(width, height);
+
+        println!("bound: {:?}", bound);
+
+        shape.edge_coloring_simple(3.0, 0);
+
+        let framing = bound
+            .autoframe(width, height, Range::Px(4.0), None)
+            .unwrap();
+
+        println!("framing: {:?}", framing);
+
+        let config = ErrorCorrectionConfig::default();
+
+        shape.generate_msdf(&mut bitmap, &framing, &config, OVERLAP_SUPPORT);
+        shape.correct_sign(&mut bitmap, &framing, FillRule::default());
+        let error = shape.estimate_error(&mut bitmap, &framing, 4, FillRule::default());
+
+        bitmap.flip_y();
+
+        let mut output = File::create(&format!("{}-{}-msdf.png", pfx, name)).unwrap();
+        bitmap.write_png(&mut output).unwrap();
+
+        drop(output);
+
+        let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
+
+        bitmap.render(&mut preview, Default::default(), MID_VALUE);
+
+        let mut output = File::create(&format!("{}-{}-preview.png", pfx, name)).unwrap();
+        preview.write_png(&mut output).unwrap();
+
+        drop(output);
+
+        assert_lt!(error, expected_error);
+    }
 
     #[cfg(feature = "ttf-parser")]
     #[cfg(feature = "png")]
@@ -124,44 +180,9 @@ mod test {
     ) {
         let font = Face::from_slice(font, 0).unwrap();
         let glyph = font.glyph_index(chr).unwrap();
-        let mut shape = font.glyph_shape(glyph).unwrap();
+        let shape = font.glyph_shape(glyph).unwrap();
 
-        if !shape.validate() {
-            panic!("Invalid shape");
-        }
-        shape.normalize();
-
-        let bounds = shape.get_bounds();
-
-        let mut bitmap = Bitmap::new(width, height);
-
-        println!("bounds: {:?}", bounds);
-
-        shape.edge_coloring_simple(3.0, 0);
-
-        let framing = bounds
-            .autoframe(width, height, Range::Px(4.0), None)
-            .unwrap();
-
-        println!("framing: {:?}", framing);
-
-        shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
-        shape.correct_sign(&mut bitmap, &framing, FillRule::default());
-        let error = shape.estimate_error(&mut bitmap, &framing, 4, FillRule::default());
-
-        assert_lt!(error, expected_error);
-
-        bitmap.flip_y();
-
-        let mut output = File::create(&format!("ttf-parser-{}-msdf.png", name)).unwrap();
-        bitmap.write_png(&mut output).unwrap();
-
-        let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
-
-        bitmap.render(&mut preview, Default::default());
-
-        let mut output = File::create(&format!("ttf-parser-{}-preview.png", name)).unwrap();
-        preview.write_png(&mut output).unwrap();
+        test_font_shape("ttf-parser", name, shape, width, height, expected_error);
     }
 
     #[cfg(feature = "freetype-rs")]
@@ -173,51 +194,14 @@ mod test {
         width: u32,
         height: u32,
         expected_error: f64,
-    ) -> freetype_rs::FtResult<()> {
-        let library = freetype_rs::Library::init()?;
-        let face = library.new_memory_face(font.to_vec(), 0)?;
-        face.set_pixel_sizes(width, height)?;
+    ) {
+        let library = freetype_rs::Library::init().unwrap();
+        let face = library.new_memory_face(font.to_vec(), 0).unwrap();
+        face.set_pixel_sizes(width, height).unwrap();
         let glyph_index = face.get_char_index(chr as usize);
-        let mut shape = face.glyph_shape(glyph_index).unwrap();
+        let shape = face.glyph_shape(glyph_index).unwrap();
 
-        if !shape.validate() {
-            panic!("Invalid shape");
-        }
-        shape.normalize();
-
-        let bounds = shape.get_bounds();
-
-        let mut bitmap = Bitmap::new(width, height);
-
-        println!("bounds: {:?}", bounds);
-
-        shape.edge_coloring_simple(3.0, 0);
-
-        let framing = bounds
-            .autoframe(width, height, Range::Px(4.0), None)
-            .unwrap();
-
-        println!("framing: {:?}", framing);
-
-        shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
-        shape.correct_sign(&mut bitmap, &framing, FillRule::default());
-        let error = shape.estimate_error(&mut bitmap, &framing, 4, FillRule::default());
-
-        assert_lt!(error, expected_error);
-
-        bitmap.flip_y();
-
-        let mut output = File::create(&format!("freetype-{}-msdf.png", name)).unwrap();
-        bitmap.write_png(&mut output).unwrap();
-
-        let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
-
-        bitmap.render(&mut preview, Default::default());
-
-        let mut output = File::create(&format!("freetype-{}-preview.png", name)).unwrap();
-        preview.write_png(&mut output).unwrap();
-
-        Ok(())
+        test_font_shape("freetype", name, shape, width, height, expected_error);
     }
 
     fn test_font_char(
@@ -234,7 +218,7 @@ mod test {
 
         #[cfg(feature = "freetype-rs")]
         #[cfg(feature = "png")]
-        test_font_char_freetype_rs(name, font, chr, width, height, expected_error).unwrap();
+        test_font_char_freetype_rs(name, font, chr, width, height, expected_error);
     }
 
     #[test]

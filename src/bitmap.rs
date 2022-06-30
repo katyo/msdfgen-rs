@@ -33,7 +33,9 @@ impl<T> Bitmap<T> {
         let size = (width * height) as usize;
 
         let mut pixels = Vec::with_capacity(size);
-        unsafe { pixels.set_len(size); }
+        unsafe {
+            pixels.set_len(size);
+        }
 
         let pixels = core::mem::ManuallyDrop::new(pixels).as_mut_ptr();
 
@@ -48,13 +50,7 @@ impl<T> Bitmap<T> {
 impl<T> Drop for Bitmap<T> {
     fn drop(&mut self) {
         let size = (self.width * self.height) as usize;
-        let _pixels = unsafe {
-            Vec::from_raw_parts(
-                self.pixels,
-                size,
-                size,
-            )
-        };
+        let _pixels = unsafe { Vec::from_raw_parts(self.pixels, size, size) };
     }
 }
 
@@ -71,18 +67,12 @@ impl<T> Bitmap<T> {
 
     /// Get pixel data slice for reading from
     pub fn pixels(&self) -> &[T] {
-        unsafe { std::slice::from_raw_parts(
-            self.pixels,
-            (self.width * self.height) as usize,
-        ) }
+        unsafe { std::slice::from_raw_parts(self.pixels, (self.width * self.height) as usize) }
     }
 
     /// Get pixel data slice for writing to
     pub fn pixels_mut(&mut self) -> &mut [T] {
-        unsafe { std::slice::from_raw_parts_mut(
-            self.pixels,
-            (self.width * self.height) as usize,
-        ) }
+        unsafe { std::slice::from_raw_parts_mut(self.pixels, (self.width * self.height) as usize) }
     }
 
     /// Get raw pixels data for reading from
@@ -92,7 +82,7 @@ impl<T> Bitmap<T> {
         unsafe {
             core::slice::from_raw_parts(
                 pixels.as_ptr() as _,
-                pixels.len() * core::mem::size_of::<T>()
+                pixels.len() * core::mem::size_of::<T>(),
             )
         }
     }
@@ -104,7 +94,7 @@ impl<T> Bitmap<T> {
         unsafe {
             core::slice::from_raw_parts_mut(
                 pixels.as_mut_ptr() as _,
-                pixels.len() * core::mem::size_of::<T>()
+                pixels.len() * core::mem::size_of::<T>(),
             )
         }
     }
@@ -140,10 +130,12 @@ impl<T> Bitmap<T> {
         for y in 0..height {
             for x in 0..width / 2 {
                 let nx = width - x - 1;
-                unsafe { core::ptr::swap(
-                    &mut pixels[(x + y * width) as usize],
-                    &mut pixels[(nx + y * width) as usize],
-                ); }
+                unsafe {
+                    core::ptr::swap(
+                        &mut pixels[(x + y * width) as usize],
+                        &mut pixels[(nx + y * width) as usize],
+                    );
+                }
             }
         }
     }
@@ -157,10 +149,12 @@ impl<T> Bitmap<T> {
         for y in 0..height / 2 {
             for x in 0..width {
                 let ny = height - y - 1;
-                unsafe { core::ptr::swap(
-                    &mut pixels[(x + y * width) as usize],
-                    &mut pixels[(x + ny * width) as usize],
-                ); }
+                unsafe {
+                    core::ptr::swap(
+                        &mut pixels[(x + y * width) as usize],
+                        &mut pixels[(x + ny * width) as usize],
+                    );
+                }
             }
         }
     }
@@ -172,9 +166,11 @@ impl<T> Bitmap<T> {
         R: From<T>,
     {
         let mut bitmap = Bitmap::<R>::new(self.width(), self.height());
-        bitmap.pixels_mut().iter_mut().zip(self.pixels().iter())
-            .for_each(|(out_pixel, in_pixel)|
-                      *out_pixel = From::from(*in_pixel));
+        bitmap
+            .pixels_mut()
+            .iter_mut()
+            .zip(self.pixels().iter())
+            .for_each(|(out_pixel, in_pixel)| *out_pixel = From::from(*in_pixel));
         bitmap
     }
 }

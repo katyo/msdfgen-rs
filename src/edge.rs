@@ -1,4 +1,4 @@
-use crate::{ffi, EdgeSegment, SegmentKind, LinearSegment, QuadraticSegment, CubicSegment, Point2};
+use crate::{ffi, CubicSegment, EdgeSegment, LinearSegment, Point2, QuadraticSegment, SegmentKind};
 
 /// Edge color enumeration
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -50,7 +50,9 @@ impl Clone for EdgeHolder {
 
 impl Drop for EdgeHolder {
     fn drop(&mut self) {
-        unsafe { self.raw.destruct(); }
+        unsafe {
+            self.raw.destruct();
+        }
     }
 }
 
@@ -67,17 +69,13 @@ impl EdgeHolder {
 
     /// Created new edge with segment
     pub fn new(segment: impl EdgeSegment) -> Self {
-        let raw = unsafe {
-            ffi::msdfgen_EdgeHolder::new1(segment.into_raw())
-        };
+        let raw = unsafe { ffi::msdfgen_EdgeHolder::new1(segment.into_raw()) };
         Self { raw }
     }
 
     /// Set segment to edge
     pub fn set(&mut self, segment: impl EdgeSegment) {
-        unsafe {
-            ffi::msdfgen_EdgeHolder_setSegment(&mut self.raw, segment.into_raw())
-        }
+        unsafe { ffi::msdfgen_EdgeHolder_setSegment(&mut self.raw, segment.into_raw()) }
     }
 
     /// Creates line edge (linear segment)
@@ -141,9 +139,8 @@ impl core::ops::Deref for EdgeHolder {
     fn deref(&self) -> &Self::Target {
         let raw_segment = unsafe { &*self.raw.edgeSegment };
 
-        let segment_kind: SegmentKind = unsafe {
-            core::mem::transmute(ffi::msdfgen_EdgeSegment_getKind(raw_segment))
-        };
+        let segment_kind: SegmentKind =
+            unsafe { core::mem::transmute(ffi::msdfgen_EdgeSegment_getKind(raw_segment)) };
 
         match segment_kind {
             SegmentKind::Linear => unsafe {
@@ -152,9 +149,7 @@ impl core::ops::Deref for EdgeHolder {
             SegmentKind::Quadratic => unsafe {
                 core::mem::transmute::<_, &QuadraticSegment>(raw_segment)
             },
-            SegmentKind::Cubic => unsafe {
-                core::mem::transmute::<_, &CubicSegment>(raw_segment)
-            },
+            SegmentKind::Cubic => unsafe { core::mem::transmute::<_, &CubicSegment>(raw_segment) },
         }
     }
 }
@@ -163,9 +158,8 @@ impl core::ops::DerefMut for EdgeHolder {
     fn deref_mut(&mut self) -> &mut Self::Target {
         let raw_segment = unsafe { &mut *self.raw.edgeSegment };
 
-        let segment_kind: SegmentKind = unsafe {
-            core::mem::transmute(ffi::msdfgen_EdgeSegment_getKind(raw_segment))
-        };
+        let segment_kind: SegmentKind =
+            unsafe { core::mem::transmute(ffi::msdfgen_EdgeSegment_getKind(raw_segment)) };
 
         match segment_kind {
             SegmentKind::Linear => unsafe {
@@ -194,35 +188,57 @@ mod test {
 
     #[test]
     fn edge_holder_new_quadratic() {
-        let edge = EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
+        let edge =
+            EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
 
         assert_eq!(edge.segment_kind(), SegmentKind::Quadratic);
     }
 
     #[test]
     fn edge_holder_new_cubic() {
-        let edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::default());
+        let edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::default(),
+        );
 
         assert_eq!(edge.segment_kind(), SegmentKind::Cubic);
     }
 
     #[test]
     fn edge_holder_new_linear_segment() {
-        let edge = EdgeHolder::new(LinearSegment::new((0.0, 1.0), (1.0, 0.0), EdgeColor::default()));
+        let edge = EdgeHolder::new(LinearSegment::new(
+            (0.0, 1.0),
+            (1.0, 0.0),
+            EdgeColor::default(),
+        ));
 
         assert_eq!(edge.segment_kind(), SegmentKind::Linear);
     }
 
     #[test]
     fn edge_holder_new_quadratic_segment() {
-        let edge = EdgeHolder::new(QuadraticSegment::new((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default()));
+        let edge = EdgeHolder::new(QuadraticSegment::new(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            EdgeColor::default(),
+        ));
 
         assert_eq!(edge.segment_kind(), SegmentKind::Quadratic);
     }
 
     #[test]
     fn edge_holder_new_cubic_segment() {
-        let edge = EdgeHolder::new(CubicSegment::new((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::default()));
+        let edge = EdgeHolder::new(CubicSegment::new(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::default(),
+        ));
 
         assert_eq!(edge.segment_kind(), SegmentKind::Cubic);
     }
@@ -233,11 +249,18 @@ mod test {
 
         assert_eq!(edge.start_point(), &Point2::new(0.0, 1.0));
 
-        let edge = EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
+        let edge =
+            EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
 
         assert_eq!(edge.start_point(), &Point2::new(0.0, 1.0));
 
-        let edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::default());
+        let edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::default(),
+        );
 
         assert_eq!(edge.start_point(), &Point2::new(0.0, 1.0));
     }
@@ -250,13 +273,20 @@ mod test {
         *edge.start_point_mut() = (1.0, 1.0).into();
         assert_eq!(edge.start_point(), &Point2::new(1.0, 1.0));
 
-        let mut edge = EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
+        let mut edge =
+            EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
 
         assert_eq!(edge.start_point(), &Point2::new(0.0, 1.0));
         *edge.start_point_mut() = (1.0, 1.0).into();
         assert_eq!(edge.start_point(), &Point2::new(1.0, 1.0));
 
-        let mut edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::default());
+        let mut edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::default(),
+        );
 
         assert_eq!(edge.start_point(), &Point2::new(0.0, 1.0));
         *edge.start_point_mut() = (1.0, 1.0).into();
@@ -269,11 +299,18 @@ mod test {
 
         assert_eq!(edge.end_point(), &Point2::new(1.0, 0.0));
 
-        let edge = EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
+        let edge =
+            EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
 
         assert_eq!(edge.end_point(), &Point2::new(1.0, 0.0));
 
-        let edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::default());
+        let edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::default(),
+        );
 
         assert_eq!(edge.end_point(), &Point2::new(1.0, 1.0));
     }
@@ -286,13 +323,20 @@ mod test {
         *edge.end_point_mut() = (1.0, 1.0).into();
         assert_eq!(edge.end_point(), &Point2::new(1.0, 1.0));
 
-        let mut edge = EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
+        let mut edge =
+            EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
 
         assert_eq!(edge.end_point(), &Point2::new(1.0, 0.0));
         *edge.end_point_mut() = (1.0, 1.0).into();
         assert_eq!(edge.end_point(), &Point2::new(1.0, 1.0));
 
-        let mut edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::default());
+        let mut edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::default(),
+        );
 
         assert_eq!(edge.end_point(), &Point2::new(1.0, 1.0));
         *edge.end_point_mut() = (0.0, 0.0).into();
@@ -307,13 +351,20 @@ mod test {
         assert_eq!(edge.control_point(1), None);
         assert_eq!(edge.control_point(2), None);
 
-        let edge = EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
+        let edge =
+            EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
 
         assert_eq!(edge.control_point(0), Some(&Point2::new(0.0, 0.0)));
         assert_eq!(edge.control_point(1), None);
         assert_eq!(edge.control_point(2), None);
 
-        let edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::default());
+        let edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::default(),
+        );
 
         assert_eq!(edge.control_point(0), Some(&Point2::new(0.0, 0.0)));
         assert_eq!(edge.control_point(1), Some(&Point2::new(1.0, 0.0)));
@@ -322,13 +373,20 @@ mod test {
 
     #[test]
     fn set_control_point() {
-        let mut edge = EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
+        let mut edge =
+            EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::default());
 
         assert_eq!(edge.control_point(0), Some(&Point2::new(0.0, 0.0)));
         *edge.control_point_mut(0).unwrap() = (1.0, 1.0).into();
         assert_eq!(edge.control_point(0), Some(&Point2::new(1.0, 1.0)));
 
-        let mut edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::default());
+        let mut edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::default(),
+        );
 
         assert_eq!(edge.control_point(0), Some(&Point2::new(0.0, 0.0)));
         *edge.control_point_mut(0).unwrap() = (0.0, 1.0).into();
@@ -348,7 +406,13 @@ mod test {
 
         assert_eq!(edge.edge_color(), &EdgeColor::Red);
 
-        let edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::Magenta);
+        let edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::Magenta,
+        );
 
         assert_eq!(edge.edge_color(), &EdgeColor::Magenta);
     }
@@ -360,13 +424,20 @@ mod test {
         *edge.edge_color_mut() = EdgeColor::Red;
         assert_eq!(edge.edge_color(), &EdgeColor::Red);
 
-        let mut edge = EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::Red);
+        let mut edge =
+            EdgeHolder::new_quadratic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), EdgeColor::Red);
 
         assert_eq!(edge.edge_color(), &EdgeColor::Red);
         *edge.edge_color_mut() = EdgeColor::Green;
         assert_eq!(edge.edge_color(), &EdgeColor::Green);
 
-        let mut edge = EdgeHolder::new_cubic((0.0, 1.0), (0.0, 0.0), (1.0, 0.0), (1.0, 1.0), EdgeColor::Magenta);
+        let mut edge = EdgeHolder::new_cubic(
+            (0.0, 1.0),
+            (0.0, 0.0),
+            (1.0, 0.0),
+            (1.0, 1.0),
+            EdgeColor::Magenta,
+        );
 
         assert_eq!(edge.edge_color(), &EdgeColor::Magenta);
         *edge.edge_color_mut() = EdgeColor::White;

@@ -1,4 +1,4 @@
-use crate::{ffi, Shape, Bitmap, Gray, RGB, Framing, FillRule};
+use crate::{ffi, Bitmap, FillRule, Framing, Gray, Shape, RGB};
 
 /// Sign correction helper trait
 pub trait SignCorrection: Sized {
@@ -18,7 +18,7 @@ impl SignCorrection for Gray<f32> {
         fill_rule: FillRule,
     ) {
         unsafe {
-            ffi::msdfgen_distanceSignCorrection(
+            ffi::msdfgen_distanceSignCorrection3(
                 bitmap.as_raw_mut(),
                 shape.as_raw(),
                 framing.scale.as_raw(),
@@ -37,7 +37,7 @@ impl SignCorrection for RGB<f32> {
         fill_rule: FillRule,
     ) {
         unsafe {
-            ffi::msdfgen_distanceSignCorrection1(
+            ffi::msdfgen_distanceSignCorrection3(
                 bitmap.as_raw_mut(),
                 shape.as_raw(),
                 framing.scale.as_raw(),
@@ -80,7 +80,7 @@ impl ErrorEstimation for Gray<f32> {
         fill_rule: FillRule,
     ) -> f64 {
         unsafe {
-            ffi::msdfgen_estimateSDFError(
+            ffi::msdfgen_estimateSDFError3(
                 bitmap.as_raw(),
                 shape.as_raw(),
                 framing.scale.as_raw(),
@@ -101,7 +101,7 @@ impl ErrorEstimation for RGB<f32> {
         fill_rule: FillRule,
     ) -> f64 {
         unsafe {
-            ffi::msdfgen_estimateSDFError1(
+            ffi::msdfgen_estimateSDFError3(
                 bitmap.as_raw(),
                 shape.as_raw(),
                 framing.scale.as_raw(),

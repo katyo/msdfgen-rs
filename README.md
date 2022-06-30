@@ -8,7 +8,6 @@
 ## Crates
 
 - [msdfgen-sys](https://crates.io/crates/msdfgen-sys) Low-level unsafe bindings generated using bindgen.
-- [msdfgen-lib](https://crates.io/crates/msdfgen-lib) Bundled library which can be build and link with application.
 - [msdfgen](https://crates.io/crates/msdfgen) High-level safe bindings which should be used by applications.
 
 ## Features
@@ -22,8 +21,6 @@
 ## Usage
 
 ```rust
-use msdfgen_lib as _; // forces linking with msdfgen library
-
 use std::fs::File;
 use notosans::REGULAR_TTF as FONT;
 use ttf_parser::Font;
