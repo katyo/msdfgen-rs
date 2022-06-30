@@ -1,6 +1,74 @@
+[package]
+name = "msdfgen"
+version = "0.2.0"
+description = "Safe bindings for msdfgen (multi-channel signed distance field generator)"
+categories = ["external-ffi-bindings", "graphics"]
+keywords = ["distance-fields", "multi-channel", "SDF", "MSDF", "MCSDF"]
+authors = ["K. <kayo@illumium.org>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/katyo/msdfgen-rs"
+edition = "2018"
+
 [workspace]
-members = [
-  "msdfgen-sys",
-  "msdfgen-lib",
-  "msdfgen"
-]
+members = ["sys", "lib"]
+
+[badges.travis-ci]
+repository = "katyo/msdfgen-rs"
+
+[badges.is-it-maintained-issue-resolution]
+repository = "katyo/msdfgen-rs"
+
+[badges.is-it-maintained-open-issues]
+repository = "katyo/msdfgen-rs"
+
+[badges.maintenance]
+status = "passively-maintained"
+
+[dependencies.msdfgen-sys]
+version = "0.2.0"
+path = "sys"
+
+[dependencies.ttf-parser]
+version = "0.15"
+optional = true
+
+[dependencies.font]
+version = "0.4"
+optional = true
+
+[dependencies.fonterator]
+version = "0.9"
+optional = true
+
+[dependencies.freetype-rs]
+version = "0.30"
+optional = true
+
+[dependencies.png]
+version = "0.17"
+optional = true
+
+[dev-dependencies.msdfgen-lib]
+version = "0.2.0"
+path = "lib"
+
+[dev-dependencies.all_asserts]
+version = "2"
+
+[dev-dependencies.ttf-parser]
+version = "0.15"
+
+[dev-dependencies.notosans]
+version = "0.1"
+
+[dev-dependencies.material-icons]
+version = "0.2"
+
+[features]
+all = ["ttf-parser", "font", "freetype-rs", "png"]
+rustdoc = ["msdfgen-sys/rustdoc", "all"]
+default = ["ttf-parser", "freetype-rs", "png"]
+
+[package.metadata.docs.rs]
+features = ["rustdoc"]

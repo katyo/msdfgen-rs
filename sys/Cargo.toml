@@ -1,6 +1,6 @@
 [package]
 name = "msdfgen-sys"
-version = "0.1.0"
+version = "0.2.0"
 description = "Unsafe bindings for msdfgen (multi-channel signed distance field generator)"
 categories = ["external-ffi-bindings", "graphics"]
 keywords = ["distance-fields", "multi-channel", "SDF", "MSDF", "MCSDF"]
