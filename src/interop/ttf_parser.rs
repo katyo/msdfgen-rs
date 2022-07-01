@@ -123,7 +123,7 @@ mod test {
 
     #[test]
     fn glyph_shape() {
-        let font = Face::from_slice(&REGULAR_TTF, 0).unwrap();
+        let font = Face::from_slice(REGULAR_TTF, 0).unwrap();
 
         let mut shapes = 0;
 

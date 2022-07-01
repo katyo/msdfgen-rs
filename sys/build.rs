@@ -76,13 +76,12 @@ fn generate_bindings<P: AsRef<Path>>(
         .detect_include_paths(true)
         .clang_arg("-xc++")
         .clang_arg("-std=c++11")
-        .clang_args(stdlib.map_or_else(|| vec![], |stdlib| vec![format!("--stdlib={}", stdlib)]))
+        .clang_args(stdlib.map_or_else(Vec::new, |stdlib| vec![format!("--stdlib={}", stdlib)]))
         .clang_arg("-target")
         .clang_arg(ctarget)
-        .clang_args(sysroot.map_or_else(
-            || vec![],
-            |sysroot| vec!["-isysroot".into(), sysroot.display().to_string()],
-        ))
+        .clang_args(sysroot.map_or_else(Vec::new, |sysroot| {
+            vec!["-isysroot".into(), sysroot.display().to_string()]
+        }))
         .clang_args(
             inc_dirs
                 .into_iter()
@@ -217,8 +216,8 @@ fn into_c_target(target: &str) -> String {
 
     if target.contains("-android") {
         let android_api = env::var("ANDROID_PLATFORM")
-            .or(env::var("ANDROID_API"))
-            .unwrap_or("16".into());
+            .or_else(|_| env::var("ANDROID_API"))
+            .unwrap_or_else(|_| "16".into());
 
         result_target.push_str(&android_api);
     }
@@ -261,14 +260,14 @@ fn detect_sysroot(target: &str) -> Result<Option<PathBuf>, String> {
         Ok(Some(str_path.trim().into()))
     } else if target.contains("-android") {
         let ndk_home = env::var("ANDROID_NDK_HOME")
-            .or(env::var("NDK_HOME"))
+            .or_else(|_| env::var("NDK_HOME"))
             .map_err(|_| "Either ANDROID_NDK_HOME or NDK_HOME should be set.".to_string())?;
 
         let ndk_path = Path::new(&ndk_home);
 
         //let ndk_bin = ndk_path.join("toolchains/llvm/prebuilt/linux-x86_64/bin");
 
-        Ok(Some(ndk_path.join("sysroot").into()))
+        Ok(Some(ndk_path.join("sysroot")))
     } else {
         Ok(None)
     }

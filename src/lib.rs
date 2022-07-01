@@ -177,14 +177,14 @@ mod test {
 
     #[test]
     fn test_regular_ttf_upcase_a_letter() {
-        test_font_char("A-letter", &REGULAR_TTF, 'A', 32, 32, 0.000016);
+        test_font_char("A-letter", REGULAR_TTF, 'A', 32, 32, 0.000016);
     }
 
     #[test]
     fn test_material_icon_fingerprint() {
         test_font_char(
             "fingerprint",
-            &FONT,
+            FONT,
             icon_to_char(Icon::Fingerprint),
             64,
             64,

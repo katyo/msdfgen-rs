@@ -59,12 +59,7 @@ impl<T> Bitmap<T> {
     pub fn new(width: u32, height: u32) -> Self {
         let size = (width * height) as usize;
 
-        let mut pixels = Vec::with_capacity(size);
-        unsafe {
-            pixels.set_len(size);
-        }
-
-        let pixels = core::mem::ManuallyDrop::new(pixels).as_mut_ptr();
+        let pixels = core::mem::ManuallyDrop::new(Vec::with_capacity(size)).as_mut_ptr();
 
         Self {
             pixels,
@@ -204,11 +199,11 @@ impl<T> Bitmap<T> {
 
 impl<T> Bitmap<T> {
     pub(crate) fn as_raw(&self) -> *const u8 {
-        unsafe { core::mem::transmute(self) }
+        self as *const _ as *const u8
     }
 
     pub(crate) fn as_raw_mut(&mut self) -> *mut u8 {
-        unsafe { core::mem::transmute(self) }
+        self as *mut _ as *mut u8
     }
 }
 

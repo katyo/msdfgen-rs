@@ -1,5 +1,4 @@
 use crate::{EdgeColor, EdgeHolder, FontExt, Point2, Shape};
-use font;
 
 impl FontExt for font::Font {
     type Glyph = char;
@@ -14,8 +13,8 @@ impl FontExt for font::Font {
             let mut last_point = Point2::new(x as f64, y as f64);
 
             for segment in contour.iter() {
-                match segment {
-                    &font::Segment::Linear(font::Offset(x, y)) => {
+                match *segment {
+                    font::Segment::Linear(font::Offset(x, y)) => {
                         let point = Point2::new(x as f64, y as f64);
                         last_contour.add_edge(&EdgeHolder::new_linear(
                             last_point,
@@ -24,7 +23,7 @@ impl FontExt for font::Font {
                         ));
                         last_point = point;
                     }
-                    &font::Segment::Quadratic(font::Offset(cx, cy), font::Offset(x, y)) => {
+                    font::Segment::Quadratic(font::Offset(cx, cy), font::Offset(x, y)) => {
                         let cpoint = Point2::new(cx as f64, cy as f64);
                         let point = Point2::new(x as f64, y as f64);
                         last_contour.add_edge(&EdgeHolder::new_quadratic(
@@ -35,7 +34,7 @@ impl FontExt for font::Font {
                         ));
                         last_point = point;
                     }
-                    &font::Segment::Cubic(
+                    font::Segment::Cubic(
                         font::Offset(c1x, c1y),
                         font::Offset(c2x, c2y),
                         font::Offset(x, y),
