@@ -1,65 +1,4 @@
-/*!
-# Safe bindings to msdfgen library
-
-## Crates
-
-- [msdfgen-sys](https://crates.io/crates/msdfgen-sys) Low-level unsafe bindings generated using bindgen.
-- [msdfgen-lib](https://crates.io/crates/msdfgen-lib) Bundled library which can be build and link with application.
-- [msdfgen](https://crates.io/crates/msdfgen) High-level safe bindings which should be used by applications.
-
-## Features
-
-- __ttf-parse__ Enables [ttf-parser](https://crates.io/crates/ttf-parser) crate integration which allows create shapes for glyphs of specific font.
-- __font__ Enables [font](https://crates.io/crates/font) crate integration which allows create shapes for glyphs of specific font.
-- __freetype-rs__ Enables [freetype-rs](https://crates.io/crates/freetype-rs) crate integration which allows create shapes for glyphs of specific font.
-- __png__ Enables [png](https://crates.io/crates/png) crate integration which allows load and save bitmaps from/as PNG images.
-- __all__ Meta-feature which enables all supported features.
-
-## Usage
-
-```ignore
-use std::fs::File;
-use notosans::REGULAR_TTF as FONT;
-use ttf_parser::Face;
-use msdfgen::{FontExt, Bitmap, Gray, Range, EDGE_THRESHOLD, OVERLAP_SUPPORT};
-
-let font = Face::from_slice(&FONT, 0).unwrap();
-
-let glyph = font.glyph_index('A').unwrap();
-
-let mut shape = font.glyph_shape(glyph).unwrap();
-
-let width = 32;
-let height = 32;
-
-let bound = shape.get_bound();
-let framing = bound.autoframe(width, height, Range::Px(4.0), None).unwrap();
-
-let mut bitmap = Bitmap::new(width, height);
-
-shape.edge_coloring_simple(3.0, 0);
-
-shape.generate_msdf(&mut bitmap, &framing, EDGE_THRESHOLD, OVERLAP_SUPPORT);
-
-// optionally
-shape.correct_sign(&mut bitmap, &framing, Default::default());
-
-let error = shape.estimate_error(&mut bitmap, &framing, 5, Default::default());
-
-println!("Estimated error: {}", error);
-
-bitmap.flip_y();
-
-let mut output = File::create("A-letter-msdf.png").unwrap();
-bitmap.write_png(&mut output).unwrap();
-
-let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
-bitmap.render(&mut preview, Default::default());
-
-let mut output = File::create("A-letter-preview.png").unwrap();
-preview.write_png(&mut output).unwrap();
-```
- */
+#![doc = include_str!("../README.md")]
 
 mod bitmap;
 mod bound;
@@ -111,7 +50,8 @@ mod test {
     use notosans::REGULAR_TTF;
 
     use crate::{
-        Bitmap, ErrorCorrectionConfig, FillRule, FontExt, Gray, Range, MID_VALUE, OVERLAP_SUPPORT, Shape,
+        Bitmap, ErrorCorrectionConfig, FillRule, FontExt, Gray, Range, Shape, MID_VALUE,
+        OVERLAP_SUPPORT,
     };
 
     #[cfg(any(feature = "ttf-parser", feature = "freetype-rs"))]
