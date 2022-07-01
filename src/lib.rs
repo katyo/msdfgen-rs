@@ -50,9 +50,31 @@ mod test {
     use notosans::REGULAR_TTF;
 
     use crate::{
-        Bitmap, ErrorCorrectionConfig, FillRule, FontExt, Gray, Range, Shape, MID_VALUE,
-        OVERLAP_SUPPORT,
+        Bitmap, FillRule, FontExt, GeneratorConfig, Gray, MsdfGeneratorConfig, PngColorType, Range,
+        RenderTarget, Rgb, Shape, MID_VALUE,
     };
+
+    #[cfg(any(feature = "ttf-parser", feature = "freetype-rs"))]
+    #[cfg(feature = "png")]
+    fn save_bitmap_and_preview<T>(pfx: &str, name: &str, sfx: &str, bitmap: &Bitmap<T>)
+    where
+        T: PngColorType + Copy,
+        T::PngPixelType: From<T>,
+        Gray<f32>: RenderTarget<T>,
+    {
+        let mut bitmap = bitmap.clone();
+        bitmap.flip_y();
+
+        let mut output = File::create(&format!("{}-{}-{}.png", pfx, name, sfx)).unwrap();
+        bitmap.write_png(&mut output).unwrap();
+
+        let mut preview = Bitmap::<Gray<f32>>::new(bitmap.width() * 10, bitmap.height() * 10);
+
+        bitmap.render(&mut preview, Default::default(), MID_VALUE);
+
+        let mut output = File::create(&format!("{}-{}-{}-preview.png", pfx, name, sfx)).unwrap();
+        preview.write_png(&mut output).unwrap();
+    }
 
     #[cfg(any(feature = "ttf-parser", feature = "freetype-rs"))]
     #[cfg(feature = "png")]
@@ -71,8 +93,6 @@ mod test {
 
         let bound = shape.get_bound();
 
-        let mut bitmap = Bitmap::new(width, height);
-
         println!("bound: {:?}", bound);
 
         shape.edge_coloring_simple(3.0, 0);
@@ -83,27 +103,21 @@ mod test {
 
         println!("framing: {:?}", framing);
 
-        let config = ErrorCorrectionConfig::default();
+        let mut bitmap = Bitmap::new(width, height);
+        let config = GeneratorConfig::default();
+        shape.generate_sdf(&mut bitmap, &framing, config);
 
-        shape.generate_msdf(&mut bitmap, &framing, &config, OVERLAP_SUPPORT);
+        save_bitmap_and_preview(pfx, name, "sdf", &bitmap);
+
+        let mut bitmap = Bitmap::<Rgb<f32>>::new(width, height);
+        let config = MsdfGeneratorConfig::default();
+
+        shape.generate_msdf(&mut bitmap, &framing, &config);
         shape.correct_sign(&mut bitmap, &framing, FillRule::default());
+        shape.correct_msdf_error(&mut bitmap, &framing, &config);
         let error = shape.estimate_error(&mut bitmap, &framing, 4, FillRule::default());
 
-        bitmap.flip_y();
-
-        let mut output = File::create(&format!("{}-{}-msdf.png", pfx, name)).unwrap();
-        bitmap.write_png(&mut output).unwrap();
-
-        drop(output);
-
-        let mut preview = Bitmap::<Gray<f32>>::new(width * 10, height * 10);
-
-        bitmap.render(&mut preview, Default::default(), MID_VALUE);
-
-        let mut output = File::create(&format!("{}-{}-preview.png", pfx, name)).unwrap();
-        preview.write_png(&mut output).unwrap();
-
-        drop(output);
+        save_bitmap_and_preview(pfx, name, "msdf", &bitmap);
 
         assert_lt!(error, expected_error);
     }

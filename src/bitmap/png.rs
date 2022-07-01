@@ -1,4 +1,4 @@
-use super::{Bitmap, Gray, RGB};
+use super::{Bitmap, Gray, Rgb, Rgba};
 use std::io::{Read, Write};
 
 pub trait PngColorType {
@@ -11,9 +11,14 @@ impl<T> PngColorType for Gray<T> {
     const PNG_COLOR_TYPE: png::ColorType = png::ColorType::Grayscale;
 }
 
-impl<T> PngColorType for RGB<T> {
-    type PngPixelType = RGB<u8>;
+impl<T> PngColorType for Rgb<T> {
+    type PngPixelType = Rgb<u8>;
     const PNG_COLOR_TYPE: png::ColorType = png::ColorType::Rgb;
+}
+
+impl<T> PngColorType for Rgba<T> {
+    type PngPixelType = Rgba<u8>;
+    const PNG_COLOR_TYPE: png::ColorType = png::ColorType::Rgba;
 }
 
 impl<T> Bitmap<T>

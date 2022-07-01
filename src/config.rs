@@ -44,9 +44,22 @@ impl Default for DistanceCheckMode {
 }
 
 /// Error correction config
+#[derive(Clone, Copy)]
 #[repr(transparent)]
 pub struct ErrorCorrectionConfig {
     raw: ffi::msdfgen_ErrorCorrectionConfig,
+}
+
+impl AsRef<ErrorCorrectionConfig> for ErrorCorrectionConfig {
+    fn as_ref(&self) -> &ErrorCorrectionConfig {
+        self
+    }
+}
+
+impl AsMut<ErrorCorrectionConfig> for ErrorCorrectionConfig {
+    fn as_mut(&mut self) -> &mut ErrorCorrectionConfig {
+        self
+    }
 }
 
 impl Default for ErrorCorrectionConfig {
@@ -70,6 +83,10 @@ impl Default for ErrorCorrectionConfig {
 impl ErrorCorrectionConfig {
     pub(crate) fn as_raw(&self) -> &ffi::msdfgen_ErrorCorrectionConfig {
         &self.raw
+    }
+
+    pub(crate) fn into_raw(self) -> ffi::msdfgen_ErrorCorrectionConfig {
+        self.raw
     }
 
     /// Get operation mode
@@ -144,6 +161,189 @@ impl ErrorCorrectionConfig {
     #[inline(always)]
     pub fn set_min_improve_ratio(&mut self, ratio: f64) {
         self.raw.minImproveRatio = ratio as _;
+    }
+
+    /// Configure min improve ratio
+    #[inline(always)]
+    pub fn with_min_improve_ratio(mut self, ratio: f64) -> Self {
+        self.set_min_improve_ratio(ratio);
+        self
+    }
+}
+
+/// Base generator config
+#[derive(Clone, Copy)]
+#[repr(transparent)]
+pub struct GeneratorConfig {
+    raw: ffi::msdfgen_GeneratorConfig,
+}
+
+impl AsRef<GeneratorConfig> for GeneratorConfig {
+    fn as_ref(&self) -> &GeneratorConfig {
+        self
+    }
+}
+
+impl AsMut<GeneratorConfig> for GeneratorConfig {
+    fn as_mut(&mut self) -> &mut GeneratorConfig {
+        self
+    }
+}
+
+impl Default for GeneratorConfig {
+    fn default() -> Self {
+        Self {
+            raw: ffi::msdfgen_GeneratorConfig {
+                overlapSupport: true,
+            },
+        }
+    }
+}
+
+impl GeneratorConfig {
+    pub(crate) fn as_raw(&self) -> &ffi::msdfgen_GeneratorConfig {
+        &self.raw
+    }
+
+    pub(crate) fn into_raw(self) -> ffi::msdfgen_GeneratorConfig {
+        self.raw
+    }
+
+    /// Get overlap support
+    #[inline(always)]
+    pub fn get_overlap_support(&self) -> bool {
+        self.raw.overlapSupport
+    }
+
+    /// Set overlap support
+    #[inline(always)]
+    pub fn set_overlap_support(&mut self, overlap_support: bool) {
+        self.raw.overlapSupport = overlap_support;
+    }
+
+    /// Configure overlap support
+    #[inline(always)]
+    pub fn with_overlap_support(mut self, overlap_support: bool) -> Self {
+        self.set_overlap_support(overlap_support);
+        self
+    }
+}
+
+/// MSDF generator config
+#[derive(Clone, Copy)]
+#[repr(transparent)]
+pub struct MsdfGeneratorConfig {
+    raw: ffi::msdfgen_MSDFGeneratorConfig,
+}
+
+impl AsRef<MsdfGeneratorConfig> for MsdfGeneratorConfig {
+    fn as_ref(&self) -> &MsdfGeneratorConfig {
+        self
+    }
+}
+
+impl AsMut<MsdfGeneratorConfig> for MsdfGeneratorConfig {
+    fn as_mut(&mut self) -> &mut MsdfGeneratorConfig {
+        self
+    }
+}
+
+impl AsRef<GeneratorConfig> for MsdfGeneratorConfig {
+    fn as_ref(&self) -> &GeneratorConfig {
+        unsafe { core::mem::transmute(&self.raw._base) }
+    }
+}
+
+impl AsMut<GeneratorConfig> for MsdfGeneratorConfig {
+    fn as_mut(&mut self) -> &mut GeneratorConfig {
+        unsafe { core::mem::transmute(&mut self.raw._base) }
+    }
+}
+
+impl AsRef<ErrorCorrectionConfig> for MsdfGeneratorConfig {
+    fn as_ref(&self) -> &ErrorCorrectionConfig {
+        unsafe { core::mem::transmute(&self.raw.errorCorrection) }
+    }
+}
+
+impl AsMut<ErrorCorrectionConfig> for MsdfGeneratorConfig {
+    fn as_mut(&mut self) -> &mut ErrorCorrectionConfig {
+        unsafe { core::mem::transmute(&mut self.raw.errorCorrection) }
+    }
+}
+
+impl core::ops::Deref for MsdfGeneratorConfig {
+    type Target = ErrorCorrectionConfig;
+
+    fn deref(&self) -> &Self::Target {
+        unsafe { core::mem::transmute(&self.raw.errorCorrection) }
+    }
+}
+
+impl core::ops::DerefMut for MsdfGeneratorConfig {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe { core::mem::transmute(&mut self.raw.errorCorrection) }
+    }
+}
+
+impl Default for MsdfGeneratorConfig {
+    fn default() -> Self {
+        Self {
+            raw: ffi::msdfgen_MSDFGeneratorConfig {
+                _base: GeneratorConfig::default().into_raw(),
+                errorCorrection: ErrorCorrectionConfig::default().into_raw(),
+            },
+        }
+    }
+}
+
+impl MsdfGeneratorConfig {
+    pub(crate) fn as_raw(&self) -> &ffi::msdfgen_MSDFGeneratorConfig {
+        &self.raw
+    }
+
+    /*pub(crate) fn into_raw(self) -> ffi::msdfgen_MSDFGeneratorConfig {
+        self.raw
+    }*/
+
+    /// Get overlap support
+    #[inline(always)]
+    pub fn get_overlap_support(&self) -> bool {
+        (self.as_ref() as &GeneratorConfig).get_overlap_support()
+    }
+
+    /// Set overlap support
+    #[inline(always)]
+    pub fn set_overlap_support(&mut self, overlap_support: bool) {
+        (self.as_mut() as &mut GeneratorConfig).set_overlap_support(overlap_support);
+    }
+
+    /// Configure overlap support
+    #[inline(always)]
+    pub fn with_overlap_support(mut self, overlap_support: bool) -> Self {
+        self.set_overlap_support(overlap_support);
+        self
+    }
+
+    /// Configure operation mode
+    #[inline(always)]
+    pub fn with_mode(mut self, mode: ErrorCorrectionMode) -> Self {
+        self.set_mode(mode);
+        self
+    }
+
+    /// Configure distance check mode
+    #[inline(always)]
+    pub fn with_distance_check_mode(mut self, mode: DistanceCheckMode) -> Self {
+        self.set_distance_check_mode(mode);
+        self
+    }
+
+    /// Configure min deviation ratio
+    #[inline(always)]
+    pub fn with_min_deviation_ratio(mut self, ratio: f64) -> Self {
+        self.set_min_deviation_ratio(ratio);
+        self
     }
 
     /// Configure min improve ratio

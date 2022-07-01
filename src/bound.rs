@@ -143,7 +143,8 @@ impl Bound<f64> {
         match range {
             Range::Px(range) => {
                 if scale.is_none() {
-                    res.translate += Vector2::from(range * 0.5) / res.scale;
+                    let scale = res.scale;
+                    res.translate += Vector2::from(range * 0.5) / scale;
                 }
 
                 res.range = range / min(res.scale.x, res.scale.y);

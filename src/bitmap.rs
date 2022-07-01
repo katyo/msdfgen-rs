@@ -1,11 +1,16 @@
 mod gray;
 mod rgb;
+mod rgba;
 
 pub use gray::*;
 pub use rgb::*;
+pub use rgba::*;
 
 #[cfg(feature = "png")]
 mod png;
+
+#[cfg(feature = "png")]
+pub use self::png::PngColorType;
 
 /// Bitmap pixel
 pub trait Pixel {
@@ -26,6 +31,28 @@ pub struct Bitmap<T> {
 }
 
 unsafe impl<T> Send for Bitmap<T> {}
+
+impl<T> AsRef<Bitmap<T>> for Bitmap<T> {
+    fn as_ref(&self) -> &Bitmap<T> {
+        self
+    }
+}
+
+impl<T> AsMut<Bitmap<T>> for Bitmap<T> {
+    fn as_mut(&mut self) -> &mut Bitmap<T> {
+        self
+    }
+}
+
+impl<T> Clone for Bitmap<T> {
+    fn clone(&self) -> Self {
+        let mut new = Self::new(self.width, self.height);
+
+        new.raw_pixels_mut().copy_from_slice(self.raw_pixels());
+
+        new
+    }
+}
 
 impl<T> Bitmap<T> {
     /// Create new bitmap with specified size

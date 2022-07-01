@@ -4,8 +4,11 @@ use crate::{ffi, EdgeColor, Point2};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[repr(u32)]
 pub enum SegmentKind {
+    /// Linear segment
     Linear = ffi::msdfgen_SegmentKind_LINEAR,
+    /// Quadratic segment
     Quadratic = ffi::msdfgen_SegmentKind_QUADRATIC,
+    /// Cubic segment
     Cubic = ffi::msdfgen_SegmentKind_CUBIC,
 }
 
