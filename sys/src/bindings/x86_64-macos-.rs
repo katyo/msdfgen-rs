@@ -11,9 +11,11 @@ pub const MSDFGEN_VERSION: &[u8; 4usize] = b"1.9\0";
 pub struct std_allocator {
     pub _address: u8,
 }
-pub type std_allocator_value_type = u8;
 pub type std_allocator_size_type = u64;
 pub type std_allocator_difference_type = u64;
+pub type std_allocator_value_type = u8;
+pub type std_allocator_propagate_on_container_move_assignment = u8;
+pub type std_allocator_is_always_equal = u8;
 pub type std_allocator_pointer = u8;
 pub type std_allocator_const_pointer = u8;
 pub type std_allocator_reference = u8;
@@ -24,42 +26,34 @@ pub struct std_allocator_rebind {
     pub _address: u8,
 }
 pub type std_allocator_rebind_other = u8;
-pub type std_allocator_propagate_on_container_move_assignment = u8;
-pub type std_allocator_is_always_equal = u8;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct std_vector {
     pub _address: u8,
 }
-pub type std_vector__Base = u8;
-pub type std_vector__Tp_alloc_type = u8;
-pub type std_vector__Alloc_traits = u8;
+pub type std_vector___base = u8;
+pub type std_vector___default_allocator_type = u8;
+pub type std_vector___self = u8;
 pub type std_vector_value_type = u8;
-pub type std_vector_pointer = u8;
-pub type std_vector_const_pointer = u8;
+pub type std_vector_allocator_type = u8;
+pub type std_vector___alloc_traits = u8;
 pub type std_vector_reference = u8;
 pub type std_vector_const_reference = u8;
+pub type std_vector_size_type = u8;
+pub type std_vector_difference_type = u8;
+pub type std_vector_pointer = u8;
+pub type std_vector_const_pointer = u8;
 pub type std_vector_iterator = u8;
 pub type std_vector_const_iterator = u8;
-pub type std_vector_const_reverse_iterator = u8;
 pub type std_vector_reverse_iterator = u8;
-pub type std_vector_size_type = u64;
-pub type std_vector_difference_type = u64;
-pub type std_vector_allocator_type = u8;
+pub type std_vector_const_reverse_iterator = u8;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct std_vector__Temporary_value {
+pub struct std_vector__ConstructTransaction {
     pub _address: u8,
 }
-#[repr(C)]
-#[repr(align(1))]
-#[derive(Copy, Clone)]
-pub union std_vector__Temporary_value__Storage {
-    pub _bindgen_opaque_blob: u8,
-}
-pub type size_t = ::std::os::raw::c_ulong;
-pub type __off_t = ::std::os::raw::c_long;
-pub type __off64_t = ::std::os::raw::c_long;
+pub type __int64_t = ::std::os::raw::c_longlong;
+pub type __darwin_off_t = __int64_t;
 #[doc = " A 2-dimensional euclidean vector with double precision."]
 #[doc = " Implementation based on the Vector2 template from Artery Engine."]
 #[doc = " @author Viktor Chlumsky"]
@@ -118,27 +112,27 @@ fn bindgen_test_layout_msdfgen_Vector2() {
 }
 extern "C" {
     #[doc = " Sets the vector to zero."]
-    #[link_name = "\u{1}_ZN7msdfgen7Vector25resetEv"]
+    #[link_name = "\u{1}__ZN7msdfgen7Vector25resetEv"]
     pub fn msdfgen_Vector2_reset(this: *mut msdfgen_Vector2);
 }
 extern "C" {
     #[doc = " Sets individual elements of the vector."]
-    #[link_name = "\u{1}_ZN7msdfgen7Vector23setEdd"]
+    #[link_name = "\u{1}__ZN7msdfgen7Vector23setEdd"]
     pub fn msdfgen_Vector2_set(this: *mut msdfgen_Vector2, x: f64, y: f64);
 }
 extern "C" {
     #[doc = " Returns the vector's length."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Vector26lengthEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Vector26lengthEv"]
     pub fn msdfgen_Vector2_length(this: *const msdfgen_Vector2) -> f64;
 }
 extern "C" {
     #[doc = " Returns the angle of the vector in radians (atan2)."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Vector29directionEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Vector29directionEv"]
     pub fn msdfgen_Vector2_direction(this: *const msdfgen_Vector2) -> f64;
 }
 extern "C" {
     #[doc = " Returns the normalized vector - one that has the same direction but unit length."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Vector29normalizeEb"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Vector29normalizeEb"]
     pub fn msdfgen_Vector2_normalize(
         this: *const msdfgen_Vector2,
         allowZero: bool,
@@ -146,7 +140,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Returns a vector with the same length that is orthogonal to this one."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Vector213getOrthogonalEb"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Vector213getOrthogonalEb"]
     pub fn msdfgen_Vector2_getOrthogonal(
         this: *const msdfgen_Vector2,
         polarity: bool,
@@ -154,7 +148,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Returns a vector with unit length that is orthogonal to this one."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Vector214getOrthonormalEbb"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Vector214getOrthonormalEbb"]
     pub fn msdfgen_Vector2_getOrthonormal(
         this: *const msdfgen_Vector2,
         polarity: bool,
@@ -163,7 +157,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Returns a vector projected along this one."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Vector27projectERKS0_b"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Vector27projectERKS0_b"]
     pub fn msdfgen_Vector2_project(
         this: *const msdfgen_Vector2,
         vector: *const msdfgen_Vector2,
@@ -171,11 +165,11 @@ extern "C" {
     ) -> msdfgen_Vector2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7Vector2C1Ed"]
+    #[link_name = "\u{1}__ZN7msdfgen7Vector2C1Ed"]
     pub fn msdfgen_Vector2_Vector2(this: *mut msdfgen_Vector2, val: f64);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7Vector2C1Edd"]
+    #[link_name = "\u{1}__ZN7msdfgen7Vector2C1Edd"]
     pub fn msdfgen_Vector2_Vector21(this: *mut msdfgen_Vector2, x: f64, y: f64);
 }
 impl msdfgen_Vector2 {
@@ -288,7 +282,7 @@ fn bindgen_test_layout_msdfgen_Projection() {
 }
 extern "C" {
     #[doc = " Converts the shape coordinate to pixel coordinate."]
-    #[link_name = "\u{1}_ZNK7msdfgen10Projection7projectERKNS_7Vector2E"]
+    #[link_name = "\u{1}__ZNK7msdfgen10Projection7projectERKNS_7Vector2E"]
     pub fn msdfgen_Projection_project(
         this: *const msdfgen_Projection,
         coord: *const msdfgen_Point2,
@@ -296,7 +290,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Converts the pixel coordinate to shape coordinate."]
-    #[link_name = "\u{1}_ZNK7msdfgen10Projection9unprojectERKNS_7Vector2E"]
+    #[link_name = "\u{1}__ZNK7msdfgen10Projection9unprojectERKNS_7Vector2E"]
     pub fn msdfgen_Projection_unproject(
         this: *const msdfgen_Projection,
         coord: *const msdfgen_Point2,
@@ -304,7 +298,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Converts the vector to pixel coordinate space."]
-    #[link_name = "\u{1}_ZNK7msdfgen10Projection13projectVectorERKNS_7Vector2E"]
+    #[link_name = "\u{1}__ZNK7msdfgen10Projection13projectVectorERKNS_7Vector2E"]
     pub fn msdfgen_Projection_projectVector(
         this: *const msdfgen_Projection,
         vector: *const msdfgen_Vector2,
@@ -312,7 +306,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Converts the vector from pixel coordinate space."]
-    #[link_name = "\u{1}_ZNK7msdfgen10Projection15unprojectVectorERKNS_7Vector2E"]
+    #[link_name = "\u{1}__ZNK7msdfgen10Projection15unprojectVectorERKNS_7Vector2E"]
     pub fn msdfgen_Projection_unprojectVector(
         this: *const msdfgen_Projection,
         vector: *const msdfgen_Vector2,
@@ -320,30 +314,30 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Converts the X-coordinate from shape to pixel coordinate space."]
-    #[link_name = "\u{1}_ZNK7msdfgen10Projection8projectXEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen10Projection8projectXEd"]
     pub fn msdfgen_Projection_projectX(this: *const msdfgen_Projection, x: f64) -> f64;
 }
 extern "C" {
     #[doc = " Converts the Y-coordinate from shape to pixel coordinate space."]
-    #[link_name = "\u{1}_ZNK7msdfgen10Projection8projectYEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen10Projection8projectYEd"]
     pub fn msdfgen_Projection_projectY(this: *const msdfgen_Projection, y: f64) -> f64;
 }
 extern "C" {
     #[doc = " Converts the X-coordinate from pixel to shape coordinate space."]
-    #[link_name = "\u{1}_ZNK7msdfgen10Projection10unprojectXEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen10Projection10unprojectXEd"]
     pub fn msdfgen_Projection_unprojectX(this: *const msdfgen_Projection, x: f64) -> f64;
 }
 extern "C" {
     #[doc = " Converts the Y-coordinate from pixel to shape coordinate space."]
-    #[link_name = "\u{1}_ZNK7msdfgen10Projection10unprojectYEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen10Projection10unprojectYEd"]
     pub fn msdfgen_Projection_unprojectY(this: *const msdfgen_Projection, y: f64) -> f64;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10ProjectionC1Ev"]
+    #[link_name = "\u{1}__ZN7msdfgen10ProjectionC1Ev"]
     pub fn msdfgen_Projection_Projection(this: *mut msdfgen_Projection);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10ProjectionC1ERKNS_7Vector2ES3_"]
+    #[link_name = "\u{1}__ZN7msdfgen10ProjectionC1ERKNS_7Vector2ES3_"]
     pub fn msdfgen_Projection_Projection1(
         this: *mut msdfgen_Projection,
         scale: *const msdfgen_Vector2,
@@ -404,7 +398,7 @@ pub const msdfgen_FillRule_FILL_NEGATIVE: msdfgen_FillRule = 3;
 pub type msdfgen_FillRule = ::std::os::raw::c_uint;
 extern "C" {
     #[doc = " Resolves the number of intersection into a binary fill value based on fill rule."]
-    #[link_name = "\u{1}_ZN7msdfgen17interpretFillRuleEiNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen17interpretFillRuleEiNS_8FillRuleE"]
     pub fn msdfgen_interpretFillRule(
         intersections: ::std::os::raw::c_int,
         fillRule: msdfgen_FillRule,
@@ -521,7 +515,7 @@ fn bindgen_test_layout_msdfgen_Scanline() {
     test_field_lastIndex();
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen8Scanline7overlapERKS0_S2_ddNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen8Scanline7overlapERKS0_S2_ddNS_8FillRuleE"]
     pub fn msdfgen_Scanline_overlap(
         a: *const msdfgen_Scanline,
         b: *const msdfgen_Scanline,
@@ -532,14 +526,14 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Populates the intersection list."]
-    #[link_name = "\u{1}_ZN7msdfgen8Scanline16setIntersectionsERKSt6vectorINS0_12IntersectionESaIS2_EE"]
+    #[link_name = "\u{1}__ZN7msdfgen8Scanline16setIntersectionsERKNSt3__16vectorINS0_12IntersectionENS1_9allocatorIS3_EEEE"]
     pub fn msdfgen_Scanline_setIntersections(
         this: *mut msdfgen_Scanline,
         intersections: *const [u64; 3usize],
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen8Scanline16setIntersectionsEOSt6vectorINS0_12IntersectionESaIS2_EE"]
+    #[link_name = "\u{1}__ZN7msdfgen8Scanline16setIntersectionsEONSt3__16vectorINS0_12IntersectionENS1_9allocatorIS3_EEEE"]
     pub fn msdfgen_Scanline_setIntersections1(
         this: *mut msdfgen_Scanline,
         intersections: *mut [u64; 3usize],
@@ -547,7 +541,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Returns the number of intersections left of x."]
-    #[link_name = "\u{1}_ZNK7msdfgen8Scanline18countIntersectionsEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen8Scanline18countIntersectionsEd"]
     pub fn msdfgen_Scanline_countIntersections(
         this: *const msdfgen_Scanline,
         x: f64,
@@ -555,7 +549,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Returns the total sign of intersections left of x."]
-    #[link_name = "\u{1}_ZNK7msdfgen8Scanline16sumIntersectionsEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen8Scanline16sumIntersectionsEd"]
     pub fn msdfgen_Scanline_sumIntersections(
         this: *const msdfgen_Scanline,
         x: f64,
@@ -563,7 +557,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Decides whether the scanline is filled at x based on fill rule."]
-    #[link_name = "\u{1}_ZNK7msdfgen8Scanline6filledEdNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZNK7msdfgen8Scanline6filledEdNS_8FillRuleE"]
     pub fn msdfgen_Scanline_filled(
         this: *const msdfgen_Scanline,
         x: f64,
@@ -571,7 +565,7 @@ extern "C" {
     ) -> bool;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen8ScanlineC1Ev"]
+    #[link_name = "\u{1}__ZN7msdfgen8ScanlineC1Ev"]
     pub fn msdfgen_Scanline_Scanline(this: *mut msdfgen_Scanline);
 }
 impl msdfgen_Scanline {
@@ -667,11 +661,11 @@ fn bindgen_test_layout_msdfgen_SignedDistance() {
     test_field_dot();
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen14SignedDistanceC1Ev"]
+    #[link_name = "\u{1}__ZN7msdfgen14SignedDistanceC1Ev"]
     pub fn msdfgen_SignedDistance_SignedDistance(this: *mut msdfgen_SignedDistance);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen14SignedDistanceC1Edd"]
+    #[link_name = "\u{1}__ZN7msdfgen14SignedDistanceC1Edd"]
     pub fn msdfgen_SignedDistance_SignedDistance1(
         this: *mut msdfgen_SignedDistance,
         dist: f64,
@@ -743,7 +737,7 @@ fn bindgen_test_layout_msdfgen_EdgeSegment() {
 }
 extern "C" {
     #[doc = " Converts a previously retrieved signed distance from origin to pseudo-distance."]
-    #[link_name = "\u{1}_ZNK7msdfgen11EdgeSegment24distanceToPseudoDistanceERNS_14SignedDistanceENS_7Vector2Ed"]
+    #[link_name = "\u{1}__ZNK7msdfgen11EdgeSegment24distanceToPseudoDistanceERNS_14SignedDistanceENS_7Vector2Ed"]
     pub fn msdfgen_EdgeSegment_distanceToPseudoDistance(
         this: *mut ::std::os::raw::c_void,
         distance: *mut msdfgen_SignedDistance,
@@ -789,11 +783,11 @@ fn bindgen_test_layout_msdfgen_LinearSegment() {
     test_field_p();
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment6lengthEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment6lengthEv"]
     pub fn msdfgen_LinearSegment_length(this: *const msdfgen_LinearSegment) -> f64;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen13LinearSegmentC1ENS_7Vector2ES1_NS_9EdgeColorE"]
+    #[link_name = "\u{1}__ZN7msdfgen13LinearSegmentC1ENS_7Vector2ES1_NS_9EdgeColorE"]
     pub fn msdfgen_LinearSegment_LinearSegment(
         this: *mut msdfgen_LinearSegment,
         p0: msdfgen_Point2,
@@ -818,34 +812,34 @@ impl msdfgen_LinearSegment {
     }
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment5cloneEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment5cloneEv"]
     pub fn msdfgen_LinearSegment_clone(
         this: *mut ::std::os::raw::c_void,
     ) -> *mut msdfgen_LinearSegment;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment5pointEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment5pointEd"]
     pub fn msdfgen_LinearSegment_point(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Point2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment9directionEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment9directionEd"]
     pub fn msdfgen_LinearSegment_direction(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Vector2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment15directionChangeEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment15directionChangeEd"]
     pub fn msdfgen_LinearSegment_directionChange(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Vector2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment14signedDistanceENS_7Vector2ERd"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment14signedDistanceENS_7Vector2ERd"]
     pub fn msdfgen_LinearSegment_signedDistance(
         this: *mut ::std::os::raw::c_void,
         origin: msdfgen_Point2,
@@ -853,7 +847,7 @@ extern "C" {
     ) -> msdfgen_SignedDistance;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment21scanlineIntersectionsEPdPid"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment21scanlineIntersectionsEPdPid"]
     pub fn msdfgen_LinearSegment_scanlineIntersections(
         this: *mut ::std::os::raw::c_void,
         x: *mut f64,
@@ -862,7 +856,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment5boundERdS1_S1_S1_"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment5boundERdS1_S1_S1_"]
     pub fn msdfgen_LinearSegment_bound(
         this: *mut ::std::os::raw::c_void,
         l: *mut f64,
@@ -872,25 +866,25 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen13LinearSegment7reverseEv"]
+    #[link_name = "\u{1}__ZN7msdfgen13LinearSegment7reverseEv"]
     pub fn msdfgen_LinearSegment_reverse(this: *mut ::std::os::raw::c_void);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen13LinearSegment14moveStartPointENS_7Vector2E"]
+    #[link_name = "\u{1}__ZN7msdfgen13LinearSegment14moveStartPointENS_7Vector2E"]
     pub fn msdfgen_LinearSegment_moveStartPoint(
         this: *mut ::std::os::raw::c_void,
         to: msdfgen_Point2,
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen13LinearSegment12moveEndPointENS_7Vector2E"]
+    #[link_name = "\u{1}__ZN7msdfgen13LinearSegment12moveEndPointENS_7Vector2E"]
     pub fn msdfgen_LinearSegment_moveEndPoint(
         this: *mut ::std::os::raw::c_void,
         to: msdfgen_Point2,
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen13LinearSegment13splitInThirdsERPNS_11EdgeSegmentES3_S3_"]
+    #[link_name = "\u{1}__ZNK7msdfgen13LinearSegment13splitInThirdsERPNS_11EdgeSegmentES3_S3_"]
     pub fn msdfgen_LinearSegment_splitInThirds(
         this: *mut ::std::os::raw::c_void,
         part1: *mut *mut msdfgen_EdgeSegment,
@@ -936,17 +930,17 @@ fn bindgen_test_layout_msdfgen_QuadraticSegment() {
     test_field_p();
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment6lengthEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment6lengthEv"]
     pub fn msdfgen_QuadraticSegment_length(this: *const msdfgen_QuadraticSegment) -> f64;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment14convertToCubicEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment14convertToCubicEv"]
     pub fn msdfgen_QuadraticSegment_convertToCubic(
         this: *const msdfgen_QuadraticSegment,
     ) -> *mut msdfgen_EdgeSegment;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16QuadraticSegmentC1ENS_7Vector2ES1_S1_NS_9EdgeColorE"]
+    #[link_name = "\u{1}__ZN7msdfgen16QuadraticSegmentC1ENS_7Vector2ES1_S1_NS_9EdgeColorE"]
     pub fn msdfgen_QuadraticSegment_QuadraticSegment(
         this: *mut msdfgen_QuadraticSegment,
         p0: msdfgen_Point2,
@@ -983,34 +977,34 @@ impl msdfgen_QuadraticSegment {
     }
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment5cloneEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment5cloneEv"]
     pub fn msdfgen_QuadraticSegment_clone(
         this: *mut ::std::os::raw::c_void,
     ) -> *mut msdfgen_QuadraticSegment;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment5pointEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment5pointEd"]
     pub fn msdfgen_QuadraticSegment_point(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Point2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment9directionEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment9directionEd"]
     pub fn msdfgen_QuadraticSegment_direction(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Vector2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment15directionChangeEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment15directionChangeEd"]
     pub fn msdfgen_QuadraticSegment_directionChange(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Vector2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment14signedDistanceENS_7Vector2ERd"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment14signedDistanceENS_7Vector2ERd"]
     pub fn msdfgen_QuadraticSegment_signedDistance(
         this: *mut ::std::os::raw::c_void,
         origin: msdfgen_Point2,
@@ -1018,7 +1012,7 @@ extern "C" {
     ) -> msdfgen_SignedDistance;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment21scanlineIntersectionsEPdPid"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment21scanlineIntersectionsEPdPid"]
     pub fn msdfgen_QuadraticSegment_scanlineIntersections(
         this: *mut ::std::os::raw::c_void,
         x: *mut f64,
@@ -1027,7 +1021,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment5boundERdS1_S1_S1_"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment5boundERdS1_S1_S1_"]
     pub fn msdfgen_QuadraticSegment_bound(
         this: *mut ::std::os::raw::c_void,
         l: *mut f64,
@@ -1037,25 +1031,25 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16QuadraticSegment7reverseEv"]
+    #[link_name = "\u{1}__ZN7msdfgen16QuadraticSegment7reverseEv"]
     pub fn msdfgen_QuadraticSegment_reverse(this: *mut ::std::os::raw::c_void);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16QuadraticSegment14moveStartPointENS_7Vector2E"]
+    #[link_name = "\u{1}__ZN7msdfgen16QuadraticSegment14moveStartPointENS_7Vector2E"]
     pub fn msdfgen_QuadraticSegment_moveStartPoint(
         this: *mut ::std::os::raw::c_void,
         to: msdfgen_Point2,
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16QuadraticSegment12moveEndPointENS_7Vector2E"]
+    #[link_name = "\u{1}__ZN7msdfgen16QuadraticSegment12moveEndPointENS_7Vector2E"]
     pub fn msdfgen_QuadraticSegment_moveEndPoint(
         this: *mut ::std::os::raw::c_void,
         to: msdfgen_Point2,
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen16QuadraticSegment13splitInThirdsERPNS_11EdgeSegmentES3_S3_"]
+    #[link_name = "\u{1}__ZNK7msdfgen16QuadraticSegment13splitInThirdsERPNS_11EdgeSegmentES3_S3_"]
     pub fn msdfgen_QuadraticSegment_splitInThirds(
         this: *mut ::std::os::raw::c_void,
         part1: *mut *mut msdfgen_EdgeSegment,
@@ -1101,7 +1095,7 @@ fn bindgen_test_layout_msdfgen_CubicSegment() {
     test_field_p();
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen12CubicSegment10deconvergeEid"]
+    #[link_name = "\u{1}__ZN7msdfgen12CubicSegment10deconvergeEid"]
     pub fn msdfgen_CubicSegment_deconverge(
         this: *mut msdfgen_CubicSegment,
         param: ::std::os::raw::c_int,
@@ -1109,7 +1103,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen12CubicSegmentC1ENS_7Vector2ES1_S1_S1_NS_9EdgeColorE"]
+    #[link_name = "\u{1}__ZN7msdfgen12CubicSegmentC1ENS_7Vector2ES1_S1_S1_NS_9EdgeColorE"]
     pub fn msdfgen_CubicSegment_CubicSegment(
         this: *mut msdfgen_CubicSegment,
         p0: msdfgen_Point2,
@@ -1138,34 +1132,34 @@ impl msdfgen_CubicSegment {
     }
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen12CubicSegment5cloneEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen12CubicSegment5cloneEv"]
     pub fn msdfgen_CubicSegment_clone(
         this: *mut ::std::os::raw::c_void,
     ) -> *mut msdfgen_CubicSegment;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen12CubicSegment5pointEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen12CubicSegment5pointEd"]
     pub fn msdfgen_CubicSegment_point(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Point2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen12CubicSegment9directionEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen12CubicSegment9directionEd"]
     pub fn msdfgen_CubicSegment_direction(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Vector2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen12CubicSegment15directionChangeEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen12CubicSegment15directionChangeEd"]
     pub fn msdfgen_CubicSegment_directionChange(
         this: *mut ::std::os::raw::c_void,
         param: f64,
     ) -> msdfgen_Vector2;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen12CubicSegment14signedDistanceENS_7Vector2ERd"]
+    #[link_name = "\u{1}__ZNK7msdfgen12CubicSegment14signedDistanceENS_7Vector2ERd"]
     pub fn msdfgen_CubicSegment_signedDistance(
         this: *mut ::std::os::raw::c_void,
         origin: msdfgen_Point2,
@@ -1173,7 +1167,7 @@ extern "C" {
     ) -> msdfgen_SignedDistance;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen12CubicSegment21scanlineIntersectionsEPdPid"]
+    #[link_name = "\u{1}__ZNK7msdfgen12CubicSegment21scanlineIntersectionsEPdPid"]
     pub fn msdfgen_CubicSegment_scanlineIntersections(
         this: *mut ::std::os::raw::c_void,
         x: *mut f64,
@@ -1182,7 +1176,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen12CubicSegment5boundERdS1_S1_S1_"]
+    #[link_name = "\u{1}__ZNK7msdfgen12CubicSegment5boundERdS1_S1_S1_"]
     pub fn msdfgen_CubicSegment_bound(
         this: *mut ::std::os::raw::c_void,
         l: *mut f64,
@@ -1192,22 +1186,22 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen12CubicSegment7reverseEv"]
+    #[link_name = "\u{1}__ZN7msdfgen12CubicSegment7reverseEv"]
     pub fn msdfgen_CubicSegment_reverse(this: *mut ::std::os::raw::c_void);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen12CubicSegment14moveStartPointENS_7Vector2E"]
+    #[link_name = "\u{1}__ZN7msdfgen12CubicSegment14moveStartPointENS_7Vector2E"]
     pub fn msdfgen_CubicSegment_moveStartPoint(
         this: *mut ::std::os::raw::c_void,
         to: msdfgen_Point2,
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen12CubicSegment12moveEndPointENS_7Vector2E"]
+    #[link_name = "\u{1}__ZN7msdfgen12CubicSegment12moveEndPointENS_7Vector2E"]
     pub fn msdfgen_CubicSegment_moveEndPoint(this: *mut ::std::os::raw::c_void, to: msdfgen_Point2);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZNK7msdfgen12CubicSegment13splitInThirdsERPNS_11EdgeSegmentES3_S3_"]
+    #[link_name = "\u{1}__ZNK7msdfgen12CubicSegment13splitInThirdsERPNS_11EdgeSegmentES3_S3_"]
     pub fn msdfgen_CubicSegment_splitInThirds(
         this: *mut ::std::os::raw::c_void,
         part1: *mut *mut msdfgen_EdgeSegment,
@@ -1253,22 +1247,22 @@ fn bindgen_test_layout_msdfgen_EdgeHolder() {
 }
 extern "C" {
     #[doc = " Swaps the edges held by a and b."]
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolder4swapERS0_S1_"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolder4swapERS0_S1_"]
     pub fn msdfgen_EdgeHolder_swap(a: *mut msdfgen_EdgeHolder, b: *mut msdfgen_EdgeHolder);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolderC1Ev"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolderC1Ev"]
     pub fn msdfgen_EdgeHolder_EdgeHolder(this: *mut msdfgen_EdgeHolder);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolderC1EPNS_11EdgeSegmentE"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolderC1EPNS_11EdgeSegmentE"]
     pub fn msdfgen_EdgeHolder_EdgeHolder1(
         this: *mut msdfgen_EdgeHolder,
         segment: *mut msdfgen_EdgeSegment,
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolderC1ENS_7Vector2ES1_NS_9EdgeColorE"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolderC1ENS_7Vector2ES1_NS_9EdgeColorE"]
     pub fn msdfgen_EdgeHolder_EdgeHolder2(
         this: *mut msdfgen_EdgeHolder,
         p0: msdfgen_Point2,
@@ -1277,7 +1271,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolderC1ENS_7Vector2ES1_S1_NS_9EdgeColorE"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolderC1ENS_7Vector2ES1_S1_NS_9EdgeColorE"]
     pub fn msdfgen_EdgeHolder_EdgeHolder3(
         this: *mut msdfgen_EdgeHolder,
         p0: msdfgen_Point2,
@@ -1287,7 +1281,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolderC1ENS_7Vector2ES1_S1_S1_NS_9EdgeColorE"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolderC1ENS_7Vector2ES1_S1_S1_NS_9EdgeColorE"]
     pub fn msdfgen_EdgeHolder_EdgeHolder4(
         this: *mut msdfgen_EdgeHolder,
         p0: msdfgen_Point2,
@@ -1298,21 +1292,21 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolderC1ERKS0_"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolderC1ERKS0_"]
     pub fn msdfgen_EdgeHolder_EdgeHolder5(
         this: *mut msdfgen_EdgeHolder,
         orig: *const msdfgen_EdgeHolder,
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolderC1EOS0_"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolderC1EOS0_"]
     pub fn msdfgen_EdgeHolder_EdgeHolder6(
         this: *mut msdfgen_EdgeHolder,
         orig: *mut msdfgen_EdgeHolder,
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen10EdgeHolderD1Ev"]
+    #[link_name = "\u{1}__ZN7msdfgen10EdgeHolderD1Ev"]
     pub fn msdfgen_EdgeHolder_EdgeHolder_destructor(this: *mut msdfgen_EdgeHolder);
 }
 impl msdfgen_EdgeHolder {
@@ -1421,21 +1415,21 @@ fn bindgen_test_layout_msdfgen_Contour() {
 }
 extern "C" {
     #[doc = " Adds an edge to the contour."]
-    #[link_name = "\u{1}_ZN7msdfgen7Contour7addEdgeERKNS_10EdgeHolderE"]
+    #[link_name = "\u{1}__ZN7msdfgen7Contour7addEdgeERKNS_10EdgeHolderE"]
     pub fn msdfgen_Contour_addEdge(this: *mut msdfgen_Contour, edge: *const msdfgen_EdgeHolder);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7Contour7addEdgeEONS_10EdgeHolderE"]
+    #[link_name = "\u{1}__ZN7msdfgen7Contour7addEdgeEONS_10EdgeHolderE"]
     pub fn msdfgen_Contour_addEdge1(this: *mut msdfgen_Contour, edge: *mut msdfgen_EdgeHolder);
 }
 extern "C" {
     #[doc = " Creates a new edge in the contour and returns its reference."]
-    #[link_name = "\u{1}_ZN7msdfgen7Contour7addEdgeEv"]
+    #[link_name = "\u{1}__ZN7msdfgen7Contour7addEdgeEv"]
     pub fn msdfgen_Contour_addEdge2(this: *mut msdfgen_Contour) -> *mut msdfgen_EdgeHolder;
 }
 extern "C" {
     #[doc = " Adjusts the bounding box to fit the contour."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Contour5boundERdS1_S1_S1_"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Contour5boundERdS1_S1_S1_"]
     pub fn msdfgen_Contour_bound(
         this: *const msdfgen_Contour,
         l: *mut f64,
@@ -1446,7 +1440,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Adjusts the bounding box to fit the contour border's mitered corners."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Contour11boundMitersERdS1_S1_S1_ddi"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Contour11boundMitersERdS1_S1_S1_ddi"]
     pub fn msdfgen_Contour_boundMiters(
         this: *const msdfgen_Contour,
         l: *mut f64,
@@ -1460,12 +1454,12 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Computes the winding of the contour. Returns 1 if positive, -1 if negative."]
-    #[link_name = "\u{1}_ZNK7msdfgen7Contour7windingEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen7Contour7windingEv"]
     pub fn msdfgen_Contour_winding(this: *const msdfgen_Contour) -> ::std::os::raw::c_int;
 }
 extern "C" {
     #[doc = " Reverses the sequence of edges on the contour."]
-    #[link_name = "\u{1}_ZN7msdfgen7Contour7reverseEv"]
+    #[link_name = "\u{1}__ZN7msdfgen7Contour7reverseEv"]
     pub fn msdfgen_Contour_reverse(this: *mut msdfgen_Contour);
 }
 impl msdfgen_Contour {
@@ -1654,31 +1648,31 @@ fn bindgen_test_layout_msdfgen_Shape() {
 }
 extern "C" {
     #[doc = " Adds a contour."]
-    #[link_name = "\u{1}_ZN7msdfgen5Shape10addContourERKNS_7ContourE"]
+    #[link_name = "\u{1}__ZN7msdfgen5Shape10addContourERKNS_7ContourE"]
     pub fn msdfgen_Shape_addContour(this: *mut msdfgen_Shape, contour: *const msdfgen_Contour);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen5Shape10addContourEONS_7ContourE"]
+    #[link_name = "\u{1}__ZN7msdfgen5Shape10addContourEONS_7ContourE"]
     pub fn msdfgen_Shape_addContour1(this: *mut msdfgen_Shape, contour: *mut msdfgen_Contour);
 }
 extern "C" {
     #[doc = " Adds a blank contour and returns its reference."]
-    #[link_name = "\u{1}_ZN7msdfgen5Shape10addContourEv"]
+    #[link_name = "\u{1}__ZN7msdfgen5Shape10addContourEv"]
     pub fn msdfgen_Shape_addContour2(this: *mut msdfgen_Shape) -> *mut msdfgen_Contour;
 }
 extern "C" {
     #[doc = " Normalizes the shape geometry for distance field generation."]
-    #[link_name = "\u{1}_ZN7msdfgen5Shape9normalizeEv"]
+    #[link_name = "\u{1}__ZN7msdfgen5Shape9normalizeEv"]
     pub fn msdfgen_Shape_normalize(this: *mut msdfgen_Shape);
 }
 extern "C" {
     #[doc = " Performs basic checks to determine if the object represents a valid shape."]
-    #[link_name = "\u{1}_ZNK7msdfgen5Shape8validateEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen5Shape8validateEv"]
     pub fn msdfgen_Shape_validate(this: *const msdfgen_Shape) -> bool;
 }
 extern "C" {
     #[doc = " Adjusts the bounding box to fit the shape."]
-    #[link_name = "\u{1}_ZNK7msdfgen5Shape5boundERdS1_S1_S1_"]
+    #[link_name = "\u{1}__ZNK7msdfgen5Shape5boundERdS1_S1_S1_"]
     pub fn msdfgen_Shape_bound(
         this: *const msdfgen_Shape,
         l: *mut f64,
@@ -1689,7 +1683,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Adjusts the bounding box to fit the shape border's mitered corners."]
-    #[link_name = "\u{1}_ZNK7msdfgen5Shape11boundMitersERdS1_S1_S1_ddi"]
+    #[link_name = "\u{1}__ZNK7msdfgen5Shape11boundMitersERdS1_S1_S1_ddi"]
     pub fn msdfgen_Shape_boundMiters(
         this: *const msdfgen_Shape,
         l: *mut f64,
@@ -1703,7 +1697,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Computes the minimum bounding box that fits the shape, optionally with a (mitered) border."]
-    #[link_name = "\u{1}_ZNK7msdfgen5Shape9getBoundsEddi"]
+    #[link_name = "\u{1}__ZNK7msdfgen5Shape9getBoundsEddi"]
     pub fn msdfgen_Shape_getBounds(
         this: *const msdfgen_Shape,
         border: f64,
@@ -1713,21 +1707,21 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Outputs the scanline that intersects the shape at y."]
-    #[link_name = "\u{1}_ZNK7msdfgen5Shape8scanlineERNS_8ScanlineEd"]
+    #[link_name = "\u{1}__ZNK7msdfgen5Shape8scanlineERNS_8ScanlineEd"]
     pub fn msdfgen_Shape_scanline(this: *const msdfgen_Shape, line: *mut msdfgen_Scanline, y: f64);
 }
 extern "C" {
     #[doc = " Returns the total number of edge segments"]
-    #[link_name = "\u{1}_ZNK7msdfgen5Shape9edgeCountEv"]
+    #[link_name = "\u{1}__ZNK7msdfgen5Shape9edgeCountEv"]
     pub fn msdfgen_Shape_edgeCount(this: *const msdfgen_Shape) -> ::std::os::raw::c_int;
 }
 extern "C" {
     #[doc = " Assumes its contours are unoriented (even-odd fill rule). Attempts to orient them to conform to the non-zero winding rule."]
-    #[link_name = "\u{1}_ZN7msdfgen5Shape14orientContoursEv"]
+    #[link_name = "\u{1}__ZN7msdfgen5Shape14orientContoursEv"]
     pub fn msdfgen_Shape_orientContours(this: *mut msdfgen_Shape);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen5ShapeC1Ev"]
+    #[link_name = "\u{1}__ZN7msdfgen5ShapeC1Ev"]
     pub fn msdfgen_Shape_Shape(this: *mut msdfgen_Shape);
 }
 impl msdfgen_Shape {
@@ -1802,7 +1796,7 @@ extern "C" {
     #[doc = "  May split some edges if necessary."]
     #[doc = "  angleThreshold specifies the maximum angle (in radians) to be considered a corner, for example 3 (~172 degrees)."]
     #[doc = "  Values below 1/2 PI will be treated as the external angle."]
-    #[link_name = "\u{1}_ZN7msdfgen18edgeColoringSimpleERNS_5ShapeEdy"]
+    #[link_name = "\u{1}__ZN7msdfgen18edgeColoringSimpleERNS_5ShapeEdy"]
     pub fn msdfgen_edgeColoringSimple(
         shape: *mut msdfgen_Shape,
         angleThreshold: f64,
@@ -1813,7 +1807,7 @@ extern "C" {
     #[doc = " The alternative \"ink trap\" coloring strategy is designed for better results with typefaces"]
     #[doc = "  that use ink traps as a design feature. It guarantees that even if all edges that are shorter than"]
     #[doc = "  both their neighboring edges are removed, the coloring remains consistent with the established rules."]
-    #[link_name = "\u{1}_ZN7msdfgen19edgeColoringInkTrapERNS_5ShapeEdy"]
+    #[link_name = "\u{1}__ZN7msdfgen19edgeColoringInkTrapERNS_5ShapeEdy"]
     pub fn msdfgen_edgeColoringInkTrap(
         shape: *mut msdfgen_Shape,
         angleThreshold: f64,
@@ -1824,7 +1818,7 @@ extern "C" {
     #[doc = " The alternative coloring by distance tries to use different colors for edges that are close together."]
     #[doc = "  This should theoretically be the best strategy on average. However, since it needs to compute the distance"]
     #[doc = "  between all pairs of edges, and perform a graph optimization task, it is much slower than the rest."]
-    #[link_name = "\u{1}_ZN7msdfgen22edgeColoringByDistanceERNS_5ShapeEdy"]
+    #[link_name = "\u{1}__ZN7msdfgen22edgeColoringByDistanceERNS_5ShapeEdy"]
     pub fn msdfgen_edgeColoringByDistance(
         shape: *mut msdfgen_Shape,
         angleThreshold: f64,
@@ -1867,12 +1861,12 @@ pub const msdfgen_ErrorCorrectionConfig_DistanceCheckMode_ALWAYS_CHECK_DISTANCE:
 pub type msdfgen_ErrorCorrectionConfig_DistanceCheckMode = ::std::os::raw::c_uint;
 extern "C" {
     #[doc = " The default value of minDeviationRatio."]
-    #[link_name = "\u{1}_ZN7msdfgen21ErrorCorrectionConfig24defaultMinDeviationRatioE"]
+    #[link_name = "\u{1}__ZN7msdfgen21ErrorCorrectionConfig24defaultMinDeviationRatioE"]
     pub static msdfgen_ErrorCorrectionConfig_defaultMinDeviationRatio: f64;
 }
 extern "C" {
     #[doc = " The default value of minImproveRatio."]
-    #[link_name = "\u{1}_ZN7msdfgen21ErrorCorrectionConfig22defaultMinImproveRatioE"]
+    #[link_name = "\u{1}__ZN7msdfgen21ErrorCorrectionConfig22defaultMinImproveRatioE"]
     pub static msdfgen_ErrorCorrectionConfig_defaultMinImproveRatio: f64;
 }
 #[test]
@@ -2050,7 +2044,7 @@ fn bindgen_test_layout_msdfgen_MSDFGeneratorConfig() {
 }
 extern "C" {
     #[doc = " Predicts potential artifacts caused by the interpolation of the MSDF and corrects them by converting nearby texels to single-channel."]
-    #[link_name = "\u{1}_ZN7msdfgen19msdfErrorCorrectionERKNS_9BitmapRefIfLi3EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_19MSDFGeneratorConfigE"]
+    #[link_name = "\u{1}__ZN7msdfgen19msdfErrorCorrectionERKNS_9BitmapRefIfLi3EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_19MSDFGeneratorConfigE"]
     pub fn msdfgen_msdfErrorCorrection(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2060,7 +2054,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen19msdfErrorCorrectionERKNS_9BitmapRefIfLi4EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_19MSDFGeneratorConfigE"]
+    #[link_name = "\u{1}__ZN7msdfgen19msdfErrorCorrectionERKNS_9BitmapRefIfLi4EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_19MSDFGeneratorConfigE"]
     pub fn msdfgen_msdfErrorCorrection1(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2071,7 +2065,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Applies the simplified error correction to all discontiunous distances (INDISCRIMINATE mode). Does not need shape or translation."]
-    #[link_name = "\u{1}_ZN7msdfgen31msdfFastDistanceErrorCorrectionERKNS_9BitmapRefIfLi3EEERKNS_10ProjectionEdd"]
+    #[link_name = "\u{1}__ZN7msdfgen31msdfFastDistanceErrorCorrectionERKNS_9BitmapRefIfLi3EEERKNS_10ProjectionEdd"]
     pub fn msdfgen_msdfFastDistanceErrorCorrection(
         sdf: *const u8,
         projection: *const msdfgen_Projection,
@@ -2080,7 +2074,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen31msdfFastDistanceErrorCorrectionERKNS_9BitmapRefIfLi4EEERKNS_10ProjectionEdd"]
+    #[link_name = "\u{1}__ZN7msdfgen31msdfFastDistanceErrorCorrectionERKNS_9BitmapRefIfLi4EEERKNS_10ProjectionEdd"]
     pub fn msdfgen_msdfFastDistanceErrorCorrection1(
         sdf: *const u8,
         projection: *const msdfgen_Projection,
@@ -2090,7 +2084,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Applies the simplified error correction to edges only (EDGE_ONLY mode). Does not need shape or translation."]
-    #[link_name = "\u{1}_ZN7msdfgen27msdfFastEdgeErrorCorrectionERKNS_9BitmapRefIfLi3EEERKNS_10ProjectionEdd"]
+    #[link_name = "\u{1}__ZN7msdfgen27msdfFastEdgeErrorCorrectionERKNS_9BitmapRefIfLi3EEERKNS_10ProjectionEdd"]
     pub fn msdfgen_msdfFastEdgeErrorCorrection(
         sdf: *const u8,
         projection: *const msdfgen_Projection,
@@ -2099,7 +2093,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen27msdfFastEdgeErrorCorrectionERKNS_9BitmapRefIfLi4EEERKNS_10ProjectionEdd"]
+    #[link_name = "\u{1}__ZN7msdfgen27msdfFastEdgeErrorCorrectionERKNS_9BitmapRefIfLi4EEERKNS_10ProjectionEdd"]
     pub fn msdfgen_msdfFastEdgeErrorCorrection1(
         sdf: *const u8,
         projection: *const msdfgen_Projection,
@@ -2109,11 +2103,11 @@ extern "C" {
 }
 extern "C" {
     #[doc = " The original version of the error correction algorithm."]
-    #[link_name = "\u{1}_ZN7msdfgen26msdfErrorCorrection_legacyERKNS_9BitmapRefIfLi3EEERKNS_7Vector2E"]
+    #[link_name = "\u{1}__ZN7msdfgen26msdfErrorCorrection_legacyERKNS_9BitmapRefIfLi3EEERKNS_7Vector2E"]
     pub fn msdfgen_msdfErrorCorrection_legacy(output: *const u8, threshold: *const msdfgen_Vector2);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen26msdfErrorCorrection_legacyERKNS_9BitmapRefIfLi4EEERKNS_7Vector2E"]
+    #[link_name = "\u{1}__ZN7msdfgen26msdfErrorCorrection_legacyERKNS_9BitmapRefIfLi4EEERKNS_7Vector2E"]
     pub fn msdfgen_msdfErrorCorrection_legacy1(
         output: *const u8,
         threshold: *const msdfgen_Vector2,
@@ -2121,45 +2115,45 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Reconstructs the shape's appearance into output from the distance field sdf."]
-    #[link_name = "\u{1}_ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi1EEERKNS_14BitmapConstRefIfLi1EEEdf"]
+    #[link_name = "\u{1}__ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi1EEERKNS_14BitmapConstRefIfLi1EEEdf"]
     pub fn msdfgen_renderSDF(output: *const u8, sdf: *const u8, pxRange: f64, midValue: f32);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi3EEERKNS_14BitmapConstRefIfLi1EEEdf"]
+    #[link_name = "\u{1}__ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi3EEERKNS_14BitmapConstRefIfLi1EEEdf"]
     pub fn msdfgen_renderSDF1(output: *const u8, sdf: *const u8, pxRange: f64, midValue: f32);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi1EEERKNS_14BitmapConstRefIfLi3EEEdf"]
+    #[link_name = "\u{1}__ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi1EEERKNS_14BitmapConstRefIfLi3EEEdf"]
     pub fn msdfgen_renderSDF2(output: *const u8, sdf: *const u8, pxRange: f64, midValue: f32);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi3EEERKNS_14BitmapConstRefIfLi3EEEdf"]
+    #[link_name = "\u{1}__ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi3EEERKNS_14BitmapConstRefIfLi3EEEdf"]
     pub fn msdfgen_renderSDF3(output: *const u8, sdf: *const u8, pxRange: f64, midValue: f32);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi1EEERKNS_14BitmapConstRefIfLi4EEEdf"]
+    #[link_name = "\u{1}__ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi1EEERKNS_14BitmapConstRefIfLi4EEEdf"]
     pub fn msdfgen_renderSDF4(output: *const u8, sdf: *const u8, pxRange: f64, midValue: f32);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi4EEERKNS_14BitmapConstRefIfLi4EEEdf"]
+    #[link_name = "\u{1}__ZN7msdfgen9renderSDFERKNS_9BitmapRefIfLi4EEERKNS_14BitmapConstRefIfLi4EEEdf"]
     pub fn msdfgen_renderSDF5(output: *const u8, sdf: *const u8, pxRange: f64, midValue: f32);
 }
 extern "C" {
     #[doc = " Snaps the values of the floating-point bitmaps into one of the 256 values representable in a standard 8-bit bitmap."]
-    #[link_name = "\u{1}_ZN7msdfgen12simulate8bitERKNS_9BitmapRefIfLi1EEE"]
+    #[link_name = "\u{1}__ZN7msdfgen12simulate8bitERKNS_9BitmapRefIfLi1EEE"]
     pub fn msdfgen_simulate8bit(bitmap: *const u8);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen12simulate8bitERKNS_9BitmapRefIfLi3EEE"]
+    #[link_name = "\u{1}__ZN7msdfgen12simulate8bitERKNS_9BitmapRefIfLi3EEE"]
     pub fn msdfgen_simulate8bit1(bitmap: *const u8);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen12simulate8bitERKNS_9BitmapRefIfLi4EEE"]
+    #[link_name = "\u{1}__ZN7msdfgen12simulate8bitERKNS_9BitmapRefIfLi4EEE"]
     pub fn msdfgen_simulate8bit2(bitmap: *const u8);
 }
 extern "C" {
     #[doc = " Rasterizes the shape into a monochrome bitmap."]
-    #[link_name = "\u{1}_ZN7msdfgen9rasterizeERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionENS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen9rasterizeERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionENS_8FillRuleE"]
     pub fn msdfgen_rasterize(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2169,7 +2163,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Fixes the sign of the input signed distance field, so that it matches the shape's rasterized fill."]
-    #[link_name = "\u{1}_ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionENS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionENS_8FillRuleE"]
     pub fn msdfgen_distanceSignCorrection(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2178,7 +2172,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi3EEERKNS_5ShapeERKNS_10ProjectionENS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi3EEERKNS_5ShapeERKNS_10ProjectionENS_8FillRuleE"]
     pub fn msdfgen_distanceSignCorrection1(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2187,7 +2181,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi4EEERKNS_5ShapeERKNS_10ProjectionENS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi4EEERKNS_5ShapeERKNS_10ProjectionENS_8FillRuleE"]
     pub fn msdfgen_distanceSignCorrection2(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2196,7 +2190,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen9rasterizeERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_7Vector2ES9_NS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen9rasterizeERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_7Vector2ES9_NS_8FillRuleE"]
     pub fn msdfgen_rasterize1(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2206,7 +2200,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_7Vector2ES9_NS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_7Vector2ES9_NS_8FillRuleE"]
     pub fn msdfgen_distanceSignCorrection3(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2216,7 +2210,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi3EEERKNS_5ShapeERKNS_7Vector2ES9_NS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi3EEERKNS_5ShapeERKNS_7Vector2ES9_NS_8FillRuleE"]
     pub fn msdfgen_distanceSignCorrection4(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2226,7 +2220,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi4EEERKNS_5ShapeERKNS_7Vector2ES9_NS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen22distanceSignCorrectionERKNS_9BitmapRefIfLi4EEERKNS_5ShapeERKNS_7Vector2ES9_NS_8FillRuleE"]
     pub fn msdfgen_distanceSignCorrection5(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2237,7 +2231,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Analytically constructs a scanline at y evaluating fill by linear interpolation of the SDF."]
-    #[link_name = "\u{1}_ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi1EEERKNS_10ProjectionEdb"]
+    #[link_name = "\u{1}__ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi1EEERKNS_10ProjectionEdb"]
     pub fn msdfgen_scanlineSDF(
         line: *mut msdfgen_Scanline,
         sdf: *const u8,
@@ -2247,7 +2241,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi3EEERKNS_10ProjectionEdb"]
+    #[link_name = "\u{1}__ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi3EEERKNS_10ProjectionEdb"]
     pub fn msdfgen_scanlineSDF1(
         line: *mut msdfgen_Scanline,
         sdf: *const u8,
@@ -2257,7 +2251,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi4EEERKNS_10ProjectionEdb"]
+    #[link_name = "\u{1}__ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi4EEERKNS_10ProjectionEdb"]
     pub fn msdfgen_scanlineSDF2(
         line: *mut msdfgen_Scanline,
         sdf: *const u8,
@@ -2268,7 +2262,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Estimates the portion of the area that will be filled incorrectly when rendering using the SDF."]
-    #[link_name = "\u{1}_ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionEiNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionEiNS_8FillRuleE"]
     pub fn msdfgen_estimateSDFError(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2278,7 +2272,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi3EEERKNS_5ShapeERKNS_10ProjectionEiNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi3EEERKNS_5ShapeERKNS_10ProjectionEiNS_8FillRuleE"]
     pub fn msdfgen_estimateSDFError1(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2288,7 +2282,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi4EEERKNS_5ShapeERKNS_10ProjectionEiNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi4EEERKNS_5ShapeERKNS_10ProjectionEiNS_8FillRuleE"]
     pub fn msdfgen_estimateSDFError2(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2298,7 +2292,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi1EEERKNS_7Vector2ES8_bd"]
+    #[link_name = "\u{1}__ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi1EEERKNS_7Vector2ES8_bd"]
     pub fn msdfgen_scanlineSDF3(
         line: *mut msdfgen_Scanline,
         sdf: *const u8,
@@ -2309,7 +2303,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi3EEERKNS_7Vector2ES8_bd"]
+    #[link_name = "\u{1}__ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi3EEERKNS_7Vector2ES8_bd"]
     pub fn msdfgen_scanlineSDF4(
         line: *mut msdfgen_Scanline,
         sdf: *const u8,
@@ -2320,7 +2314,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi4EEERKNS_7Vector2ES8_bd"]
+    #[link_name = "\u{1}__ZN7msdfgen11scanlineSDFERNS_8ScanlineERKNS_14BitmapConstRefIfLi4EEERKNS_7Vector2ES8_bd"]
     pub fn msdfgen_scanlineSDF5(
         line: *mut msdfgen_Scanline,
         sdf: *const u8,
@@ -2331,7 +2325,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi1EEERKNS_5ShapeERKNS_7Vector2ES9_iNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi1EEERKNS_5ShapeERKNS_7Vector2ES9_iNS_8FillRuleE"]
     pub fn msdfgen_estimateSDFError3(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2342,7 +2336,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi3EEERKNS_5ShapeERKNS_7Vector2ES9_iNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi3EEERKNS_5ShapeERKNS_7Vector2ES9_iNS_8FillRuleE"]
     pub fn msdfgen_estimateSDFError4(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2353,7 +2347,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi4EEERKNS_5ShapeERKNS_7Vector2ES9_iNS_8FillRuleE"]
+    #[link_name = "\u{1}__ZN7msdfgen16estimateSDFErrorERKNS_14BitmapConstRefIfLi4EEERKNS_5ShapeERKNS_7Vector2ES9_iNS_8FillRuleE"]
     pub fn msdfgen_estimateSDFError5(
         sdf: *const u8,
         shape: *const msdfgen_Shape,
@@ -2365,45 +2359,45 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Saves the bitmap as a BMP file."]
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIhLi1EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIhLi1EEEPKc"]
     pub fn msdfgen_saveBmp(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIhLi3EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIhLi3EEEPKc"]
     pub fn msdfgen_saveBmp1(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIhLi4EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIhLi4EEEPKc"]
     pub fn msdfgen_saveBmp2(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIfLi1EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIfLi1EEEPKc"]
     pub fn msdfgen_saveBmp3(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIfLi3EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIfLi3EEEPKc"]
     pub fn msdfgen_saveBmp4(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIfLi4EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen7saveBmpERKNS_14BitmapConstRefIfLi4EEEPKc"]
     pub fn msdfgen_saveBmp5(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
     #[doc = " Saves the bitmap as an uncompressed floating-point TIFF file."]
-    #[link_name = "\u{1}_ZN7msdfgen8saveTiffERKNS_14BitmapConstRefIfLi1EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen8saveTiffERKNS_14BitmapConstRefIfLi1EEEPKc"]
     pub fn msdfgen_saveTiff(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen8saveTiffERKNS_14BitmapConstRefIfLi3EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen8saveTiffERKNS_14BitmapConstRefIfLi3EEEPKc"]
     pub fn msdfgen_saveTiff1(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen8saveTiffERKNS_14BitmapConstRefIfLi4EEEPKc"]
+    #[link_name = "\u{1}__ZN7msdfgen8saveTiffERKNS_14BitmapConstRefIfLi4EEEPKc"]
     pub fn msdfgen_saveTiff2(bitmap: *const u8, filename: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
     #[doc = " Generates a conventional single-channel signed distance field."]
-    #[link_name = "\u{1}_ZN7msdfgen11generateSDFERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_15GeneratorConfigE"]
+    #[link_name = "\u{1}__ZN7msdfgen11generateSDFERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_15GeneratorConfigE"]
     pub fn msdfgen_generateSDF(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2414,7 +2408,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Generates a single-channel signed pseudo-distance field."]
-    #[link_name = "\u{1}_ZN7msdfgen17generatePseudoSDFERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_15GeneratorConfigE"]
+    #[link_name = "\u{1}__ZN7msdfgen17generatePseudoSDFERKNS_9BitmapRefIfLi1EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_15GeneratorConfigE"]
     pub fn msdfgen_generatePseudoSDF(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2425,7 +2419,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Generates a multi-channel signed distance field. Edge colors must be assigned first! (See edgeColoringSimple)"]
-    #[link_name = "\u{1}_ZN7msdfgen12generateMSDFERKNS_9BitmapRefIfLi3EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_19MSDFGeneratorConfigE"]
+    #[link_name = "\u{1}__ZN7msdfgen12generateMSDFERKNS_9BitmapRefIfLi3EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_19MSDFGeneratorConfigE"]
     pub fn msdfgen_generateMSDF(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2436,7 +2430,7 @@ extern "C" {
 }
 extern "C" {
     #[doc = " Generates a multi-channel signed distance field with true distance in the alpha channel. Edge colors must be assigned first."]
-    #[link_name = "\u{1}_ZN7msdfgen13generateMTSDFERKNS_9BitmapRefIfLi4EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_19MSDFGeneratorConfigE"]
+    #[link_name = "\u{1}__ZN7msdfgen13generateMTSDFERKNS_9BitmapRefIfLi4EEERKNS_5ShapeERKNS_10ProjectionEdRKNS_19MSDFGeneratorConfigE"]
     pub fn msdfgen_generateMTSDF(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2446,7 +2440,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen11generateSDFERKNS_9BitmapRefIfLi1EEERKNS_5ShapeEdRKNS_7Vector2ES9_b"]
+    #[link_name = "\u{1}__ZN7msdfgen11generateSDFERKNS_9BitmapRefIfLi1EEERKNS_5ShapeEdRKNS_7Vector2ES9_b"]
     pub fn msdfgen_generateSDF1(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2457,7 +2451,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen17generatePseudoSDFERKNS_9BitmapRefIfLi1EEERKNS_5ShapeEdRKNS_7Vector2ES9_b"]
+    #[link_name = "\u{1}__ZN7msdfgen17generatePseudoSDFERKNS_9BitmapRefIfLi1EEERKNS_5ShapeEdRKNS_7Vector2ES9_b"]
     pub fn msdfgen_generatePseudoSDF1(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2468,7 +2462,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen12generateMSDFERKNS_9BitmapRefIfLi3EEERKNS_5ShapeEdRKNS_7Vector2ES9_RKNS_21ErrorCorrectionConfigEb"]
+    #[link_name = "\u{1}__ZN7msdfgen12generateMSDFERKNS_9BitmapRefIfLi3EEERKNS_5ShapeEdRKNS_7Vector2ES9_RKNS_21ErrorCorrectionConfigEb"]
     pub fn msdfgen_generateMSDF1(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2480,7 +2474,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen13generateMTSDFERKNS_9BitmapRefIfLi4EEERKNS_5ShapeEdRKNS_7Vector2ES9_RKNS_21ErrorCorrectionConfigEb"]
+    #[link_name = "\u{1}__ZN7msdfgen13generateMTSDFERKNS_9BitmapRefIfLi4EEERKNS_5ShapeEdRKNS_7Vector2ES9_RKNS_21ErrorCorrectionConfigEb"]
     pub fn msdfgen_generateMTSDF1(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2492,7 +2486,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen18generateSDF_legacyERKNS_9BitmapRefIfLi1EEERKNS_5ShapeEdRKNS_7Vector2ES9_"]
+    #[link_name = "\u{1}__ZN7msdfgen18generateSDF_legacyERKNS_9BitmapRefIfLi1EEERKNS_5ShapeEdRKNS_7Vector2ES9_"]
     pub fn msdfgen_generateSDF_legacy(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2502,7 +2496,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen24generatePseudoSDF_legacyERKNS_9BitmapRefIfLi1EEERKNS_5ShapeEdRKNS_7Vector2ES9_"]
+    #[link_name = "\u{1}__ZN7msdfgen24generatePseudoSDF_legacyERKNS_9BitmapRefIfLi1EEERKNS_5ShapeEdRKNS_7Vector2ES9_"]
     pub fn msdfgen_generatePseudoSDF_legacy(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2512,7 +2506,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen19generateMSDF_legacyERKNS_9BitmapRefIfLi3EEERKNS_5ShapeEdRKNS_7Vector2ES9_NS_21ErrorCorrectionConfigE"]
+    #[link_name = "\u{1}__ZN7msdfgen19generateMSDF_legacyERKNS_9BitmapRefIfLi3EEERKNS_5ShapeEdRKNS_7Vector2ES9_NS_21ErrorCorrectionConfigE"]
     pub fn msdfgen_generateMSDF_legacy(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2523,7 +2517,7 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen20generateMTSDF_legacyERKNS_9BitmapRefIfLi4EEERKNS_5ShapeEdRKNS_7Vector2ES9_NS_21ErrorCorrectionConfigE"]
+    #[link_name = "\u{1}__ZN7msdfgen20generateMTSDF_legacyERKNS_9BitmapRefIfLi4EEERKNS_5ShapeEdRKNS_7Vector2ES9_NS_21ErrorCorrectionConfigE"]
     pub fn msdfgen_generateMTSDF_legacy(
         output: *const u8,
         shape: *const msdfgen_Shape,
@@ -2534,23 +2528,23 @@ extern "C" {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen19Contour_constructorEv"]
+    #[link_name = "\u{1}__ZN7msdfgen19Contour_constructorEv"]
     pub fn msdfgen_Contour_constructor() -> msdfgen_Contour;
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen18Contour_destructorERNS_7ContourE"]
+    #[link_name = "\u{1}__ZN7msdfgen18Contour_destructorERNS_7ContourE"]
     pub fn msdfgen_Contour_destructor(self_: *mut msdfgen_Contour);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen16Shape_destructorERNS_5ShapeE"]
+    #[link_name = "\u{1}__ZN7msdfgen16Shape_destructorERNS_5ShapeE"]
     pub fn msdfgen_Shape_destructor(self_: *mut msdfgen_Shape);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen19Scanline_destructorERNS_8ScanlineE"]
+    #[link_name = "\u{1}__ZN7msdfgen19Scanline_destructorERNS_8ScanlineE"]
     pub fn msdfgen_Scanline_destructor(self_: *mut msdfgen_Scanline);
 }
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen21EdgeHolder_setSegmentERNS_10EdgeHolderERKNS_11EdgeSegmentE"]
+    #[link_name = "\u{1}__ZN7msdfgen21EdgeHolder_setSegmentERNS_10EdgeHolderERKNS_11EdgeSegmentE"]
     pub fn msdfgen_EdgeHolder_setSegment(
         self_: *mut msdfgen_EdgeHolder,
         segment: *const msdfgen_EdgeSegment,
@@ -2561,6 +2555,462 @@ pub const msdfgen_SegmentKind_QUADRATIC: msdfgen_SegmentKind = 1;
 pub const msdfgen_SegmentKind_CUBIC: msdfgen_SegmentKind = 2;
 pub type msdfgen_SegmentKind = ::std::os::raw::c_uint;
 extern "C" {
-    #[link_name = "\u{1}_ZN7msdfgen19EdgeSegment_getKindERKNS_11EdgeSegmentE"]
+    #[link_name = "\u{1}__ZN7msdfgen19EdgeSegment_getKindERKNS_11EdgeSegmentE"]
     pub fn msdfgen_EdgeSegment_getKind(self_: *const msdfgen_EdgeSegment) -> msdfgen_SegmentKind;
+}
+pub type fpos_t = __darwin_off_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __sbuf {
+    pub _base: *mut ::std::os::raw::c_uchar,
+    pub _size: ::std::os::raw::c_int,
+}
+#[test]
+fn bindgen_test_layout___sbuf() {
+    assert_eq!(
+        ::std::mem::size_of::<__sbuf>(),
+        16usize,
+        concat!("Size of: ", stringify!(__sbuf))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<__sbuf>(),
+        8usize,
+        concat!("Alignment of ", stringify!(__sbuf))
+    );
+    fn test_field__base() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sbuf>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._base) as usize - ptr as usize
+            },
+            0usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sbuf),
+                "::",
+                stringify!(_base)
+            )
+        );
+    }
+    test_field__base();
+    fn test_field__size() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sbuf>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._size) as usize - ptr as usize
+            },
+            8usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sbuf),
+                "::",
+                stringify!(_size)
+            )
+        );
+    }
+    test_field__size();
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __sFILEX {
+    _unused: [u8; 0],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __sFILE {
+    pub _p: *mut ::std::os::raw::c_uchar,
+    pub _r: ::std::os::raw::c_int,
+    pub _w: ::std::os::raw::c_int,
+    pub _flags: ::std::os::raw::c_short,
+    pub _file: ::std::os::raw::c_short,
+    pub _bf: __sbuf,
+    pub _lbfsize: ::std::os::raw::c_int,
+    pub _cookie: *mut ::std::os::raw::c_void,
+    pub _close: ::std::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
+    >,
+    pub _read: ::std::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut ::std::os::raw::c_void,
+            arg2: *mut ::std::os::raw::c_char,
+            arg3: ::std::os::raw::c_int,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub _seek: ::std::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut ::std::os::raw::c_void,
+            arg2: fpos_t,
+            arg3: ::std::os::raw::c_int,
+        ) -> fpos_t,
+    >,
+    pub _write: ::std::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut ::std::os::raw::c_void,
+            arg2: *const ::std::os::raw::c_char,
+            arg3: ::std::os::raw::c_int,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub _ub: __sbuf,
+    pub _extra: *mut __sFILEX,
+    pub _ur: ::std::os::raw::c_int,
+    pub _ubuf: [::std::os::raw::c_uchar; 3usize],
+    pub _nbuf: [::std::os::raw::c_uchar; 1usize],
+    pub _lb: __sbuf,
+    pub _blksize: ::std::os::raw::c_int,
+    pub _offset: fpos_t,
+}
+#[test]
+fn bindgen_test_layout___sFILE() {
+    assert_eq!(
+        ::std::mem::size_of::<__sFILE>(),
+        152usize,
+        concat!("Size of: ", stringify!(__sFILE))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<__sFILE>(),
+        8usize,
+        concat!("Alignment of ", stringify!(__sFILE))
+    );
+    fn test_field__p() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._p) as usize - ptr as usize
+            },
+            0usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_p)
+            )
+        );
+    }
+    test_field__p();
+    fn test_field__r() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._r) as usize - ptr as usize
+            },
+            8usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_r)
+            )
+        );
+    }
+    test_field__r();
+    fn test_field__w() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._w) as usize - ptr as usize
+            },
+            12usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_w)
+            )
+        );
+    }
+    test_field__w();
+    fn test_field__flags() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._flags) as usize - ptr as usize
+            },
+            16usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_flags)
+            )
+        );
+    }
+    test_field__flags();
+    fn test_field__file() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._file) as usize - ptr as usize
+            },
+            18usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_file)
+            )
+        );
+    }
+    test_field__file();
+    fn test_field__bf() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._bf) as usize - ptr as usize
+            },
+            24usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_bf)
+            )
+        );
+    }
+    test_field__bf();
+    fn test_field__lbfsize() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._lbfsize) as usize - ptr as usize
+            },
+            40usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_lbfsize)
+            )
+        );
+    }
+    test_field__lbfsize();
+    fn test_field__cookie() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._cookie) as usize - ptr as usize
+            },
+            48usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_cookie)
+            )
+        );
+    }
+    test_field__cookie();
+    fn test_field__close() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._close) as usize - ptr as usize
+            },
+            56usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_close)
+            )
+        );
+    }
+    test_field__close();
+    fn test_field__read() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._read) as usize - ptr as usize
+            },
+            64usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_read)
+            )
+        );
+    }
+    test_field__read();
+    fn test_field__seek() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._seek) as usize - ptr as usize
+            },
+            72usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_seek)
+            )
+        );
+    }
+    test_field__seek();
+    fn test_field__write() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._write) as usize - ptr as usize
+            },
+            80usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_write)
+            )
+        );
+    }
+    test_field__write();
+    fn test_field__ub() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._ub) as usize - ptr as usize
+            },
+            88usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_ub)
+            )
+        );
+    }
+    test_field__ub();
+    fn test_field__extra() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._extra) as usize - ptr as usize
+            },
+            104usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_extra)
+            )
+        );
+    }
+    test_field__extra();
+    fn test_field__ur() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._ur) as usize - ptr as usize
+            },
+            112usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_ur)
+            )
+        );
+    }
+    test_field__ur();
+    fn test_field__ubuf() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._ubuf) as usize - ptr as usize
+            },
+            116usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_ubuf)
+            )
+        );
+    }
+    test_field__ubuf();
+    fn test_field__nbuf() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._nbuf) as usize - ptr as usize
+            },
+            119usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_nbuf)
+            )
+        );
+    }
+    test_field__nbuf();
+    fn test_field__lb() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._lb) as usize - ptr as usize
+            },
+            120usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_lb)
+            )
+        );
+    }
+    test_field__lb();
+    fn test_field__blksize() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._blksize) as usize - ptr as usize
+            },
+            136usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_blksize)
+            )
+        );
+    }
+    test_field__blksize();
+    fn test_field__offset() {
+        assert_eq!(
+            unsafe {
+                let uninit = ::std::mem::MaybeUninit::<__sFILE>::uninit();
+                let ptr = uninit.as_ptr();
+                ::std::ptr::addr_of!((*ptr)._offset) as usize - ptr as usize
+            },
+            144usize,
+            concat!(
+                "Offset of field: ",
+                stringify!(__sFILE),
+                "::",
+                stringify!(_offset)
+            )
+        );
+    }
+    test_field__offset();
 }

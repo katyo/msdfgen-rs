@@ -12,8 +12,8 @@ pub struct std_allocator {
     pub _address: u8,
 }
 pub type std_allocator_value_type = u8;
-pub type std_allocator_size_type = u64;
-pub type std_allocator_difference_type = u64;
+pub type std_allocator_size_type = u32;
+pub type std_allocator_difference_type = u32;
 pub type std_allocator_pointer = u8;
 pub type std_allocator_const_pointer = u8;
 pub type std_allocator_reference = u8;
@@ -43,23 +43,18 @@ pub type std_vector_iterator = u8;
 pub type std_vector_const_iterator = u8;
 pub type std_vector_const_reverse_iterator = u8;
 pub type std_vector_reverse_iterator = u8;
-pub type std_vector_size_type = u64;
-pub type std_vector_difference_type = u64;
+pub type std_vector_size_type = u32;
+pub type std_vector_difference_type = u32;
 pub type std_vector_allocator_type = u8;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct std_vector__Temporary_value {
     pub _address: u8,
 }
-#[repr(C)]
-#[repr(align(1))]
-#[derive(Copy, Clone)]
-pub union std_vector__Temporary_value__Storage {
-    pub _bindgen_opaque_blob: u8,
-}
-pub type size_t = ::std::os::raw::c_ulong;
+pub type size_t = ::std::os::raw::c_uint;
+pub type __int64_t = ::std::os::raw::c_longlong;
 pub type __off_t = ::std::os::raw::c_long;
-pub type __off64_t = ::std::os::raw::c_long;
+pub type __off64_t = __int64_t;
 #[doc = " A 2-dimensional euclidean vector with double precision."]
 #[doc = " Implementation based on the Vector2 template from Artery Engine."]
 #[doc = " @author Viktor Chlumsky"]
@@ -414,7 +409,7 @@ extern "C" {
 #[repr(C)]
 #[derive(Debug)]
 pub struct msdfgen_Scanline {
-    pub intersections: [u64; 3usize],
+    pub intersections: [u32; 3usize],
     pub lastIndex: ::std::os::raw::c_int,
 }
 #[doc = " An intersection with the scanline."]
@@ -477,12 +472,12 @@ fn bindgen_test_layout_msdfgen_Scanline_Intersection() {
 fn bindgen_test_layout_msdfgen_Scanline() {
     assert_eq!(
         ::std::mem::size_of::<msdfgen_Scanline>(),
-        32usize,
+        16usize,
         concat!("Size of: ", stringify!(msdfgen_Scanline))
     );
     assert_eq!(
         ::std::mem::align_of::<msdfgen_Scanline>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(msdfgen_Scanline))
     );
     fn test_field_intersections() {
@@ -509,7 +504,7 @@ fn bindgen_test_layout_msdfgen_Scanline() {
                 let ptr = uninit.as_ptr();
                 ::std::ptr::addr_of!((*ptr).lastIndex) as usize - ptr as usize
             },
-            24usize,
+            12usize,
             concat!(
                 "Offset of field: ",
                 stringify!(msdfgen_Scanline),
@@ -535,14 +530,14 @@ extern "C" {
     #[link_name = "\u{1}_ZN7msdfgen8Scanline16setIntersectionsERKSt6vectorINS0_12IntersectionESaIS2_EE"]
     pub fn msdfgen_Scanline_setIntersections(
         this: *mut msdfgen_Scanline,
-        intersections: *const [u64; 3usize],
+        intersections: *const [u32; 3usize],
     );
 }
 extern "C" {
     #[link_name = "\u{1}_ZN7msdfgen8Scanline16setIntersectionsEOSt6vectorINS0_12IntersectionESaIS2_EE"]
     pub fn msdfgen_Scanline_setIntersections1(
         this: *mut msdfgen_Scanline,
-        intersections: *mut [u64; 3usize],
+        intersections: *mut [u32; 3usize],
     );
 }
 extern "C" {
@@ -586,11 +581,11 @@ impl msdfgen_Scanline {
         msdfgen_Scanline_overlap(a, b, xFrom, xTo, fillRule)
     }
     #[inline]
-    pub unsafe fn setIntersections(&mut self, intersections: *const [u64; 3usize]) {
+    pub unsafe fn setIntersections(&mut self, intersections: *const [u32; 3usize]) {
         msdfgen_Scanline_setIntersections(self, intersections)
     }
     #[inline]
-    pub unsafe fn setIntersections1(&mut self, intersections: *mut [u64; 3usize]) {
+    pub unsafe fn setIntersections1(&mut self, intersections: *mut [u32; 3usize]) {
         msdfgen_Scanline_setIntersections1(self, intersections)
     }
     #[inline]
@@ -715,12 +710,12 @@ pub struct msdfgen_EdgeSegment {
 fn bindgen_test_layout_msdfgen_EdgeSegment() {
     assert_eq!(
         ::std::mem::size_of::<msdfgen_EdgeSegment>(),
-        16usize,
+        8usize,
         concat!("Size of: ", stringify!(msdfgen_EdgeSegment))
     );
     assert_eq!(
         ::std::mem::align_of::<msdfgen_EdgeSegment>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(msdfgen_EdgeSegment))
     );
     fn test_field_color() {
@@ -730,7 +725,7 @@ fn bindgen_test_layout_msdfgen_EdgeSegment() {
                 let ptr = uninit.as_ptr();
                 ::std::ptr::addr_of!((*ptr).color) as usize - ptr as usize
             },
-            8usize,
+            4usize,
             concat!(
                 "Offset of field: ",
                 stringify!(msdfgen_EdgeSegment),
@@ -762,7 +757,7 @@ pub struct msdfgen_LinearSegment {
 fn bindgen_test_layout_msdfgen_LinearSegment() {
     assert_eq!(
         ::std::mem::size_of::<msdfgen_LinearSegment>(),
-        48usize,
+        40usize,
         concat!("Size of: ", stringify!(msdfgen_LinearSegment))
     );
     assert_eq!(
@@ -777,7 +772,7 @@ fn bindgen_test_layout_msdfgen_LinearSegment() {
                 let ptr = uninit.as_ptr();
                 ::std::ptr::addr_of!((*ptr).p) as usize - ptr as usize
             },
-            16usize,
+            8usize,
             concat!(
                 "Offset of field: ",
                 stringify!(msdfgen_LinearSegment),
@@ -909,7 +904,7 @@ pub struct msdfgen_QuadraticSegment {
 fn bindgen_test_layout_msdfgen_QuadraticSegment() {
     assert_eq!(
         ::std::mem::size_of::<msdfgen_QuadraticSegment>(),
-        64usize,
+        56usize,
         concat!("Size of: ", stringify!(msdfgen_QuadraticSegment))
     );
     assert_eq!(
@@ -924,7 +919,7 @@ fn bindgen_test_layout_msdfgen_QuadraticSegment() {
                 let ptr = uninit.as_ptr();
                 ::std::ptr::addr_of!((*ptr).p) as usize - ptr as usize
             },
-            16usize,
+            8usize,
             concat!(
                 "Offset of field: ",
                 stringify!(msdfgen_QuadraticSegment),
@@ -1074,7 +1069,7 @@ pub struct msdfgen_CubicSegment {
 fn bindgen_test_layout_msdfgen_CubicSegment() {
     assert_eq!(
         ::std::mem::size_of::<msdfgen_CubicSegment>(),
-        80usize,
+        72usize,
         concat!("Size of: ", stringify!(msdfgen_CubicSegment))
     );
     assert_eq!(
@@ -1089,7 +1084,7 @@ fn bindgen_test_layout_msdfgen_CubicSegment() {
                 let ptr = uninit.as_ptr();
                 ::std::ptr::addr_of!((*ptr).p) as usize - ptr as usize
             },
-            16usize,
+            8usize,
             concat!(
                 "Offset of field: ",
                 stringify!(msdfgen_CubicSegment),
@@ -1225,12 +1220,12 @@ pub struct msdfgen_EdgeHolder {
 fn bindgen_test_layout_msdfgen_EdgeHolder() {
     assert_eq!(
         ::std::mem::size_of::<msdfgen_EdgeHolder>(),
-        8usize,
+        4usize,
         concat!("Size of: ", stringify!(msdfgen_EdgeHolder))
     );
     assert_eq!(
         ::std::mem::align_of::<msdfgen_EdgeHolder>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(msdfgen_EdgeHolder))
     );
     fn test_field_edgeSegment() {
@@ -1387,18 +1382,18 @@ impl msdfgen_EdgeHolder {
 #[derive(Debug)]
 pub struct msdfgen_Contour {
     #[doc = " The sequence of edges that make up the contour."]
-    pub edges: [u64; 3usize],
+    pub edges: [u32; 3usize],
 }
 #[test]
 fn bindgen_test_layout_msdfgen_Contour() {
     assert_eq!(
         ::std::mem::size_of::<msdfgen_Contour>(),
-        24usize,
+        12usize,
         concat!("Size of: ", stringify!(msdfgen_Contour))
     );
     assert_eq!(
         ::std::mem::align_of::<msdfgen_Contour>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(msdfgen_Contour))
     );
     fn test_field_edges() {
@@ -1512,7 +1507,7 @@ impl msdfgen_Contour {
 #[derive(Debug)]
 pub struct msdfgen_Shape {
     #[doc = " The list of contours the shape consists of."]
-    pub contours: [u64; 3usize],
+    pub contours: [u32; 3usize],
     #[doc = " Specifies whether the shape uses bottom-to-top (false) or top-to-bottom (true) Y coordinates."]
     pub inverseYAxis: bool,
 }
@@ -1609,12 +1604,12 @@ fn bindgen_test_layout_msdfgen_Shape_Bounds() {
 fn bindgen_test_layout_msdfgen_Shape() {
     assert_eq!(
         ::std::mem::size_of::<msdfgen_Shape>(),
-        32usize,
+        16usize,
         concat!("Size of: ", stringify!(msdfgen_Shape))
     );
     assert_eq!(
         ::std::mem::align_of::<msdfgen_Shape>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(msdfgen_Shape))
     );
     fn test_field_contours() {
@@ -1641,7 +1636,7 @@ fn bindgen_test_layout_msdfgen_Shape() {
                 let ptr = uninit.as_ptr();
                 ::std::ptr::addr_of!((*ptr).inverseYAxis) as usize - ptr as usize
             },
-            24usize,
+            12usize,
             concat!(
                 "Offset of field: ",
                 stringify!(msdfgen_Shape),

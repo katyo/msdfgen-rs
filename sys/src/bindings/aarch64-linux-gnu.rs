@@ -51,12 +51,6 @@ pub type std_vector_allocator_type = u8;
 pub struct std_vector__Temporary_value {
     pub _address: u8,
 }
-#[repr(C)]
-#[repr(align(1))]
-#[derive(Copy, Clone)]
-pub union std_vector__Temporary_value__Storage {
-    pub _bindgen_opaque_blob: u8,
-}
 pub type size_t = ::std::os::raw::c_ulong;
 pub type __off_t = ::std::os::raw::c_long;
 pub type __off64_t = ::std::os::raw::c_long;
