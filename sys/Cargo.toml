@@ -1,0 +1,50 @@
+[package]
+name = "msdfgen-sys"
+version = "0.2.0"
+description = "Unsafe bindings for msdfgen (multi-channel signed distance field generator)"
+categories = ["external-ffi-bindings", "graphics"]
+keywords = ["distance-fields", "multi-channel", "SDF", "MSDF", "MCSDF"]
+authors = ["K. <kayo@illumium.org>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/katyo/msdfgen-rs"
+edition = "2021"
+
+[badges.is-it-maintained-issue-resolution]
+repository = "katyo/msdfgen-rs"
+
+[badges.is-it-maintained-open-issues]
+repository = "katyo/msdfgen-rs"
+
+[badges.maintenance]
+status = "passively-maintained"
+
+[build-dependencies.bindgen]
+version = "0.60"
+optional = true
+
+[build-dependencies.cc]
+version = "1"
+features = ["parallel"]
+
+[features]
+update-bindings = ["bindgen"]
+
+#builtin = []
+
+# build and link shared library
+shared = []
+
+# build and link static library
+static = []
+
+# link libc++ instead of libstdc++
+libcxx = []
+
+# link static libstdc++/libc++
+stdcxx-static = []
+
+rustdoc = []
+
+[package.metadata.docs.rs]
+features = ["rustdoc"]

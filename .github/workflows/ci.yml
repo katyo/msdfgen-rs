@@ -1,0 +1,398 @@
+name: Rust
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          profile: minimal
+          components: rustfmt
+          default: true
+          override: true
+      - uses: Swatinem/rust-cache@v1
+      - name: Format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+  doc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: rust-docs
+          default: true
+          override: true
+      - uses: Swatinem/rust-cache@v1
+      - name: Documentation
+        uses: actions-rs/cargo@v1
+        env:
+          DOCS_RS: 1
+        with:
+          command: doc
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          profile: minimal
+          components: clippy
+          default: true
+          override: true
+      - uses: Swatinem/rust-cache@v1
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all --all-features --all-targets
+
+  # minver:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         submodules: true
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         toolchain: nightly
+  #         profile: minimal
+  #         default: true
+  #         override: true
+  #     - uses: Swatinem/rust-cache@v1
+  #     - uses: actions-rs/cargo@v1
+  #       with:
+  #         command: check
+  #         args: --all --all-features --all-targets -Z minimal-versions
+
+  test:
+    needs:
+      - format
+      - doc
+      - check
+    strategy:
+      fail-fast: ${{ startsWith(github.ref, 'refs/tags/') }}
+      matrix:
+        include:
+          # Generate bindings
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: i686-unknown-linux-gnu
+            features: default
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: default
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: arm-unknown-linux-gnueabihf
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: armv7-unknown-linux-gnueabihf
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: aarch64-unknown-linux-gnu
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: mips-unknown-linux-gnu
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: mips64-unknown-linux-gnuabi64
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: mipsel-unknown-linux-gnu
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: mips64el-unknown-linux-gnuabi64
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: powerpc-unknown-linux-gnu
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: powerpc64-unknown-linux-gnu
+            features: default
+            test_args: --no-run
+          - task: bindings
+            os: ubuntu-latest
+            rust: stable
+            target: sparc64-unknown-linux-gnu
+            features: default
+            test_args: --no-run
+
+          - task: bindings
+            os: macos-latest
+            rust: stable
+            target: x86_64-apple-darwin
+            features: default
+          - task: bindings
+            os: macos-latest
+            rust: stable
+            target: aarch64-apple-darwin
+            features: default
+            test_args: --no-run
+
+          # - task: bindings
+          #   os: windows-latest
+          #   rust: stable
+          #   target: i686-pc-windows-gnu
+          #   features: default
+          # - task: bindings
+          #   os: windows-latest
+          #   rust: stable
+          #   target: x86_64-pc-windows-gnu
+          #   features: default
+          # - task: bindings
+          #   os: windows-latest
+          #   rust: stable
+          #   target: i686-pc-windows-msvc
+          #   features: default
+          # - task: bindings
+          #   os: windows-latest
+          #   rust: stable
+          #   target: x86_64-pc-windows-msvc
+          #   features: default
+
+          # - task: bindings
+          #   os: ubuntu-latest
+          #   rust: stable
+          #   target: wasm32-unknown-emscripten
+          #   features: default
+          #   test_args: --no-run
+          # - task: bindings
+          #   os: ubuntu-latest
+          #   rust: stable
+          #   target: wasm32-wasi
+          #   features: default
+          #   test_args: --no-run
+
+          # Test features
+          - task: features
+            os: ubuntu-latest
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: default
+          - task: features
+            os: ubuntu-latest
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: all
+
+          # Test channels
+          - task: channels
+            os: ubuntu-latest
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: all
+          - task: channels
+            os: ubuntu-latest
+            rust: beta
+            target: x86_64-unknown-linux-gnu
+            features: all
+          - task: channels
+            os: ubuntu-latest
+            rust: nightly
+            target: x86_64-unknown-linux-gnu
+            features: all
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup cross linux toolchain
+        if: contains(matrix.target, '-linux-') && !startsWith(matrix.target, 'x86_64-')
+        run: |
+          GCC_TARGET=$(printf "${{ matrix.target }}" | sed 's/-unknown-/-/' | sed 's/arm[^-]*/arm/g')
+          ENV_TARGET=$(printf "${{ matrix.target }}" | tr '-' '_')
+          ENV_TARGET_UC=$(printf "${ENV_TARGET}" | tr '[[:lower:]]' '[[:upper:]]')
+          sudo apt-get update -y
+          sudo apt-get install -y --install-recommends g++-10-${GCC_TARGET} g++-10-multilib
+          echo "CC_${ENV_TARGET}=${GCC_TARGET}-gcc-10" >> $GITHUB_ENV
+          echo "CXX_${ENV_TARGET}=${GCC_TARGET}-g++-10" >> $GITHUB_ENV
+          echo "CARGO_TARGET_${ENV_TARGET_UC}_LINKER=${GCC_TARGET}-g++-10" >> $GITHUB_ENV
+          #echo "BINDGEN_EXTRA_CLANG_ARGS=--sysroot=/usr/${GCC_TARGET}" >> $GITHUB_ENV
+          #find / -type f -name c++config.h 2>/dev/null || true
+          #${GCC_TARGET}-gcc-10 -xc -E -v - || true
+          #${GCC_TARGET}-gcc-10 -xc++ -E -v - || true
+          echo "BINDGEN_EXTRA_CLANG_ARGS=$(${GCC_TARGET}-g++-10 -xc++ /dev/null -E -Wp,-v 2>&1 | sed -n 's/^ /-isystem/p' | tr '\n' ' ')" >> $GITHUB_ENV
+          cat $GITHUB_ENV
+      - name: Install packages
+        if: matrix.task == 'features'
+        run: |
+          sudo apt-get install -y libfreetype-dev
+
+      - name: Setup msys2 toolchains
+        if: startsWith(matrix.os, 'windows') && endsWith(matrix.target, '-gnu')
+        uses: msys2/setup-msys2@v2
+        with:
+          release: false
+          install: mingw-w64-x86_64-gcc mingw-w64-i686-gcc
+      - name: Prepare env for windows (gnu)
+        if: startsWith(matrix.os, 'windows') && endsWith(matrix.target, '-gnu')
+        run: |
+          # Add symlinks to the target-specific GNU sysroots for Clang
+          New-Item -Path "C:\Program Files\LLVM\x86_64-w64-mingw32" -ItemType SymbolicLink -Value "C:\msys64\mingw64\x86_64-w64-mingw32"
+          New-Item -Path "C:\Program Files\LLVM\i686-w64-mingw32" -ItemType SymbolicLink -Value "C:\msys64\mingw32\i686-w64-mingw32"
+          # Add paths to GCC executables to PATH
+          echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:\msys64\mingw32\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          # Configure CC_<target> environment variables
+          echo "CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          echo "CC_i686_pc_windows_gnu=i686-w64-mingw32-gcc" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          echo "CXX_x86_64_pc_windows_gnu=x86_64-w64-mingw32-g++" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          echo "CXX_i686_pc_windows_gnu=i686-w64-mingw32-g++" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup emscripten toolchain
+        if: endsWith(matrix.target, '-emscripten')
+        uses: mymindstorm/setup-emsdk@v11
+      - name: Prepare env for emscripten
+        if: endsWith(matrix.target, '-emscripten')
+        run: |
+          #echo "CC_wasm32_unknown_emscripten=${EMSDK}/upstream/emscripten/bin/emcc" >> $GITHUB_ENV
+          echo "BINDGEN_EXTRA_CLANG_ARGS=--sysroot=${EMSDK}/upstream/emscripten/cache/sysroot" >> $GITHUB_ENV
+      - name: Setup wasi toolchain
+        if: endsWith(matrix.target, '-wasi')
+        run: |
+          #wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-12/wasi-sdk_12.0_amd64.deb
+          #sudo dpkg -i wasi-sdk_12.0_amd64.deb
+          #echo "CC_wasm32_wasi=/opt/wasi-sdk/bin/clang" >> $GITHUB_ENV
+          #echo "CFLAGS_wasm32_wasi=\"--target=wasm32-wasi --sysroot=/opt/wasi-sdk/share/wasi-sysroot\"" >> $GITHUB_ENV
+          #echo "CARGO_TARGET_WASM32_WASI_LINKER=/opt/wasi-sdk/bin/wasm-ld" >> $GITHUB_ENV
+          echo "BINDGEN_EXTRA_CLANG_ARGS=--sysroot=/opt/wasi-sdk/share/wasi-sysroot" >> $GITHUB_ENV
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          target: ${{ matrix.target }}
+          profile: minimal
+          components: rustfmt
+          default: true
+          override: true
+      - uses: Swatinem/rust-cache@v1
+      - name: Update deps
+        uses: actions-rs/cargo@v1
+        with:
+          command: update
+      - name: Build sys
+        uses: actions-rs/cargo@v1
+        env:
+          RUST_LOG: bindgen=warn,bindgen::ir=error,bindgen::codegen=error
+        with:
+          command: build
+          args: --manifest-path sys/Cargo.toml --target ${{ matrix.target }} --features update-bindings
+      - name: Upload bindings
+        if: matrix.task == 'bindings'
+        uses: actions/upload-artifact@v2
+        with:
+          name: bindings
+          path: |
+            sys/${{ env.MSDFGEN_SYS_BINDINGS_FILE }}
+            LICENSE
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --target ${{ matrix.target }} --no-default-features --features ${{ matrix.features }}
+      - name: Test
+        uses: actions-rs/cargo@v1
+        timeout-minutes: 4
+        env:
+          RUST_BACKTRACE: full
+        with:
+          command: test
+          args: --all --target ${{ matrix.target }} --no-default-features --features ${{ matrix.features }} ${{ matrix.test_args }}
+
+  update-bindings:
+    if: ${{ github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/') }}
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Download bindings
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          base: ${{ github.head_ref }}
+          commit-message: Updated bindings
+          branch: update-bindings
+          delete-branch: true
+          title: Update bindings
+          body: |
+            Bindings should be updated to be consistent with latest changes
+  publish:
+    if: github.repository == 'katyo/msdfgen-rs' && startsWith(github.ref, 'refs/tags/')
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Publish crates
+        uses: katyo/publish-crates@v1
+        with:
+          registry-token: ${{ secrets.CRATES_TOKEN }}
+          args: --no-verify
+          #dry-run: true
