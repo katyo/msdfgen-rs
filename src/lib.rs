@@ -132,7 +132,7 @@ mod test {
         height: u32,
         expected_error: f64,
     ) {
-        let font = Face::from_slice(font, 0).unwrap();
+        let font = Face::parse(font, 0).unwrap();
         let glyph = font.glyph_index(chr).unwrap();
         let shape = font.glyph_shape(glyph).unwrap();
 

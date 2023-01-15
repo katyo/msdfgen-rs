@@ -27,19 +27,20 @@ version = "0.2.0"
 path = "sys"
 
 [dependencies.ttf-parser]
-version = "0.15"
+version = "0.18"
 optional = true
 
-[dependencies.font]
-version = "0.4"
+[dependencies.typeface]
+version = "0.2"
 optional = true
 
-[dependencies.fonterator]
-version = "0.9"
+[dependencies.font-rs]
+package = "font"
+version = "0.10"
 optional = true
 
 [dependencies.freetype-rs]
-version = "0.30"
+version = "0.32"
 optional = true
 
 [dependencies.png]
@@ -50,7 +51,7 @@ optional = true
 version = "2"
 
 [dev-dependencies.ttf-parser]
-version = "0.15"
+version = "0.18"
 
 [dev-dependencies.notosans]
 version = "0.1"
@@ -60,6 +61,7 @@ version = "0.2"
 
 [features]
 default = ["ttf-parser", "freetype-rs", "png"]
+font = ["font-rs", "typeface"]
 all = ["default", "font"]
 rustdoc = ["msdfgen-sys/rustdoc", "all"]
 
