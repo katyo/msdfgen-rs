@@ -4,6 +4,7 @@ use crate::{Contour, EdgeColor, EdgeHolder, FontExt, Point2, Shape};
 struct ContourBuilder {
     contour: Contour,
     point: Point2<f64>,
+    start_point: Point2<f64>,
 }
 
 impl ContourBuilder {
@@ -11,6 +12,7 @@ impl ContourBuilder {
         Self {
             contour: Contour::default(),
             point: Point2::new(x, y),
+            start_point: Point2::new(x, y),
         }
     }
 
@@ -98,8 +100,11 @@ impl ttf_parser::OutlineBuilder for ShapeBuilder {
     }
 
     fn close(&mut self) {
-        self.shape
-            .add_contour(&self.contour.take().expect("Opened contour").close());
+        let mut contour = self.contour.take().expect("Opened contour");
+        if contour.point != contour.start_point {
+            contour.line_to(contour.start_point.x as _, contour.start_point.y as _);
+        }
+        self.shape.add_contour(&contour.close());
     }
 }
 
