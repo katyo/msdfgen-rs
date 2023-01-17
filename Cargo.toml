@@ -1,6 +1,6 @@
 [package]
 name = "msdfgen"
-version = "0.2.0"
+version = "0.2.1"
 description = "Safe bindings for msdfgen (multi-channel signed distance field generator)"
 categories = ["external-ffi-bindings", "graphics"]
 keywords = ["distance-fields", "multi-channel", "SDF", "MSDF", "MCSDF"]
@@ -23,7 +23,7 @@ repository = "katyo/msdfgen-rs"
 status = "passively-maintained"
 
 [dependencies.msdfgen-sys]
-version = "0.2.0"
+version = "0.2.1"
 path = "sys"
 
 [dependencies.ttf-parser]
