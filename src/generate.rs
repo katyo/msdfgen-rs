@@ -91,6 +91,12 @@ impl Projection<f64> {
 
 impl Shape {
     /// Generate signed distance field for shape
+    ///
+    /// When interpreting pixel values,-1 in the resulting bitmap represents
+    /// the distance `-px_range` away from the countour, and 1.0 is `px_range`
+    /// away from the contour.
+    ///
+    /// Pixel values are not clamped to `[-1.0, 1.0]`.
     pub fn generate_sdf(
         &self,
         mut output: impl AsMut<Bitmap<Gray<f32>>>,
@@ -110,6 +116,12 @@ impl Shape {
     }
 
     /// Generate pseudo signed distance field for shape
+    ///
+    /// When interpreting pixel values,-1 in the resulting bitmap represents
+    /// the distance `-px_range` away from the countour, and 1.0 is `px_range`
+    /// away from the contour.
+    ///
+    /// Pixel values are not clamped to `[-1.0, 1.0]`.
     pub fn generate_pseudo_sdf(
         &self,
         mut output: impl AsMut<Bitmap<Gray<f32>>>,
@@ -129,6 +141,12 @@ impl Shape {
     }
 
     /// Generate signed distance field for shape (legacy)
+    ///
+    /// When interpreting pixel values,-1 in the resulting bitmap represents
+    /// the distance `-px_range` away from the countour, and 1.0 is `px_range`
+    /// away from the contour.
+    ///
+    /// Pixel values are not clamped to `[-1.0, 1.0]`.
     pub fn generate_sdf_legacy(
         &self,
         mut output: impl AsMut<Bitmap<Gray<f32>>>,
@@ -147,6 +165,12 @@ impl Shape {
     }
 
     /// Generate pseudo signed distance field for shape (legacy)
+    ///
+    /// When interpreting pixel values,-1 in the resulting bitmap represents
+    /// the distance `-px_range` away from the countour, and 1.0 is `px_range`
+    /// away from the contour.
+    ///
+    /// Pixel values are not clamped to `[-1.0, 1.0]`.
     pub fn generate_pseudo_sdf_legacy(
         &self,
         mut output: impl AsMut<Bitmap<Gray<f32>>>,
@@ -165,6 +189,12 @@ impl Shape {
     }
 
     /// Generate multi-channel signed distance field for shape
+    ///
+    /// When interpreting pixel values,-1 in the resulting bitmap represents
+    /// the distance `-px_range` away from the countour, and 1.0 is `px_range`
+    /// away from the contour.
+    ///
+    /// Pixel values are not clamped to `[-1.0, 1.0]`.
     pub fn generate_msdf(
         &self,
         mut output: impl AsMut<Bitmap<Rgb<f32>>>,
@@ -184,6 +214,12 @@ impl Shape {
     }
 
     /// Generate multi-channel signed distance field for shape (legacy)
+    ///
+    /// When interpreting pixel values,-1 in the resulting bitmap represents
+    /// the distance `-px_range` away from the countour, and 1.0 is `px_range`
+    /// away from the contour.
+    ///
+    /// Pixel values are not clamped to `[-1.0, 1.0]`.
     pub fn generate_msdf_legacy(
         &self,
         mut output: impl AsMut<Bitmap<Rgb<f32>>>,
@@ -204,6 +240,12 @@ impl Shape {
     }
 
     /// Generate multi-channel signed distance field for shape with true distance in the alpha channel
+    ///
+    /// When interpreting pixel values,-1 in the resulting bitmap represents
+    /// the distance `-px_range` away from the countour, and 1.0 is `px_range`
+    /// away from the contour.
+    ///
+    /// Pixel values are not clamped to `[-1.0, 1.0]`.
     pub fn generate_mtsdf(
         &self,
         mut output: impl AsMut<Bitmap<Rgba<f32>>>,
@@ -223,6 +265,12 @@ impl Shape {
     }
 
     /// Generate multi-channel signed distance field for shape with true distance in the alpha channel (legacy)
+    ///
+    /// When interpreting pixel values,-1 in the resulting bitmap represents
+    /// the distance `-px_range` away from the countour, and 1.0 is `px_range`
+    /// away from the contour.
+    ///
+    /// Pixel values are not clamped to `[-1.0, 1.0]`.
     pub fn generate_mtsdf_legacy(
         &self,
         mut output: impl AsMut<Bitmap<Rgba<f32>>>,
