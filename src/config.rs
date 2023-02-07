@@ -2,7 +2,8 @@ use crate::ffi;
 
 /// Error correction mode
 #[derive(Clone, Copy)]
-#[repr(u32)]
+#[cfg_attr(target_os = "windows", repr(i32))]
+#[cfg_attr(not(target_os = "windows"), repr(u32))]
 pub enum ErrorCorrectionMode {
     /// Skips error correction pass
     Disabled = ffi::msdfgen_ErrorCorrectionConfig_Mode_DISABLED,
@@ -25,7 +26,8 @@ impl Default for ErrorCorrectionMode {
 
 /// Configuration of whether to use an algorithm that computes the exact shape distance at the positions of suspected artifacts. This algorithm can be much slower
 #[derive(Clone, Copy)]
-#[repr(u32)]
+#[cfg_attr(target_os = "windows", repr(i32))]
+#[cfg_attr(not(target_os = "windows"), repr(u32))]
 pub enum DistanceCheckMode {
     /// Never computes exact shape distance
     DoNotCheck = ffi::msdfgen_ErrorCorrectionConfig_DistanceCheckMode_DO_NOT_CHECK_DISTANCE,
@@ -92,7 +94,9 @@ impl ErrorCorrectionConfig {
     /// Get operation mode
     #[inline(always)]
     pub fn get_mode(&self) -> ErrorCorrectionMode {
-        assert!(self.raw.mode <= ffi::msdfgen_ErrorCorrectionConfig_Mode_EDGE_ONLY);
+        assert!((ffi::msdfgen_ErrorCorrectionConfig_Mode_DISABLED
+            ..ffi::msdfgen_ErrorCorrectionConfig_Mode_EDGE_ONLY)
+            .contains(&self.raw.mode));
         unsafe { core::mem::transmute(self.raw.mode) }
     }
 
@@ -113,8 +117,9 @@ impl ErrorCorrectionConfig {
     #[inline(always)]
     pub fn get_distance_check_mode(&self) -> DistanceCheckMode {
         assert!(
-            self.raw.distanceCheckMode
-                <= ffi::msdfgen_ErrorCorrectionConfig_DistanceCheckMode_ALWAYS_CHECK_DISTANCE
+            (ffi::msdfgen_ErrorCorrectionConfig_DistanceCheckMode_DO_NOT_CHECK_DISTANCE
+                ..ffi::msdfgen_ErrorCorrectionConfig_DistanceCheckMode_ALWAYS_CHECK_DISTANCE)
+                .contains(&self.raw.distanceCheckMode)
         );
         unsafe { core::mem::transmute(self.raw.distanceCheckMode) }
     }
