@@ -27,16 +27,16 @@ version = "0.2.1"
 path = "sys"
 
 [dependencies.ttf-parser]
-version = "0.18"
+version = "0.19"
 optional = true
 
 [dependencies.typeface]
-version = "0.2"
+version = "0.3.3"
 optional = true
 
 [dependencies.font-rs]
 package = "font"
-version = "0.10"
+version = "0.15"
 optional = true
 
 [dependencies.freetype-rs]
@@ -51,7 +51,7 @@ optional = true
 version = "2"
 
 [dev-dependencies.ttf-parser]
-version = "0.18"
+version = "0.19"
 
 [dev-dependencies.notosans]
 version = "0.1"
