@@ -5,7 +5,7 @@ use std::{
     sync::{Mutex, RwLock},
 };
 
-impl<T: typeface::Tape> FontExt for RefCell<font::Font<T>> {
+impl FontExt for RefCell<font::Font> {
     type Glyph = char;
 
     fn glyph_shape(&self, glyph: Self::Glyph) -> Option<Shape> {
@@ -13,7 +13,7 @@ impl<T: typeface::Tape> FontExt for RefCell<font::Font<T>> {
     }
 }
 
-impl<T: typeface::Tape> FontExt for Mutex<font::Font<T>> {
+impl FontExt for Mutex<font::Font> {
     type Glyph = char;
 
     fn glyph_shape(&self, glyph: Self::Glyph) -> Option<Shape> {
@@ -21,7 +21,7 @@ impl<T: typeface::Tape> FontExt for Mutex<font::Font<T>> {
     }
 }
 
-impl<T: typeface::Tape> FontExt for RwLock<font::Font<T>> {
+impl FontExt for RwLock<font::Font> {
     type Glyph = char;
 
     fn glyph_shape(&self, glyph: Self::Glyph) -> Option<Shape> {
@@ -29,7 +29,7 @@ impl<T: typeface::Tape> FontExt for RwLock<font::Font<T>> {
     }
 }
 
-fn glyph_shape<T: typeface::Tape>(font: &mut font::Font<T>, glyph: char) -> Option<Shape> {
+fn glyph_shape(font: &mut font::Font, glyph: char) -> Option<Shape> {
     let glyph = font.draw(glyph).ok()??;
     let mut shape = Shape::default();
 
