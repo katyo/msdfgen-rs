@@ -26,6 +26,9 @@ status = "passively-maintained"
 version = "0.2.1"
 path = "sys"
 
+[dependencies.bytemuck]
+version = "1"
+
 [dependencies.ttf-parser]
 version = "0.19"
 optional = true
