@@ -1,8 +1,10 @@
+use bytemuck::Pod;
+
 use super::{Bitmap, Gray, Rgb, Rgba};
 use std::io::{Read, Write};
 
 pub trait PngColorType {
-    type PngPixelType;
+    type PngPixelType: Pod;
     const PNG_COLOR_TYPE: png::ColorType;
 }
 
@@ -42,7 +44,7 @@ where
 
 impl<T> Bitmap<T>
 where
-    T: PngColorType,
+    T: PngColorType + Pod,
     T: From<<T as PngColorType>::PngPixelType>,
     T::PngPixelType: Copy,
 {

@@ -40,6 +40,7 @@ pub use vector::*;
 #[allow(unused_variables)]
 mod test {
     use all_asserts::assert_lt;
+    use bytemuck::Pod;
     #[cfg(feature = "freetype-rs")]
     use freetype as freetype_rs;
     use std::fs::File;
@@ -58,7 +59,7 @@ mod test {
     #[cfg(feature = "png")]
     fn save_bitmap_and_preview<T>(pfx: &str, name: &str, sfx: &str, bitmap: &Bitmap<T>)
     where
-        T: PngColorType + Copy,
+        T: PngColorType + Copy + Pod,
         T::PngPixelType: From<T>,
         Gray<f32>: RenderTarget<T>,
     {
