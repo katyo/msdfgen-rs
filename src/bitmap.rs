@@ -30,7 +30,7 @@ pub struct Bitmap<T> {
     height: u32,
 }
 
-unsafe impl<T> Send for Bitmap<T> {}
+unsafe impl<T: Send> Send for Bitmap<T> {}
 
 impl<T> AsRef<Bitmap<T>> for Bitmap<T> {
     fn as_ref(&self) -> &Bitmap<T> {
