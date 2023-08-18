@@ -6,6 +6,8 @@ pub use gray::*;
 pub use rgb::*;
 pub use rgba::*;
 
+use bytemuck::Pod;
+
 #[cfg(feature = "png")]
 mod png;
 
@@ -44,22 +46,29 @@ impl<T> AsMut<Bitmap<T>> for Bitmap<T> {
     }
 }
 
-impl<T> Clone for Bitmap<T> {
+impl<T: Pod> Clone for Bitmap<T> {
     fn clone(&self) -> Self {
-        let mut new = Self::new(self.width, self.height);
+        let size = (self.width * self.height) as usize;
+        let pixels = std::ptr::slice_from_raw_parts_mut(self.pixels, size);
+        let new_pixels = std::mem::ManuallyDrop::new(unsafe { Box::from_raw(pixels) })
+            .clone()
+            .as_mut_ptr();
 
-        new.raw_pixels_mut().copy_from_slice(self.raw_pixels());
-
-        new
+        Self {
+            pixels: new_pixels,
+            width: self.width,
+            height: self.height,
+        }
     }
 }
 
-impl<T> Bitmap<T> {
+impl<T: Pod> Bitmap<T> {
     /// Create new bitmap with specified size
     pub fn new(width: u32, height: u32) -> Self {
         let size = (width * height) as usize;
 
-        let pixels = core::mem::ManuallyDrop::new(Vec::with_capacity(size)).as_mut_ptr();
+        let pixels = std::mem::ManuallyDrop::new(bytemuck::allocation::zeroed_slice_box::<T>(size))
+            .as_mut_ptr();
 
         Self {
             pixels,
@@ -185,7 +194,7 @@ impl<T> Bitmap<T> {
     pub fn convert<R>(&self) -> Bitmap<R>
     where
         T: Copy,
-        R: From<T>,
+        R: From<T> + Pod,
     {
         let mut bitmap = Bitmap::<R>::new(self.width(), self.height());
         bitmap
@@ -210,7 +219,7 @@ impl<T> Bitmap<T> {
 impl<'a, A, T> From<&'a Bitmap<A>> for Bitmap<T>
 where
     A: Copy,
-    T: From<A>,
+    T: From<A> + Pod,
 {
     fn from(bitmap: &'a Bitmap<A>) -> Self {
         bitmap.convert()

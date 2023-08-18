@@ -1,3 +1,5 @@
+use bytemuck::{Pod, Zeroable};
+
 use super::Pixel;
 
 /// Gray color
@@ -6,6 +8,9 @@ use super::Pixel;
 pub struct Gray<T> {
     pub v: T,
 }
+
+unsafe impl<T: Zeroable> Zeroable for Gray<T> {}
+unsafe impl<T: Pod> Pod for Gray<T> {}
 
 impl<T> Gray<T> {
     pub fn new(v: T) -> Self {

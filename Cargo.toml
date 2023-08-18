@@ -28,6 +28,7 @@ path = "sys"
 
 [dependencies.bytemuck]
 version = "1"
+features = ["extern_crate_alloc"]
 
 [dependencies.ttf-parser]
 version = "0.19"

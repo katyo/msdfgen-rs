@@ -1,3 +1,5 @@
+use bytemuck::{Pod, Zeroable};
+
 use super::Pixel;
 
 /// RGB color
@@ -9,6 +11,9 @@ pub struct Rgba<T> {
     pub b: T,
     pub a: T,
 }
+
+unsafe impl<T: Zeroable> Zeroable for Rgba<T> {}
+unsafe impl<T: Pod> Pod for Rgba<T> {}
 
 impl<T> Rgba<T> {
     pub fn new(r: T, g: T, b: T, a: T) -> Self {
