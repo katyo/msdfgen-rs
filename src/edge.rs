@@ -2,7 +2,8 @@ use crate::{ffi, CubicSegment, EdgeSegment, LinearSegment, Point2, QuadraticSegm
 
 /// Edge color enumeration
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[repr(u32)]
+#[cfg_attr(target_os = "windows", repr(i32))]
+#[cfg_attr(not(target_os = "windows"), repr(u32))]
 pub enum EdgeColor {
     Black = ffi::msdfgen_EdgeColor_BLACK,
     Blue = ffi::msdfgen_EdgeColor_BLUE,

@@ -2,7 +2,8 @@ use crate::{ffi, EdgeColor, Point2};
 
 /// Segment kind
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[repr(u32)]
+#[cfg_attr(target_os = "windows", repr(i32))]
+#[cfg_attr(not(target_os = "windows"), repr(u32))]
 pub enum SegmentKind {
     /// Linear segment
     Linear = ffi::msdfgen_SegmentKind_LINEAR,

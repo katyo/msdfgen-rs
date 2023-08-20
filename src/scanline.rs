@@ -2,7 +2,8 @@ use crate::ffi;
 
 /// Fill rule dictates how intersection total is interpreted during rasterization
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[repr(u32)]
+#[cfg_attr(target_os = "windows", repr(i32))]
+#[cfg_attr(not(target_os = "windows"), repr(u32))]
 pub enum FillRule {
     Negative = ffi::msdfgen_FillRule_FILL_NEGATIVE,
     NonZero = ffi::msdfgen_FillRule_FILL_NONZERO,
@@ -17,13 +18,9 @@ impl Default for FillRule {
 }
 
 impl FillRule {
-    pub(crate) fn into_raw(self) -> u32 {
+    pub(crate) fn into_raw(self) -> std::ffi::c_int {
         self as _
     }
-
-    /*pub(crate) fn from_raw(raw: u32) -> Self {
-        unsafe { core::mem::transmute(raw) }
-    }*/
 }
 
 /// Scanline object
