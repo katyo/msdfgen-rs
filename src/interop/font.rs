@@ -1,5 +1,5 @@
 use crate::{EdgeColor, EdgeHolder, FontExt, Point2, Shape};
-use font_rs as font;
+use font_rs::{self as font, glyph::Segment};
 use std::{
     cell::RefCell,
     sync::{Mutex, RwLock},
@@ -30,7 +30,7 @@ impl FontExt for RwLock<font::Font> {
 }
 
 fn glyph_shape(font: &mut font::Font, glyph: char) -> Option<Shape> {
-    let glyph = font.draw(glyph).ok()??;
+    let glyph = font.glyph(glyph).ok()??;
     let mut shape = Shape::default();
 
     for contour in glyph.iter() {
@@ -40,7 +40,7 @@ fn glyph_shape(font: &mut font::Font, glyph: char) -> Option<Shape> {
 
         for segment in contour.iter() {
             match *segment {
-                font::Segment::Linear(font::Offset(x, y)) => {
+                Segment::Linear(font::Offset(x, y)) => {
                     let point = Point2::new(x as f64, y as f64);
                     last_contour.add_edge(&EdgeHolder::new_linear(
                         last_point,
@@ -49,7 +49,7 @@ fn glyph_shape(font: &mut font::Font, glyph: char) -> Option<Shape> {
                     ));
                     last_point = point;
                 }
-                font::Segment::Quadratic(font::Offset(cx, cy), font::Offset(x, y)) => {
+                Segment::Quadratic(font::Offset(cx, cy), font::Offset(x, y)) => {
                     let cpoint = Point2::new(cx as f64, cy as f64);
                     let point = Point2::new(x as f64, y as f64);
                     last_contour.add_edge(&EdgeHolder::new_quadratic(
@@ -60,7 +60,7 @@ fn glyph_shape(font: &mut font::Font, glyph: char) -> Option<Shape> {
                     ));
                     last_point = point;
                 }
-                font::Segment::Cubic(
+                Segment::Cubic(
                     font::Offset(c1x, c1y),
                     font::Offset(c2x, c2y),
                     font::Offset(x, y),
