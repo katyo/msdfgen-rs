@@ -165,6 +165,7 @@ fn build_library(src_dir: &Path, lib_dir: &Path) {
     .map(|name| core_src_dir.join(name));
 
     let profile = std::env::var("PROFILE").expect("PROFILE is set by cargo.");
+    let target = std::env::var("TARGET").expect("TARGET is set by cargo.");
 
     let mut build = cc::Build::new();
 
@@ -191,6 +192,10 @@ fn build_library(src_dir: &Path, lib_dir: &Path) {
         .files(core_srcs)
         .files(extra_srcs)
         .out_dir(lib_dir);
+
+    if target.contains("-darwin") {
+        build.cpp_set_stdlib("c++");
+    }
 
     /*
     if cfg!(feature = "libcxx") {
@@ -283,7 +288,7 @@ fn detect_stdlib(target: &str) -> Option<String> {
         return Some(stdlib);
     }
 
-    if target.contains("-ios") {
+    if target.contains("-ios") || target.contains("-darwin") {
         return Some("libc++".into());
     }
 
