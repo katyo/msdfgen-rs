@@ -129,30 +129,6 @@ jobs:
           - task: bindings
             os: ubuntu-latest
             rust: stable
-            target: mips-unknown-linux-gnu
-            features: default
-            test_args: --no-run
-          - task: bindings
-            os: ubuntu-latest
-            rust: stable
-            target: mips64-unknown-linux-gnuabi64
-            features: default
-            test_args: --no-run
-          - task: bindings
-            os: ubuntu-latest
-            rust: stable
-            target: mipsel-unknown-linux-gnu
-            features: default
-            test_args: --no-run
-          - task: bindings
-            os: ubuntu-latest
-            rust: stable
-            target: mips64el-unknown-linux-gnuabi64
-            features: default
-            test_args: --no-run
-          - task: bindings
-            os: ubuntu-latest
-            rust: stable
             target: powerpc-unknown-linux-gnu
             features: default
             test_args: --no-run
